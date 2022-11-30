@@ -17,8 +17,10 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.ListSelectionModel;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 
-public class Accueil extends JFrame implements ActionListener{
+public class Accueil extends JFrame implements ActionListener, MouseListener{
 
 	private JPanel contentPane;
 	private JTable table;
@@ -154,6 +156,7 @@ public class Accueil extends JFrame implements ActionListener{
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
+		table.addMouseListener(this);
 		table.setRowSelectionAllowed(false);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setSurrendersFocusOnKeystroke(true);
@@ -268,4 +271,21 @@ public class Accueil extends JFrame implements ActionListener{
 				break;
 		}
 	}
+	public void mouseClicked(MouseEvent e) {
+	}
+	public void mouseEntered(MouseEvent e) {
+	}
+	public void mouseExited(MouseEvent e) {
+	}
+	public void mousePressed(MouseEvent e) {
+	}
+	public void mouseReleased(MouseEvent e) {
+        int columnNumber = this.table.getColumnModel().getSelectionModel().getLeadSelectionIndex();
+        String column = this.table.getColumnName(columnNumber);
+        int row = this.table.getSelectionModel().getLeadSelectionIndex();
+        //if (column.equalsIgnoreCase("Select")) {
+            this.dispose();
+            new Bati().setVisible(true);
+        //}
+    }
 }
