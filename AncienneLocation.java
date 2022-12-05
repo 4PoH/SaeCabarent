@@ -147,7 +147,7 @@ public class AncienneLocation extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(23, 50, 916, 349);
+		scrollPane.setBounds(23, 50, 916, 350);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
