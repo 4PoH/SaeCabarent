@@ -1,3 +1,0 @@
-INDEX VERSION 1.131+C:\Users\Nino\Documents\1-Cour\BUT\S3\SAE BD Immobilier\Cabarent\SaeCabarent\.metadata\.plugins\org.eclipse.jdt.core
-1865797976.index
-199504408.index
