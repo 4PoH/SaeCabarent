@@ -255,7 +255,7 @@ public class FactureEau extends JFrame implements ActionListener {
 		contentPane.add(lblLabelDescription);
 		
 		JTextPane textPaneDescription = new JTextPane();
-		textPaneDescription.setBounds(165, 189, 235, 61);
+		textPaneDescription.setBounds(165, 189, 235, 60);
 		contentPane.add(textPaneDescription);
 		
 		JLabel lblLabelEntreprise = new JLabel("* Entreprise :");
