@@ -36,7 +36,7 @@ public class Bati extends JFrame implements ActionListener {
 	public Bati() {
 		setTitle("Bati");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(150, 100, 480, 300);
+		setBounds(149, 100, 480, 300);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(0, 5, 0, 5));

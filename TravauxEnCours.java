@@ -146,7 +146,7 @@ public class TravauxEnCours extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 64, 946, 325);
+		scrollPane.setBounds(10, 64, 946, 269);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
@@ -178,10 +178,48 @@ public class TravauxEnCours extends JFrame implements ActionListener {
 		TitreTravauxC.setFont(new Font("Tahoma", Font.BOLD, 20));
 		TitreTravauxC.setBounds(10, 10, 195, 32);
 		contentPane.add(TitreTravauxC);
+		
+		JButton btnCharger = new JButton("Charger");
+		btnCharger.setBounds(87, 372, 85, 21);
+		contentPane.add(btnCharger);
+		
+		JButton btnInserer = new JButton("Inserer");
+		btnInserer.setBounds(271, 372, 85, 21);
+		contentPane.add(btnInserer);
+		
+		JButton btnMiseJour = new JButton("Mise à jour");
+		btnMiseJour.setBounds(459, 372, 85, 21);
+		contentPane.add(btnMiseJour);
+		
+		JButton btnSupprimer = new JButton("Supprimer");
+		btnSupprimer.setBounds(640, 372, 85, 21);
+		contentPane.add(btnSupprimer);
+		
+		JButton btnAnnuler = new JButton("Annuler");
+		btnAnnuler.setBounds(813, 372, 85, 21);
+		contentPane.add(btnAnnuler);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Charger" :
+			break;
+			
+			case "Inserer" :
+				this.dispose();
+				new NouveauTravaux().setVisible(true);
+				break;
+			
+			case "Mise à Jour":
+				break;
+			
+			case "Supprimer":
+				break;
+			
+			case "Annuler":
+				this.dispose();
+				break;
+		
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
