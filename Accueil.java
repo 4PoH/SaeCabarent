@@ -155,8 +155,8 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 			new Object[][] {
 				{"75 Avenue des Pyr\u00E9n\u00E9es, 75m\u00B2, T3, Ivan LATERREUR", "+ 262.25 \u20AC", ""},
 				{"4 Rue du Sacré Graal, 143m², T4, Ni", "+ 353.45", ""},
-				{"6 Avenue de la Cantina, 232m², T5, Georges Lucas", "+ 799.50", ""},
-				{null, null, null},
+				{"6 Avenue de la Cantina, 232m², T5, Georges Lucas", "+ 799.50 €", ""},
+				{"12 Impasse Zoubida, 123m², T4, Gaston Lagaf", "+ 666.60 €", ""},
 				{null, null, null},
 				{null, null, null},
 			},
