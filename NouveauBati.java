@@ -22,10 +22,20 @@ import java.awt.Color;
 import javax.swing.JToolBar;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
+import java.awt.Font;
+import javax.swing.JTextPane;
+import javax.swing.JCheckBox;
 
-public class Quittances extends JFrame implements ActionListener {
+public class NouveauBati extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
+	private JTextField textFieldAnneeFac;
+	private JTextField textFieldMontantPartieFixe;
+	private JTextField champlienpdf;
+	private JTextField textFieldRefAvis;
+	private JTextField textField;
 
 	/**
 	 * Launch the application.
@@ -34,7 +44,7 @@ public class Quittances extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Quittances frame = new Quittances();
+					NouveauBati frame = new NouveauBati();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -46,10 +56,10 @@ public class Quittances extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public Quittances() {
-		setTitle("Quittances");
+	public NouveauBati() {
+		setTitle("Nouveaux travaux");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 480, 300);
+		setBounds(100, 100, 480, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
@@ -141,11 +151,93 @@ public class Quittances extends JFrame implements ActionListener {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(new BorderLayout(0, 0));
+		contentPane.setLayout(null);
+		
+		textFieldAnneeFac = new JTextField();
+		textFieldAnneeFac.setColumns(10);
+		textFieldAnneeFac.setBounds(179, 127, 68, 20);
+		contentPane.add(textFieldAnneeFac);
+		
+		JLabel lblLabelAnneeFac = new JLabel("* Code postal :");
+		lblLabelAnneeFac.setBounds(37, 126, 132, 14);
+		contentPane.add(lblLabelAnneeFac);
+		
+		JLabel lblLabelTotalOrdure = new JLabel("Ville :");
+		lblLabelTotalOrdure.setBounds(35, 158, 144, 14);
+		contentPane.add(lblLabelTotalOrdure);
+		
+		textFieldMontantPartieFixe = new JTextField();
+		textFieldMontantPartieFixe.setColumns(10);
+		textFieldMontantPartieFixe.setBounds(177, 159, 132, 20);
+		contentPane.add(textFieldMontantPartieFixe);
+		
+		JLabel lblLabelMontantTotal = new JLabel("Type d'habitat :");
+		lblLabelMontantTotal.setBounds(35, 189, 132, 14);
+		contentPane.add(lblLabelMontantTotal);
+		
+		JButton btnAjouter = new JButton("Ajouter");
+		btnAjouter.setBounds(307, 384, 132, 23);
+		contentPane.add(btnAjouter);
+		
+		JButton btnAnnuler = new JButton("Annuler");
+		btnAnnuler.setBounds(49, 384, 132, 23);
+		contentPane.add(btnAnnuler);
+		
+		JLabel lblTaxeFonciere = new JLabel("Nouveau Bâtiment");
+		lblTaxeFonciere.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblTaxeFonciere.setBounds(37, 0, 260, 41);
+		contentPane.add(lblTaxeFonciere);
+		
+		champlienpdf = new JTextField();
+		champlienpdf.setColumns(10);
+		champlienpdf.setBounds(177, 222, 68, 20);
+		contentPane.add(champlienpdf);
+		
+		JLabel lblLabelLienPDF_1 = new JLabel("Année de construction :");
+		lblLabelLienPDF_1.setBounds(35, 221, 132, 14);
+		contentPane.add(lblLabelLienPDF_1);
+		
+		JLabel lblLabelEntreprise = new JLabel("* Adresse :");
+		lblLabelEntreprise.setBounds(37, 96, 132, 14);
+		contentPane.add(lblLabelEntreprise);
+		
+		textFieldRefAvis = new JTextField();
+		textFieldRefAvis.setColumns(10);
+		textFieldRefAvis.setBounds(179, 96, 233, 20);
+		contentPane.add(textFieldRefAvis);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(179, 190, 130, 22);
+		contentPane.add(comboBox);
+		
+		JLabel lblListeDesParties = new JLabel("Liste des parties communes :");
+		lblListeDesParties.setBounds(37, 258, 132, 14);
+		contentPane.add(lblListeDesParties);
+		
+		textField = new JTextField();
+		textField.setColumns(10);
+		textField.setBounds(177, 253, 132, 20);
+		contentPane.add(textField);
+		
+		JLabel lblCoproprit = new JLabel("Copropriété :");
+		lblCoproprit.setBounds(37, 288, 132, 14);
+		contentPane.add(lblCoproprit);
+		
+		JCheckBox chckbxNewCheckBox = new JCheckBox("");
+		chckbxNewCheckBox.setBounds(174, 284, 97, 23);
+		contentPane.add(chckbxNewCheckBox);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Annuler":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
+			case "Ajouter":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -173,7 +265,7 @@ public class Quittances extends JFrame implements ActionListener {
 				
 			case "Facture d'eau":
 				this.dispose();
-				new FactureEau().setVisible(true);
+				new NouveauBati().setVisible(true);
 				break;
 			
 			case "Impositions":
@@ -198,7 +290,7 @@ public class Quittances extends JFrame implements ActionListener {
 			
 			case "Nouveaux travaux":
 				this.dispose();
-				new NouveauTravaux().setVisible(true);
+				new NouveauBati().setVisible(true);
 				break;
 				
 			case "Nouvelle location":
@@ -218,7 +310,7 @@ public class Quittances extends JFrame implements ActionListener {
 			
 			case "Taxe fonciere":
 				this.dispose();
-				new TaxeFonciere().setVisible(true);
+				new NouveauBati().setVisible(true);
 				break;
 			case "Autre":
 				this.dispose();
@@ -234,5 +326,4 @@ public class Quittances extends JFrame implements ActionListener {
 				break;
 		}
 	}
-	
 }

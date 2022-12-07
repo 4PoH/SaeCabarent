@@ -157,75 +157,78 @@ public class NouveauTravaux extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 		
 		textFieldNumFac = new JTextField();
-		textFieldNumFac.setBounds(165, 63, 132, 20);
+		textFieldNumFac.setBounds(165, 68, 132, 20);
 		contentPane.add(textFieldNumFac);
 		textFieldNumFac.setColumns(10);
 		
 		textFieldNumDevis = new JTextField();
 		textFieldNumDevis.setColumns(10);
-		textFieldNumDevis.setBounds(165, 94, 132, 20);
+		textFieldNumDevis.setBounds(165, 99, 132, 20);
 		contentPane.add(textFieldNumDevis);
 		
 		JLabel lblLabelNumFac = new JLabel("* Numéro de facture :");
-		lblLabelNumFac.setBounds(37, 63, 132, 14);
+		lblLabelNumFac.setBounds(37, 68, 132, 14);
 		contentPane.add(lblLabelNumFac);
 		
 		JLabel lblLabelNumDevis = new JLabel("Numéro de devis :");
-		lblLabelNumDevis.setBounds(37, 94, 132, 14);
+		lblLabelNumDevis.setBounds(37, 99, 132, 14);
 		contentPane.add(lblLabelNumDevis);
 		
 		textFieldLibelle = new JTextField();
 		textFieldLibelle.setColumns(10);
-		textFieldLibelle.setBounds(165, 125, 132, 20);
+		textFieldLibelle.setBounds(165, 130, 132, 20);
 		contentPane.add(textFieldLibelle);
 		
 		JLabel lblLabelLibelle = new JLabel("Libellé  :");
-		lblLabelLibelle.setBounds(37, 125, 132, 14);
+		lblLabelLibelle.setBounds(37, 130, 132, 14);
 		contentPane.add(lblLabelLibelle);
 		
 		textFieldLienPDF = new JTextField();
 		textFieldLienPDF.setColumns(10);
-		textFieldLienPDF.setBounds(165, 156, 68, 20);
+		textFieldLienPDF.setBounds(165, 161, 68, 20);
 		contentPane.add(textFieldLienPDF);
 		
 		JLabel lblLabelDateDebut = new JLabel("Date de début  :");
-		lblLabelDateDebut.setBounds(37, 156, 132, 14);
+		lblLabelDateDebut.setBounds(37, 161, 132, 14);
 		contentPane.add(lblLabelDateDebut);
 		
 		JLabel lblLabelMontant = new JLabel("Montant  :");
-		lblLabelMontant.setBounds(37, 259, 132, 14);
+		lblLabelMontant.setBounds(37, 264, 132, 14);
 		contentPane.add(lblLabelMontant);
 		
 		textFieldMontant = new JTextField();
 		textFieldMontant.setColumns(10);
-		textFieldMontant.setBounds(165, 259, 132, 20);
+		textFieldMontant.setBounds(165, 264, 132, 20);
 		contentPane.add(textFieldMontant);
 		
 		JLabel lblLabelMontantNonDeductible = new JLabel("Montant  non déductible :");
-		lblLabelMontantNonDeductible.setBounds(37, 290, 132, 14);
+		lblLabelMontantNonDeductible.setBounds(37, 295, 132, 14);
 		contentPane.add(lblLabelMontantNonDeductible);
 		
 		textField = new JTextField();
 		textField.setColumns(10);
-		textField.setBounds(165, 290, 132, 20);
+		textField.setBounds(165, 295, 132, 20);
 		contentPane.add(textField);
 		
 		JLabel lblLabelReduction = new JLabel("Réduction :");
-		lblLabelReduction.setBounds(37, 320, 132, 14);
+		lblLabelReduction.setBounds(37, 325, 132, 14);
 		contentPane.add(lblLabelReduction);
 		
 		textField_1 = new JTextField();
 		textField_1.setColumns(10);
-		textField_1.setBounds(165, 320, 132, 20);
+		textField_1.setBounds(165, 325, 132, 20);
 		contentPane.add(textField_1);
 		
 		JButton btnAjouter = new JButton("Ajouter");
-		btnAjouter.setBounds(307, 382, 132, 23);
+		btnAjouter.setBounds(307, 384, 132, 23);
+		btnAjouter.addActionListener(this);
 		contentPane.add(btnAjouter);
 		
 		JButton btnAnnuler = new JButton("Annuler");
-		btnAnnuler.setBounds(49, 382, 132, 23);
+		btnAnnuler.setBounds(49, 384, 132, 23);
+		btnAnnuler.addActionListener(this);
 		contentPane.add(btnAnnuler);
+		
 		
 		JLabel lblNouveauTravaux = new JLabel("Nouveaux Travaux");
 		lblNouveauTravaux.setFont(new Font("Tahoma", Font.BOLD, 20));
@@ -234,33 +237,58 @@ public class NouveauTravaux extends JFrame implements ActionListener {
 		
 		textField_2 = new JTextField();
 		textField_2.setColumns(10);
-		textField_2.setBounds(165, 348, 235, 20);
+		textField_2.setBounds(165, 353, 235, 20);
 		contentPane.add(textField_2);
 		
 		JLabel lblLabelLienPDF_1 = new JLabel("Lien pdf  :");
-		lblLabelLienPDF_1.setBounds(37, 348, 132, 14);
+		lblLabelLienPDF_1.setBounds(37, 353, 132, 14);
 		contentPane.add(lblLabelLienPDF_1);
 		
 		JLabel lblLabelDateFin = new JLabel("Date de fin :");
-		lblLabelDateFin.setBounds(255, 159, 93, 14);
+		lblLabelDateFin.setBounds(255, 164, 93, 14);
 		contentPane.add(lblLabelDateFin);
 		
 		textField_3 = new JTextField();
 		textField_3.setColumns(10);
-		textField_3.setBounds(332, 156, 68, 20);
+		textField_3.setBounds(332, 161, 68, 20);
 		contentPane.add(textField_3);
 		
 		JLabel lblLabelDescription = new JLabel("Description  :");
-		lblLabelDescription.setBounds(37, 189, 132, 14);
+		lblLabelDescription.setBounds(37, 194, 132, 14);
 		contentPane.add(lblLabelDescription);
 		
 		JTextPane textPaneDescription = new JTextPane();
-		textPaneDescription.setBounds(165, 187, 235, 61);
+		textPaneDescription.setBounds(165, 192, 235, 61);
 		contentPane.add(textPaneDescription);
+		
+		JLabel lblLabelEntreprise = new JLabel("* Entreprise :");
+		lblLabelEntreprise.setBounds(37, 43, 132, 14);
+		contentPane.add(lblLabelEntreprise);
+		
+		JComboBox comboBoxEntreprise = new JComboBox();
+		comboBoxEntreprise.setBounds(165, 39, 132, 22);
+		contentPane.add(comboBoxEntreprise);
+		
+		JButton btnNouvelleEntreprise = new JButton("Nouvelle entreprise");
+		btnNouvelleEntreprise.setBounds(307, 39, 132, 23);
+		btnNouvelleEntreprise.addActionListener(this);
+		contentPane.add(btnNouvelleEntreprise);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Nouvelle entreprise":
+				this.dispose();
+				new NouvelleEntreprise().setVisible(true);
+				break;
+			case "Annuler":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
+			case "Ajouter":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -335,7 +363,10 @@ public class NouveauTravaux extends JFrame implements ActionListener {
 				this.dispose();
 				new TaxeFonciere().setVisible(true);
 				break;
-				
+			case "Autre":
+				this.dispose();
+				new NouvelleChargeSupp().setVisible(true);
+				break;
 			case "Travaux en cours":
 				this.dispose();
 				new TravauxEnCours().setVisible(true);

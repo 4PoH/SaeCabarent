@@ -190,10 +190,12 @@ public class Entretien extends JFrame implements ActionListener {
 		
 		JButton btnAjouter = new JButton("Ajouter");
 		btnAjouter.setBounds(307, 384, 132, 23);
+		btnAjouter.addActionListener(this);
 		contentPane.add(btnAjouter);
 		
 		JButton btnAnnuler = new JButton("Annuler");
 		btnAnnuler.setBounds(49, 384, 132, 23);
+		btnAnnuler.addActionListener(this);
 		contentPane.add(btnAnnuler);
 		
 		JLabel lblNouveauEntretien = new JLabel("Nouveau entretien");
@@ -225,6 +227,14 @@ public class Entretien extends JFrame implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Annuler":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
+			case "Ajouter":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -298,6 +308,10 @@ public class Entretien extends JFrame implements ActionListener {
 			case "Taxe fonciere":
 				this.dispose();
 				new TaxeFonciere().setVisible(true);
+				break;
+			case "Autre":
+				this.dispose();
+				new NouvelleChargeSupp().setVisible(true);
 				break;
 				
 			case "Travaux en cours":
