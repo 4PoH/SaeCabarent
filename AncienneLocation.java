@@ -181,10 +181,12 @@ public class AncienneLocation extends JFrame implements ActionListener {
 		contentPane.add(TitreLocationPasse);
 		
 		JButton btnCharger = new JButton("Charger");
+		btnCharger.addActionListener(this);
 		btnCharger.setBounds(216, 357, 85, 21);
 		contentPane.add(btnCharger);
 		
 		JButton btnAnnuler = new JButton("Annuler");
+		btnAnnuler.addActionListener(this);
 		btnAnnuler.setBounds(642, 357, 85, 21);
 		contentPane.add(btnAnnuler);
 		

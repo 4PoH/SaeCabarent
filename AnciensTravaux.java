@@ -181,10 +181,12 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 		contentPane.add(TitreAncienTr);
 		
 		JButton btnCharger = new JButton("Charger");
+		btnCharger.addActionListener(this);
 		btnCharger.setBounds(152, 362, 85, 21);
 		contentPane.add(btnCharger);
 		
 		JButton btnAnnuler = new JButton("Annuler");
+		btnAnnuler.addActionListener(this);
 		btnAnnuler.setBounds(730, 362, 85, 21);
 		contentPane.add(btnAnnuler);
 	}

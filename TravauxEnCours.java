@@ -180,22 +180,27 @@ public class TravauxEnCours extends JFrame implements ActionListener {
 		contentPane.add(TitreTravauxC);
 		
 		JButton btnCharger = new JButton("Charger");
+		btnCharger.addActionListener(this);
 		btnCharger.setBounds(87, 372, 85, 21);
 		contentPane.add(btnCharger);
 		
 		JButton btnInserer = new JButton("Inserer");
+		btnInserer.addActionListener(this);
 		btnInserer.setBounds(271, 372, 85, 21);
 		contentPane.add(btnInserer);
 		
 		JButton btnMiseJour = new JButton("Mise à jour");
+		btnMiseJour.addActionListener(this);
 		btnMiseJour.setBounds(459, 372, 85, 21);
 		contentPane.add(btnMiseJour);
 		
 		JButton btnSupprimer = new JButton("Supprimer");
+		btnSupprimer.addActionListener(this);
 		btnSupprimer.setBounds(640, 372, 85, 21);
 		contentPane.add(btnSupprimer);
 		
 		JButton btnAnnuler = new JButton("Annuler");
+		btnAnnuler.addActionListener(this);
 		btnAnnuler.setBounds(813, 372, 85, 21);
 		contentPane.add(btnAnnuler);
 	}
