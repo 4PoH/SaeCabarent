@@ -22,10 +22,16 @@ import java.awt.Color;
 import javax.swing.JToolBar;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
+import java.awt.Font;
 
-public class Quittances extends JFrame implements ActionListener {
+public class NouveauContrat extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
+	private JTextField textFieldNumFac;
+	private JTextField textFieldLibelle;
+	private JTextField textField;
 
 	/**
 	 * Launch the application.
@@ -34,7 +40,7 @@ public class Quittances extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Quittances frame = new Quittances();
+					NouveauContrat frame = new NouveauContrat();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -46,10 +52,10 @@ public class Quittances extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public Quittances() {
-		setTitle("Quittances");
+	public NouveauContrat() {
+		setTitle("Nouveaux travaux");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 480, 300);
+		setBounds(100, 100, 480, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
@@ -141,11 +147,103 @@ public class Quittances extends JFrame implements ActionListener {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(new BorderLayout(0, 0));
+		contentPane.setLayout(null);
+		
+		textFieldNumFac = new JTextField();
+		textFieldNumFac.setBounds(166, 60, 61, 20);
+		contentPane.add(textFieldNumFac);
+		textFieldNumFac.setColumns(10);
+		
+		JLabel lblLabelDateMiseEnEffet = new JLabel("* Date de mise en effet :");
+		lblLabelDateMiseEnEffet.setBounds(24, 63, 132, 14);
+		contentPane.add(lblLabelDateMiseEnEffet);
+		
+		textFieldLibelle = new JTextField();
+		textFieldLibelle.setColumns(10);
+		textFieldLibelle.setBounds(166, 182, 132, 20);
+		contentPane.add(textFieldLibelle);
+		
+		JLabel lblLabelCaution = new JLabel("Caution :");
+		lblLabelCaution.setBounds(24, 185, 132, 14);
+		contentPane.add(lblLabelCaution);
+		
+		JLabel lblLabelType = new JLabel("Type de location :");
+		lblLabelType.setBounds(24, 91, 132, 14);
+		contentPane.add(lblLabelType);
+		
+		JButton btnAjouter = new JButton("Ajouter");
+		btnAjouter.setBounds(307, 384, 132, 23);
+		btnAjouter.addActionListener(this);
+		contentPane.add(btnAjouter);
+		
+		JButton btnAnnuler = new JButton("Annuler");
+		btnAnnuler.setBounds(49, 384, 132, 23);
+		btnAnnuler.addActionListener(this);
+		contentPane.add(btnAnnuler);
+		
+		JLabel lblContrat = new JLabel("Nouveau Contrat WIP");
+		lblContrat.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblContrat.setBounds(24, 0, 307, 41);
+		contentPane.add(lblContrat);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(166, 87, 132, 22);
+		contentPane.add(comboBox);
+		
+		JLabel lblLabelLibelle = new JLabel("* Locataire(s)  :");
+		lblLabelLibelle.setBounds(23, 124, 132, 14);
+		contentPane.add(lblLabelLibelle);
+		
+		JComboBox comboBox_1 = new JComboBox();
+		comboBox_1.setBounds(165, 121, 132, 22);
+		contentPane.add(comboBox_1);
+		
+		JButton btnNouveauLocataire = new JButton("Nouveau Locataire");
+		btnNouveauLocataire.setBounds(307, 120, 132, 23);
+		btnNouveauLocataire.addActionListener(this);
+		contentPane.add(btnNouveauLocataire);
+		
+		JLabel lblNombreDeLocataires = new JLabel("Nombre de locataire(s) :");
+		lblNombreDeLocataires.setBounds(24, 157, 132, 14);
+		contentPane.add(lblNombreDeLocataires);
+		
+		textField = new JTextField();
+		textField.setColumns(10);
+		textField.setBounds(166, 154, 132, 20);
+		contentPane.add(textField);
+		
+		JLabel lblDocumentss = new JLabel("* Documents(s)  :");
+		lblDocumentss.setBounds(23, 217, 132, 14);
+		contentPane.add(lblDocumentss);
+		
+		JComboBox comboBox_1_1 = new JComboBox();
+		comboBox_1_1.setBounds(165, 214, 132, 22);
+		contentPane.add(comboBox_1_1);
+		
+		JButton btnNouveauDocument = new JButton("Nouveau Document");
+		btnNouveauDocument.setBounds(307, 213, 132, 23);
+		btnNouveauDocument.addActionListener(this);
+		contentPane.add(btnNouveauDocument);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Nouveau Document":
+				this.dispose();
+				new NouveauDocumentContrat().setVisible(true);
+				break;
+			case "Nouveau Locataire":
+				this.dispose();
+				new NouveauLocataire().setVisible(true);
+				break;
+			case "Annuler":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
+			case "Ajouter":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -198,12 +296,12 @@ public class Quittances extends JFrame implements ActionListener {
 			
 			case "Nouveaux travaux":
 				this.dispose();
-				new NouveauTravaux().setVisible(true);
+				new InformationsBailleur().setVisible(true);
 				break;
 				
 			case "Nouvelle location":
 				this.dispose();
-				new NouvelleLocation().setVisible(true);
+				new InformationsBailleur().setVisible(true);
 				break;
 				
 			case "Protection juridique":
@@ -234,5 +332,4 @@ public class Quittances extends JFrame implements ActionListener {
 				break;
 		}
 	}
-	
 }

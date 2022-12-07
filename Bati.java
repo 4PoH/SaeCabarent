@@ -204,6 +204,10 @@ public class Bati extends JFrame implements ActionListener {
 				this.dispose();
 				new TaxeFonciere().setVisible(true);
 				break;
+			case "Autre":
+				this.dispose();
+				new NouvelleChargeSupp().setVisible(true);
+				break;
 				
 			case "Travaux en cours":
 				this.dispose();

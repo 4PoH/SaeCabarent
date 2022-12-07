@@ -213,6 +213,14 @@ public class TaxeFonciere extends JFrame implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Annuler":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
+			case "Ajouter":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -287,7 +295,10 @@ public class TaxeFonciere extends JFrame implements ActionListener {
 				this.dispose();
 				new TaxeFonciere().setVisible(true);
 				break;
-				
+			case "Autre":
+				this.dispose();
+				new NouvelleChargeSupp().setVisible(true);
+				break;
 			case "Travaux en cours":
 				this.dispose();
 				new TravauxEnCours().setVisible(true);

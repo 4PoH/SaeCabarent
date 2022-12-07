@@ -22,10 +22,21 @@ import java.awt.Color;
 import javax.swing.JToolBar;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
+import java.awt.Font;
+import javax.swing.JTextPane;
 
-public class Quittances extends JFrame implements ActionListener {
+public class NouvelleEntreprise extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
+	private JTextField textFieldNumSiren;
+	private JTextField textFieldNomEntreprise;
+	private JTextField textFieldLibelle;
+	private JTextField textFieldLienPDF;
+	private JTextField textFieldMontant;
+	private JTextField textFieldNumSiret;
+	private JTextField textField_3;
 
 	/**
 	 * Launch the application.
@@ -34,7 +45,7 @@ public class Quittances extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Quittances frame = new Quittances();
+					NouveauTravaux frame = new NouveauTravaux();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -46,10 +57,10 @@ public class Quittances extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public Quittances() {
-		setTitle("Quittances");
+	public NouvelleEntreprise() {
+		setTitle("Nouvelle Entreprise");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 480, 300);
+		setBounds(105, 100, 480, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
@@ -141,11 +152,98 @@ public class Quittances extends JFrame implements ActionListener {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(new BorderLayout(0, 0));
+		contentPane.setLayout(null);
+		
+		textFieldNumSiren = new JTextField();
+		textFieldNumSiren.setBounds(165, 63, 132, 20);
+		contentPane.add(textFieldNumSiren);
+		textFieldNumSiren.setColumns(10);
+		
+		textFieldNomEntreprise = new JTextField();
+		textFieldNomEntreprise.setColumns(10);
+		textFieldNomEntreprise.setBounds(165, 125, 132, 20);
+		contentPane.add(textFieldNomEntreprise);
+		
+		JLabel lblLabelNumSiren = new JLabel("* Numéro de SIREN :");
+		lblLabelNumSiren.setBounds(37, 63, 132, 14);
+		contentPane.add(lblLabelNumSiren);
+		
+		JLabel lblLabelNom = new JLabel("Nom :");
+		lblLabelNom.setBounds(37, 125, 132, 14);
+		contentPane.add(lblLabelNom);
+		
+		textFieldLibelle = new JTextField();
+		textFieldLibelle.setColumns(10);
+		textFieldLibelle.setBounds(165, 156, 132, 20);
+		contentPane.add(textFieldLibelle);
+		
+		JLabel lblLabelTelephone = new JLabel("Téléphone :");
+		lblLabelTelephone.setBounds(37, 156, 132, 14);
+		contentPane.add(lblLabelTelephone);
+		
+		textFieldLienPDF = new JTextField();
+		textFieldLienPDF.setColumns(10);
+		textFieldLienPDF.setBounds(165, 187, 132, 20);
+		contentPane.add(textFieldLienPDF);
+		
+		JLabel lblLabelVille = new JLabel("Ville :");
+		lblLabelVille.setBounds(37, 187, 132, 14);
+		contentPane.add(lblLabelVille);
+		
+		JLabel lblLabelEmail = new JLabel("Adresse mail :");
+		lblLabelEmail.setBounds(37, 248, 132, 14);
+		contentPane.add(lblLabelEmail);
+		
+		textFieldMontant = new JTextField();
+		textFieldMontant.setColumns(10);
+		textFieldMontant.setBounds(165, 248, 132, 20);
+		contentPane.add(textFieldMontant);
+		
+		JLabel lblLabelNumSiret = new JLabel("Numéro de SIRET :");
+		lblLabelNumSiret.setBounds(37, 94, 132, 14);
+		contentPane.add(lblLabelNumSiret);
+		
+		textFieldNumSiret = new JTextField();
+		textFieldNumSiret.setColumns(10);
+		textFieldNumSiret.setBounds(165, 94, 132, 20);
+		contentPane.add(textFieldNumSiret);
+		
+		JButton btnAjouter = new JButton("Ajouter");
+		btnAjouter.setBounds(307, 384, 132, 23);
+		btnAjouter.addActionListener(this);
+		contentPane.add(btnAjouter);
+		
+		JButton btnAnnuler = new JButton("Annuler");
+		btnAnnuler.setBounds(49, 384, 132, 23);
+		btnAnnuler.addActionListener(this);
+		contentPane.add(btnAnnuler);
+		
+		
+		JLabel lblNouvelleEntreprise = new JLabel("Nouvelle Entreprise");
+		lblNouvelleEntreprise.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblNouvelleEntreprise.setBounds(37, 0, 202, 41);
+		contentPane.add(lblNouvelleEntreprise);
+		
+		JLabel lblLabelCodePostal = new JLabel("Code postal :");
+		lblLabelCodePostal.setBounds(37, 220, 132, 14);
+		contentPane.add(lblLabelCodePostal);
+		
+		textField_3 = new JTextField();
+		textField_3.setColumns(10);
+		textField_3.setBounds(165, 217, 132, 20);
+		contentPane.add(textField_3);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Annuler":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
+			case "Ajouter":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -234,5 +332,4 @@ public class Quittances extends JFrame implements ActionListener {
 				break;
 		}
 	}
-	
 }
