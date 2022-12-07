@@ -29,13 +29,11 @@ import java.awt.Font;
 public class NouvelleLocation extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField textFieldNumFac;
 	private JTextField textFieldDateFac;
-	private JTextField textFieldLibelle;
-	private JTextField textFieldLienPDF;
 	private JTextField textFieldMontant;
 	private JTextField textField;
 	private JTextField textField_1;
+	private JTextField textField_2;
 
 	/**
 	 * Launch the application.
@@ -153,97 +151,128 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textFieldNumFac = new JTextField();
-		textFieldNumFac.setBounds(166, 60, 132, 20);
-		contentPane.add(textFieldNumFac);
-		textFieldNumFac.setColumns(10);
-		
 		textFieldDateFac = new JTextField();
 		textFieldDateFac.setColumns(10);
-		textFieldDateFac.setBounds(166, 91, 132, 20);
+		textFieldDateFac.setBounds(166, 91, 26, 20);
 		contentPane.add(textFieldDateFac);
 		
-		JLabel lblLabelDateEffet = new JLabel("* Date de mise en effet :");
-		lblLabelDateEffet.setBounds(24, 63, 132, 14);
-		contentPane.add(lblLabelDateEffet);
+		JLabel lblLabelContrat = new JLabel("* Contrat :");
+		lblLabelContrat.setBounds(24, 63, 132, 14);
+		contentPane.add(lblLabelContrat);
 		
-		JLabel lblLabelDateFac = new JLabel("Date de la facture :");
+		JLabel lblLabelDateFac = new JLabel("Nombre de locataire :");
 		lblLabelDateFac.setBounds(24, 94, 132, 14);
 		contentPane.add(lblLabelDateFac);
 		
-		textFieldLibelle = new JTextField();
-		textFieldLibelle.setColumns(10);
-		textFieldLibelle.setBounds(166, 122, 132, 20);
-		contentPane.add(textFieldLibelle);
-		
-		JLabel lblLabelLibelle = new JLabel("Libellé  :");
+		JLabel lblLabelLibelle = new JLabel("* Locataire(s)  :");
 		lblLabelLibelle.setBounds(24, 125, 132, 14);
 		contentPane.add(lblLabelLibelle);
 		
-		textFieldLienPDF = new JTextField();
-		textFieldLienPDF.setColumns(10);
-		textFieldLienPDF.setBounds(166, 153, 274, 20);
-		contentPane.add(textFieldLienPDF);
-		
-		JLabel lblLabelLienPDF = new JLabel("Lien pdf  :");
+		JLabel lblLabelLienPDF = new JLabel("* Logement  :");
 		lblLabelLienPDF.setBounds(24, 156, 132, 14);
 		contentPane.add(lblLabelLienPDF);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(166, 184, 132, 22);
-		contentPane.add(comboBox);
-		
-		JLabel lblLabelEntreprise = new JLabel("Entreprise  :");
-		lblLabelEntreprise.setBounds(24, 188, 132, 14);
-		contentPane.add(lblLabelEntreprise);
-		
-		JButton btnNouvelleEntreprise = new JButton("Nouvelle Entreprise");
-		btnNouvelleEntreprise.setBounds(308, 184, 132, 23);
-		contentPane.add(btnNouvelleEntreprise);
-		
-		JLabel lblLabelMontant = new JLabel("Montant  :");
-		lblLabelMontant.setBounds(24, 220, 132, 14);
+		JLabel lblLabelMontant = new JLabel("Montant du loyer  :");
+		lblLabelMontant.setBounds(24, 184, 132, 14);
 		contentPane.add(lblLabelMontant);
 		
 		textFieldMontant = new JTextField();
 		textFieldMontant.setColumns(10);
-		textFieldMontant.setBounds(166, 217, 132, 20);
+		textFieldMontant.setBounds(166, 181, 132, 20);
 		contentPane.add(textFieldMontant);
 		
-		JLabel lblLabelMontantNonDeductible = new JLabel("Montant  non déductible :");
-		lblLabelMontantNonDeductible.setBounds(24, 245, 132, 14);
+		JLabel lblLabelMontantNonDeductible = new JLabel("Montant des charges :");
+		lblLabelMontantNonDeductible.setBounds(24, 215, 132, 14);
 		contentPane.add(lblLabelMontantNonDeductible);
 		
 		textField = new JTextField();
 		textField.setColumns(10);
-		textField.setBounds(166, 248, 132, 20);
+		textField.setBounds(166, 212, 132, 20);
 		contentPane.add(textField);
 		
-		JLabel lblLabelReduction = new JLabel("Réduction :");
-		lblLabelReduction.setBounds(24, 281, 132, 14);
+		JLabel lblLabelReduction = new JLabel("Participation entretien :");
+		lblLabelReduction.setBounds(24, 245, 132, 14);
 		contentPane.add(lblLabelReduction);
 		
 		textField_1 = new JTextField();
 		textField_1.setColumns(10);
-		textField_1.setBounds(166, 278, 132, 20);
+		textField_1.setBounds(166, 242, 132, 20);
 		contentPane.add(textField_1);
 		
 		JButton btnAjouter = new JButton("Ajouter");
-		btnAjouter.setBounds(294, 358, 132, 23);
+		btnAjouter.setBounds(307, 384, 132, 23);
+		btnAjouter.addActionListener(this);
 		contentPane.add(btnAjouter);
 		
 		JButton btnAnnuler = new JButton("Annuler");
-		btnAnnuler.setBounds(36, 358, 132, 23);
+		btnAnnuler.setBounds(49, 384, 132, 23);
+		btnAnnuler.addActionListener(this);
 		contentPane.add(btnAnnuler);
 		
-		JLabel lblNouvelleLocation = new JLabel("Nouvelle Location   WIP");
+		JLabel lblNouvelleLocation = new JLabel("Nouvelle Location");
 		lblNouvelleLocation.setFont(new Font("Tahoma", Font.BOLD, 20));
 		lblNouvelleLocation.setBounds(24, 0, 307, 41);
 		contentPane.add(lblNouvelleLocation);
+		
+		JComboBox comboBox_1 = new JComboBox();
+		comboBox_1.setBounds(166, 122, 132, 22);
+		contentPane.add(comboBox_1);
+		
+		JButton btnNouveauLocataire = new JButton("Nouveau Locataire");
+		btnNouveauLocataire.setBounds(308, 121, 132, 23);
+		btnNouveauLocataire.addActionListener(this);
+		contentPane.add(btnNouveauLocataire);
+		
+		JButton btnNouveauContrat = new JButton("Nouveau Contrat");
+		btnNouveauContrat.setBounds(308, 59, 132, 23);
+		btnNouveauContrat.addActionListener(this);
+		contentPane.add(btnNouveauContrat);
+		
+		JComboBox comboBox_1_1 = new JComboBox();
+		comboBox_1_1.setBounds(166, 59, 132, 22);
+		contentPane.add(comboBox_1_1);
+		
+		JComboBox comboBox_2 = new JComboBox();
+		comboBox_2.setBounds(166, 150, 132, 22);
+		contentPane.add(comboBox_2);
+		
+		JButton btnNouveauLogement = new JButton("Nouveau Logement");
+		btnNouveauLogement.setBounds(308, 150, 132, 23);
+		btnNouveauLogement.addActionListener(this);
+		contentPane.add(btnNouveauLogement);
+		
+		JLabel lblParticipationlctricitCommune = new JLabel("Participation éléctricité :");
+		lblParticipationlctricitCommune.setBounds(24, 273, 132, 14);
+		contentPane.add(lblParticipationlctricitCommune);
+		
+		textField_2 = new JTextField();
+		textField_2.setColumns(10);
+		textField_2.setBounds(166, 270, 132, 20);
+		contentPane.add(textField_2);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case"Nouveau Locataire":
+				this.dispose();
+				new NouveauLocataire().setVisible(true);
+				break;
+			case"Nouveau Contrat":
+				this.dispose();
+				new NouveauContrat().setVisible(true);
+				break;
+			case"Nouveau Logement":
+				this.dispose();
+				new NouveauLogement().setVisible(true);
+				break;
+			case "Annuler":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
+			case "Ajouter":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -318,7 +347,10 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 				this.dispose();
 				new TaxeFonciere().setVisible(true);
 				break;
-				
+			case "Autre":
+				this.dispose();
+				new NouvelleChargeSupp().setVisible(true);
+				break;
 			case "Travaux en cours":
 				this.dispose();
 				new TravauxEnCours().setVisible(true);

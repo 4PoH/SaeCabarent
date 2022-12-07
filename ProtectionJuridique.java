@@ -162,7 +162,7 @@ public class ProtectionJuridique extends JFrame implements ActionListener {
 		textFieldPrime.setBounds(165, 157, 68, 20);
 		contentPane.add(textFieldPrime);
 		
-		JLabel lblLabelNumContrat = new JLabel("* NumÃ©ro de contrat :");
+		JLabel lblLabelNumContrat = new JLabel("* Numéro de contrat :");
 		lblLabelNumContrat.setBounds(37, 126, 132, 14);
 		contentPane.add(lblLabelNumContrat);
 		
@@ -181,10 +181,12 @@ public class ProtectionJuridique extends JFrame implements ActionListener {
 		
 		JButton btnAjouter = new JButton("Ajouter");
 		btnAjouter.setBounds(307, 384, 132, 23);
+		btnAjouter.addActionListener(this);
 		contentPane.add(btnAjouter);
 		
 		JButton btnAnnuler = new JButton("Annuler");
 		btnAnnuler.setBounds(49, 384, 132, 23);
+		btnAnnuler.addActionListener(this);
 		contentPane.add(btnAnnuler);
 		
 		JLabel lblProtectionJuridique = new JLabel("Nouvelle protection juridique");
@@ -211,6 +213,7 @@ public class ProtectionJuridique extends JFrame implements ActionListener {
 		
 		JButton btnNouvelleEntreprise = new JButton("Nouvelle entreprise");
 		btnNouvelleEntreprise.setBounds(307, 92, 132, 23);
+		btnNouvelleEntreprise.addActionListener(this);
 		contentPane.add(btnNouvelleEntreprise);
 		
 		JLabel lblLabelDateObtention = new JLabel("Date d'obtention :");
@@ -225,6 +228,18 @@ public class ProtectionJuridique extends JFrame implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Nouvelle entreprise":
+				this.dispose();
+				new NouvelleEntreprise().setVisible(true);
+				break;
+			case "Annuler":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
+			case "Ajouter":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -299,7 +314,10 @@ public class ProtectionJuridique extends JFrame implements ActionListener {
 				this.dispose();
 				new TaxeFonciere().setVisible(true);
 				break;
-				
+			case "Autre":
+				this.dispose();
+				new NouvelleChargeSupp().setVisible(true);
+				break;
 			case "Travaux en cours":
 				this.dispose();
 				new TravauxEnCours().setVisible(true);

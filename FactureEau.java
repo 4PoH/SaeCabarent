@@ -221,10 +221,12 @@ public class FactureEau extends JFrame implements ActionListener {
 		
 		JButton btnAjouter = new JButton("Ajouter");
 		btnAjouter.setBounds(307, 384, 132, 23);
+		btnAjouter.addActionListener(this);
 		contentPane.add(btnAjouter);
 		
 		JButton btnAnnuler = new JButton("Annuler");
 		btnAnnuler.setBounds(49, 384, 132, 23);
+		btnAnnuler.addActionListener(this);
 		contentPane.add(btnAnnuler);
 		
 		JLabel lblFactureDEau = new JLabel("Nouvelle facture d'eau");
@@ -255,7 +257,7 @@ public class FactureEau extends JFrame implements ActionListener {
 		contentPane.add(lblLabelDescription);
 		
 		JTextPane textPaneDescription = new JTextPane();
-		textPaneDescription.setBounds(165, 189, 235, 61);
+		textPaneDescription.setBounds(165, 189, 235, 60);
 		contentPane.add(textPaneDescription);
 		
 		JLabel lblLabelEntreprise = new JLabel("* Entreprise :");
@@ -268,11 +270,24 @@ public class FactureEau extends JFrame implements ActionListener {
 		
 		JButton btnNouvelleEntreprise = new JButton("Nouvelle entreprise");
 		btnNouvelleEntreprise.setBounds(307, 36, 132, 23);
+		btnNouvelleEntreprise.addActionListener(this);
 		contentPane.add(btnNouvelleEntreprise);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Nouvelle entreprise":
+				this.dispose();
+				new NouvelleEntreprise().setVisible(true);
+				break;
+			case "Annuler":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
+			case "Ajouter":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -347,7 +362,10 @@ public class FactureEau extends JFrame implements ActionListener {
 				this.dispose();
 				new TaxeFonciere().setVisible(true);
 				break;
-				
+			case "Autre":
+				this.dispose();
+				new NouvelleChargeSupp().setVisible(true);
+				break;
 			case "Travaux en cours":
 				this.dispose();
 				new TravauxEnCours().setVisible(true);
