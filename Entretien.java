@@ -252,7 +252,7 @@ public class Entretien extends JFrame implements ActionListener {
 				
 			case "Facture d'eau":
 				this.dispose();
-				new Entretien().setVisible(true);
+				new FactureEau().setVisible(true);
 				break;
 			
 			case "Impositions":

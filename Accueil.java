@@ -17,8 +17,11 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.ListSelectionModel;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
+import javax.swing.SwingConstants;
 
-public class Accueil extends JFrame implements ActionListener{
+public class Accueil extends JFrame implements ActionListener, MouseListener{
 
 	private JPanel contentPane;
 	private JTable table;
@@ -45,10 +48,10 @@ public class Accueil extends JFrame implements ActionListener{
 	public Accueil(){
 		setTitle("Accueil");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 480, 300);
+		setBounds(100, 100, 720, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
-		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
+		menuBarTop.setMargin(new Insets(5, 5, 5, 5));
 		setJMenuBar(menuBarTop);
 		
 		JButton ButtonAccueil = new JButton("Accueil");
@@ -139,27 +142,20 @@ public class Accueil extends JFrame implements ActionListener{
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBounds(5, 212, 426, 23);
-		contentPane.add(menuBar);
-		
-		JButton ButtonRegime = new JButton("Regime");
-		menuBar.add(ButtonRegime);
-		
-		JLabel LabelTotal = new JLabel("Total :");
-		menuBar.add(LabelTotal);
-		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 10, 450, 180);
+		scrollPane.setBounds(10, 10, 680, 300);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
+		table.addMouseListener(this);
 		table.setRowSelectionAllowed(false);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setSurrendersFocusOnKeystroke(true);
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null},
+				{"75 Avenue des Pyr\u00E9n\u00E9es, 75m\u00B2, T3, Ivan LATERREUR", "+ 262.25 \u20AC", ""},
+				{"4 Rue du Sacré Graal, 143m², T4, Ni", "+ 353.45", ""},
+				{"6 Avenue de la Cantina, 232m², T5, Georges Lucas", "+ 799.50", ""},
 				{null, null, null},
 				{null, null, null},
 				{null, null, null},
@@ -168,17 +164,30 @@ public class Accueil extends JFrame implements ActionListener{
 				"Adresse", "Revenue", ""
 			}
 		) {
-			boolean[] columnEditables = new boolean[] {
-				false, false, false
+			Class[] columnTypes = new Class[] {
+				String.class, String.class, String.class
 			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
 			}
 		});
-		table.getColumnModel().getColumn(0).setPreferredWidth(250);
-		table.getColumnModel().getColumn(1).setPreferredWidth(75);
-		table.getColumnModel().getColumn(2).setPreferredWidth(25);
+		table.getColumnModel().getColumn(0).setPreferredWidth(560);
+		table.getColumnModel().getColumn(1).setPreferredWidth(120);
+		table.getColumnModel().getColumn(2).setPreferredWidth(40);
 		scrollPane.setViewportView(table);
+		
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.setBounds(10, 380, 680, 30);
+		contentPane.add(menuBar);
+		
+		JButton ButtonRegimeFoncier = new JButton("Regime foncier");
+		menuBar.add(ButtonRegimeFoncier);
+		
+		JLabel LabelTotal = new JLabel("Total : ");
+		LabelTotal.setHorizontalAlignment(SwingConstants.RIGHT);
+		menuBar.add(LabelTotal);
+		
+		//table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -267,5 +276,17 @@ public class Accueil extends JFrame implements ActionListener{
 				System.out.println("Choix incorrect");
 				break;
 		}
+	}
+	public void mouseClicked(MouseEvent e) {
+		this.dispose();
+		new Bati().setVisible(true);
+	}
+	public void mouseEntered(MouseEvent e) {
+	}
+	public void mouseExited(MouseEvent e) {
+	}
+	public void mousePressed(MouseEvent e) {
+	}
+	public void mouseReleased(MouseEvent e) {
 	}
 }

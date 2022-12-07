@@ -70,9 +70,9 @@ public class LocationEnCours extends JFrame implements ActionListener {
 		MenuItemNouvelleLocation.addActionListener(this);
 		MenuLocations.add(MenuItemNouvelleLocation);
 		
-		JMenuItem MenuItemLocationEnCour = new JMenuItem("Locations en cours");
-		MenuItemLocationEnCour.addActionListener(this);
-		MenuLocations.add(MenuItemLocationEnCour);
+		JMenuItem MenuItemLocationEnCours = new JMenuItem("Locations en cours");
+		MenuItemLocationEnCours.addActionListener(this);
+		MenuLocations.add(MenuItemLocationEnCours);
 		
 		JMenuItem MenuItemAncienneLocation = new JMenuItem("Anciennes location");
 		MenuItemAncienneLocation.addActionListener(this);
@@ -176,7 +176,7 @@ public class LocationEnCours extends JFrame implements ActionListener {
 		));
 		scrollPane.setViewportView(table);
 		
-		JLabel TitreLocaCours = new JLabel("Location en cour");
+		JLabel TitreLocaCours = new JLabel("Location en cours");
 		TitreLocaCours.setFont(new Font("Tahoma", Font.BOLD, 20));
 		TitreLocaCours.setBounds(10, 10, 189, 29);
 		contentPane.add(TitreLocaCours);
