@@ -53,7 +53,7 @@ public class LocationEnCours extends JFrame implements ActionListener {
 		setBackground(new Color(240, 240, 240));
 		setTitle("Location en cours");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 960, 481);
+		setBounds(100, 100, 960, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
