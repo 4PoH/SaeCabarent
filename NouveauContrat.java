@@ -191,25 +191,25 @@ public class NouveauContrat extends JFrame implements ActionListener {
 		contentPane.add(comboBox);
 		
 		JLabel lblLabelLibelle = new JLabel("* Locataire(s)  :");
-		lblLabelLibelle.setBounds(23, 124, 132, 14);
+		lblLabelLibelle.setBounds(23, 152, 132, 14);
 		contentPane.add(lblLabelLibelle);
 		
 		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setBounds(165, 121, 132, 22);
+		comboBox_1.setBounds(165, 149, 132, 22);
 		contentPane.add(comboBox_1);
 		
 		JButton btnNouveauLocataire = new JButton("Nouveau Locataire");
-		btnNouveauLocataire.setBounds(307, 120, 132, 23);
+		btnNouveauLocataire.setBounds(307, 148, 132, 23);
 		btnNouveauLocataire.addActionListener(this);
 		contentPane.add(btnNouveauLocataire);
 		
 		JLabel lblNombreDeLocataires = new JLabel("Nombre de locataire(s) :");
-		lblNombreDeLocataires.setBounds(24, 157, 132, 14);
+		lblNombreDeLocataires.setBounds(24, 119, 132, 14);
 		contentPane.add(lblNombreDeLocataires);
 		
 		textField = new JTextField();
 		textField.setColumns(10);
-		textField.setBounds(166, 154, 132, 20);
+		textField.setBounds(166, 116, 19, 20);
 		contentPane.add(textField);
 		
 		JLabel lblDocumentss = new JLabel("* Documents(s)  :");

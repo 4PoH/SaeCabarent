@@ -153,7 +153,7 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 		
 		textFieldDateFac = new JTextField();
 		textFieldDateFac.setColumns(10);
-		textFieldDateFac.setBounds(166, 91, 132, 20);
+		textFieldDateFac.setBounds(166, 91, 26, 20);
 		contentPane.add(textFieldDateFac);
 		
 		JLabel lblLabelContrat = new JLabel("* Contrat :");
