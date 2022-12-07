@@ -147,7 +147,7 @@ public class AncienneLocation extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(23, 50, 916, 350);
+		scrollPane.setBounds(23, 50, 916, 270);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
@@ -180,11 +180,27 @@ public class AncienneLocation extends JFrame implements ActionListener {
 		TitreLocationPasse.setBounds(22, 10, 204, 30);
 		contentPane.add(TitreLocationPasse);
 		
+		JButton btnCharger = new JButton("Charger");
+		btnCharger.setBounds(216, 357, 85, 21);
+		contentPane.add(btnCharger);
+		
+		JButton btnAnnuler = new JButton("Annuler");
+		btnAnnuler.setBounds(642, 357, 85, 21);
+		contentPane.add(btnAnnuler);
+		
 		
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			
+			case "Charger" :
+				break;
+			
+			case "Annuler":
+				this.dispose();
+				break;
+
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);

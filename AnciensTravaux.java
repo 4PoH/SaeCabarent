@@ -147,7 +147,7 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(16, 53, 940, 321);
+		scrollPane.setBounds(16, 53, 940, 269);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
@@ -179,10 +179,26 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 		TitreAncienTr.setFont(new Font("Tahoma", Font.BOLD, 20));
 		TitreAncienTr.setBounds(16, 10, 179, 33);
 		contentPane.add(TitreAncienTr);
+		
+		JButton btnCharger = new JButton("Charger");
+		btnCharger.setBounds(152, 362, 85, 21);
+		contentPane.add(btnCharger);
+		
+		JButton btnAnnuler = new JButton("Annuler");
+		btnAnnuler.setBounds(730, 362, 85, 21);
+		contentPane.add(btnAnnuler);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			
+			case "Charger" :
+				break;
+			
+			case "Annuler":
+				this.dispose();
+				break;
+		
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
