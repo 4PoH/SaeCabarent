@@ -22,9 +22,10 @@ import java.awt.Color;
 import javax.swing.JToolBar;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JScrollBar;
 import java.awt.Font;
 
-public class IRL extends JFrame implements ActionListener {
+public class ListeFactureEau extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JTable table;
@@ -36,7 +37,7 @@ public class IRL extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					IRL frame = new IRL();
+					ListeFactureEau frame = new ListeFactureEau();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -48,10 +49,11 @@ public class IRL extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public IRL() {
-		setTitle("IRL");
+	public ListeFactureEau() {
+		setBackground(new Color(240, 240, 240));
+		setTitle("Location en cours");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 480, 480);
+		setBounds(100, 100, 960, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
@@ -68,9 +70,9 @@ public class IRL extends JFrame implements ActionListener {
 		MenuItemNouvelleLocation.addActionListener(this);
 		MenuLocations.add(MenuItemNouvelleLocation);
 		
-		JMenuItem MenuItemLocationEnCour = new JMenuItem("Locations en cours");
-		MenuItemLocationEnCour.addActionListener(this);
-		MenuLocations.add(MenuItemLocationEnCour);
+		JMenuItem MenuItemLocationEnCours = new JMenuItem("Locations en cours");
+		MenuItemLocationEnCours.addActionListener(this);
+		MenuLocations.add(MenuItemLocationEnCours);
 		
 		JMenuItem MenuItemAncienneLocation = new JMenuItem("Anciennes location");
 		MenuItemAncienneLocation.addActionListener(this);
@@ -146,43 +148,63 @@ public class IRL extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(36, 66, 376, 170);
+		scrollPane.setBounds(22, 49, 914, 278);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
 			},
 			new String[] {
-				"Annee", "Trimestre", "Montant"
+				"Location", "Numero facture", "Date facture", "Prix unitaire m3", "Mode de paiment", "Montant payer", "Partie fixe", "Total", "Pdf"
 			}
 		));
 		scrollPane.setViewportView(table);
 		
-		JButton btnNewButton = new JButton("Annuler");
-		btnNewButton.setBounds(355, 389, 85, 21);
-		contentPane.add(btnNewButton);
+		JLabel TitreLocaCours = new JLabel("Facture d'eau");
+		TitreLocaCours.setFont(new Font("Tahoma", Font.BOLD, 20));
+		TitreLocaCours.setBounds(10, 10, 189, 29);
+		contentPane.add(TitreLocaCours);
 		
-		JButton btnConfirmer = new JButton("Supprimer");
-		btnConfirmer.setBounds(244, 389, 85, 21);
-		contentPane.add(btnConfirmer);
+		JButton btnCharger = new JButton("Charger");
+		btnCharger.addActionListener(this);
+		btnCharger.setBounds(35, 376, 85, 21);
+		contentPane.add(btnCharger);
 		
 		JButton btnInserer = new JButton("Inserer");
-		btnInserer.setBounds(21, 389, 85, 21);
+		btnInserer.addActionListener(this);
+		btnInserer.setBounds(230, 376, 85, 21);
 		contentPane.add(btnInserer);
 		
-		JLabel lblNewLabel = new JLabel("IRL");
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblNewLabel.setBounds(10, 32, 45, 13);
-		contentPane.add(lblNewLabel);
+		JButton btnMiseJour = new JButton("Mise à jour");
+		btnMiseJour.addActionListener(this);
+		btnMiseJour.setBounds(414, 376, 85, 21);
+		contentPane.add(btnMiseJour);
 		
-		JButton btnModifier = new JButton("Modifier");
-		btnModifier.addActionListener(this);
-		btnModifier.setBounds(135, 389, 85, 21);
-		contentPane.add(btnModifier);
+		JButton btnSupprimer = new JButton("Supprimer");
+		btnSupprimer.addActionListener(this);
+		btnSupprimer.setBounds(611, 376, 85, 21);
+		contentPane.add(btnSupprimer);
+		
+		JButton btnAnnuler = new JButton("Annuler");
+		btnAnnuler.addActionListener(this);
+		btnAnnuler.setBounds(816, 376, 85, 21);
+		contentPane.add(btnAnnuler);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -234,7 +256,7 @@ public class IRL extends JFrame implements ActionListener {
 				
 			case "Locations en cours":
 				this.dispose();
-				new LocationEnCours().setVisible(true);
+				new ListeFactureEau().setVisible(true);
 				break;
 			
 			case "Nouveaux travaux":
@@ -268,6 +290,15 @@ public class IRL extends JFrame implements ActionListener {
 			case "Travaux en cours":
 				this.dispose();
 				new TravauxEnCours().setVisible(true);
+				break;
+				
+			case "Inserer" :
+				this.dispose();
+				new NouvelleLocation().setVisible(true);
+				break;
+			
+			case "Annuler" :
+				this.dispose();
 				break;
        
 			default:

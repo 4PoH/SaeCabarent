@@ -22,12 +22,20 @@ import java.awt.Color;
 import javax.swing.JToolBar;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
 import java.awt.Font;
+import javax.swing.JTextPane;
 
-public class IRL extends JFrame implements ActionListener {
+public class Bailleur extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTable table;
+	private JTextField textFieldNom;
+	private JTextField textFieldPrenom;
+	private JTextField textFieldAdresse;
+	private JTextField textFieldCodeP;
+	private JTextField textFieldMail;
+	private JTextField textFieldTel;
 
 	/**
 	 * Launch the application.
@@ -36,7 +44,7 @@ public class IRL extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					IRL frame = new IRL();
+					Bailleur frame = new Bailleur();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -48,8 +56,8 @@ public class IRL extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public IRL() {
-		setTitle("IRL");
+	public Bailleur() {
+		setTitle("Nouveaux travaux");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 480, 480);
 		
@@ -145,48 +153,90 @@ public class IRL extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(36, 66, 376, 170);
-		contentPane.add(scrollPane);
+		textFieldNom = new JTextField();
+		textFieldNom.setBounds(165, 65, 132, 20);
+		contentPane.add(textFieldNom);
+		textFieldNom.setColumns(10);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-			},
-			new String[] {
-				"Annee", "Trimestre", "Montant"
-			}
-		));
-		scrollPane.setViewportView(table);
+		textFieldPrenom = new JTextField();
+		textFieldPrenom.setColumns(10);
+		textFieldPrenom.setBounds(165, 100, 132, 20);
+		contentPane.add(textFieldPrenom);
 		
-		JButton btnNewButton = new JButton("Annuler");
-		btnNewButton.setBounds(355, 389, 85, 21);
-		contentPane.add(btnNewButton);
+		JLabel lblLabelNom = new JLabel("* Nom");
+		lblLabelNom.setBounds(37, 71, 132, 14);
+		contentPane.add(lblLabelNom);
 		
-		JButton btnConfirmer = new JButton("Supprimer");
-		btnConfirmer.setBounds(244, 389, 85, 21);
-		contentPane.add(btnConfirmer);
+		JLabel lblLabelPrenom = new JLabel("*Prenom");
+		lblLabelPrenom.setBounds(37, 102, 132, 14);
+		contentPane.add(lblLabelPrenom);
 		
-		JButton btnInserer = new JButton("Inserer");
-		btnInserer.setBounds(21, 389, 85, 21);
-		contentPane.add(btnInserer);
+		textFieldAdresse = new JTextField();
+		textFieldAdresse.setColumns(10);
+		textFieldAdresse.setBounds(165, 144, 132, 20);
+		contentPane.add(textFieldAdresse);
 		
-		JLabel lblNewLabel = new JLabel("IRL");
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblNewLabel.setBounds(10, 32, 45, 13);
-		contentPane.add(lblNewLabel);
+		JLabel lblLabelLibelle = new JLabel("*Adresse");
+		lblLabelLibelle.setBounds(37, 146, 132, 14);
+		contentPane.add(lblLabelLibelle);
 		
-		JButton btnModifier = new JButton("Modifier");
-		btnModifier.addActionListener(this);
-		btnModifier.setBounds(135, 389, 85, 21);
-		contentPane.add(btnModifier);
+		JLabel lblLabelCp = new JLabel("*Code Postal");
+		lblLabelCp.setBounds(37, 185, 132, 14);
+		contentPane.add(lblLabelCp);
+		
+		textFieldCodeP = new JTextField();
+		textFieldCodeP.setColumns(10);
+		textFieldCodeP.setBounds(165, 183, 132, 20);
+		contentPane.add(textFieldCodeP);
+		
+		JLabel lblLabelMail = new JLabel("*Mail");
+		lblLabelMail.setBounds(37, 227, 132, 14);
+		contentPane.add(lblLabelMail);
+		
+		textFieldMail = new JTextField();
+		textFieldMail.setColumns(10);
+		textFieldMail.setBounds(165, 225, 132, 20);
+		contentPane.add(textFieldMail);
+		
+		JLabel lblLabelTel = new JLabel("*Telephone");
+		lblLabelTel.setBounds(37, 274, 132, 14);
+		contentPane.add(lblLabelTel);
+		
+		textFieldTel = new JTextField();
+		textFieldTel.setColumns(10);
+		textFieldTel.setBounds(165, 272, 132, 20);
+		contentPane.add(textFieldTel);
+		
+		JButton btnAjouter = new JButton("Confimer");
+		btnAjouter.setBounds(307, 384, 132, 23);
+		btnAjouter.addActionListener(this);
+		contentPane.add(btnAjouter);
+		
+		JButton btnAnnuler = new JButton("Annuler");
+		btnAnnuler.setBounds(49, 384, 132, 23);
+		btnAnnuler.addActionListener(this);
+		contentPane.add(btnAnnuler);
+		
+		JLabel lblFactureDEau = new JLabel("Information Bailleur");
+		lblFactureDEau.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblFactureDEau.setBounds(37, 0, 260, 41);
+		contentPane.add(lblFactureDEau);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Nouvelle entreprise":
+				this.dispose();
+				new NouvelleEntreprise().setVisible(true);
+				break;
+			case "Annuler":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
+			case "Ajouter":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -214,7 +264,7 @@ public class IRL extends JFrame implements ActionListener {
 				
 			case "Facture d'eau":
 				this.dispose();
-				new FactureEau().setVisible(true);
+				new Bailleur().setVisible(true);
 				break;
 			
 			case "Impositions":
@@ -239,7 +289,7 @@ public class IRL extends JFrame implements ActionListener {
 			
 			case "Nouveaux travaux":
 				this.dispose();
-				new NouveauTravaux().setVisible(true);
+				new Bailleur().setVisible(true);
 				break;
 				
 			case "Nouvelle location":
