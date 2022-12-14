@@ -1,4 +1,20 @@
+package vue.consultation;
+
 import java.awt.EventQueue;
+
+import vue.Accueil;
+import vue.IRL;
+import vue.InformationsBailleur;
+import vue.Quittances;
+import vue.insertion.Electricite;
+import vue.insertion.Entretien;
+import vue.insertion.FactureEau;
+import vue.insertion.Impositions;
+import vue.insertion.NouveauTravaux;
+import vue.insertion.NouvelleChargeSupp;
+import vue.insertion.NouvelleLocation;
+import vue.insertion.ProtectionJuridique;
+import vue.insertion.TaxeFonciere;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,6 +30,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JTable;
 import java.awt.FlowLayout;
 import javax.swing.table.DefaultTableModel;
+
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
@@ -22,10 +39,9 @@ import java.awt.Color;
 import javax.swing.JToolBar;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JScrollBar;
 import java.awt.Font;
 
-public class ListeFactureEau extends JFrame implements ActionListener {
+public class AnciensTravaux extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JTable table;
@@ -37,7 +53,7 @@ public class ListeFactureEau extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ListeFactureEau frame = new ListeFactureEau();
+					AnciensTravaux frame = new AnciensTravaux();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -49,11 +65,10 @@ public class ListeFactureEau extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public ListeFactureEau() {
-		setBackground(new Color(240, 240, 240));
-		setTitle("Location en cours");
+	public AnciensTravaux() {
+		setTitle("Anciens Travaux");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 960, 480);
+		setBounds(100, 100, 980, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
@@ -70,9 +85,9 @@ public class ListeFactureEau extends JFrame implements ActionListener {
 		MenuItemNouvelleLocation.addActionListener(this);
 		MenuLocations.add(MenuItemNouvelleLocation);
 		
-		JMenuItem MenuItemLocationEnCours = new JMenuItem("Locations en cours");
-		MenuItemLocationEnCours.addActionListener(this);
-		MenuLocations.add(MenuItemLocationEnCours);
+		JMenuItem MenuItemLocationEnCour = new JMenuItem("Locations en cours");
+		MenuItemLocationEnCour.addActionListener(this);
+		MenuLocations.add(MenuItemLocationEnCour);
 		
 		JMenuItem MenuItemAncienneLocation = new JMenuItem("Anciennes location");
 		MenuItemAncienneLocation.addActionListener(this);
@@ -144,11 +159,12 @@ public class ListeFactureEau extends JFrame implements ActionListener {
 		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(22, 49, 914, 278);
+		scrollPane.setBounds(16, 53, 940, 269);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
@@ -171,44 +187,37 @@ public class ListeFactureEau extends JFrame implements ActionListener {
 				{null, null, null, null, null, null, null, null, null},
 			},
 			new String[] {
-				"Location", "Numero facture", "Date facture", "Prix unitaire m3", "Mode de paiment", "Montant payer", "Partie fixe", "Total", "Pdf"
+				"date facturation", "libelle entreprise", "numero SIREN", "montant payer", "numero facture", "date debut", "date fin", "detail", "pdf"
 			}
 		));
 		scrollPane.setViewportView(table);
 		
-		JLabel TitreLocaCours = new JLabel("Facture d'eau");
-		TitreLocaCours.setFont(new Font("Tahoma", Font.BOLD, 20));
-		TitreLocaCours.setBounds(10, 10, 189, 29);
-		contentPane.add(TitreLocaCours);
+		JLabel TitreAncienTr = new JLabel("Ancien Travaux");
+		TitreAncienTr.setFont(new Font("Tahoma", Font.BOLD, 20));
+		TitreAncienTr.setBounds(16, 10, 179, 33);
+		contentPane.add(TitreAncienTr);
 		
 		JButton btnCharger = new JButton("Charger");
 		btnCharger.addActionListener(this);
-		btnCharger.setBounds(35, 376, 85, 21);
+		btnCharger.setBounds(152, 362, 85, 21);
 		contentPane.add(btnCharger);
-		
-		JButton btnInserer = new JButton("Inserer");
-		btnInserer.addActionListener(this);
-		btnInserer.setBounds(230, 376, 85, 21);
-		contentPane.add(btnInserer);
-		
-		JButton btnMiseJour = new JButton("Mise à jour");
-		btnMiseJour.addActionListener(this);
-		btnMiseJour.setBounds(414, 376, 85, 21);
-		contentPane.add(btnMiseJour);
-		
-		JButton btnSupprimer = new JButton("Supprimer");
-		btnSupprimer.addActionListener(this);
-		btnSupprimer.setBounds(611, 376, 85, 21);
-		contentPane.add(btnSupprimer);
 		
 		JButton btnAnnuler = new JButton("Annuler");
 		btnAnnuler.addActionListener(this);
-		btnAnnuler.setBounds(816, 376, 85, 21);
+		btnAnnuler.setBounds(730, 362, 85, 21);
 		contentPane.add(btnAnnuler);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			
+			case "Charger" :
+				break;
+			
+			case "Annuler":
+				this.dispose();
+				break;
+		
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -256,7 +265,7 @@ public class ListeFactureEau extends JFrame implements ActionListener {
 				
 			case "Locations en cours":
 				this.dispose();
-				new ListeFactureEau().setVisible(true);
+				new LocationEnCours().setVisible(true);
 				break;
 			
 			case "Nouveaux travaux":
@@ -287,18 +296,10 @@ public class ListeFactureEau extends JFrame implements ActionListener {
 				this.dispose();
 				new NouvelleChargeSupp().setVisible(true);
 				break;
+				
 			case "Travaux en cours":
 				this.dispose();
 				new TravauxEnCours().setVisible(true);
-				break;
-				
-			case "Inserer" :
-				this.dispose();
-				new NouvelleLocation().setVisible(true);
-				break;
-			
-			case "Annuler" :
-				this.dispose();
 				break;
        
 			default:
@@ -306,4 +307,5 @@ public class ListeFactureEau extends JFrame implements ActionListener {
 				break;
 		}
 	}
+	
 }

@@ -1,4 +1,20 @@
+package vue.consultation;
+
+
 import java.awt.EventQueue;
+import vue.Accueil;
+import vue.IRL;
+import vue.InformationsBailleur;
+import vue.Quittances;
+import vue.insertion.Electricite;
+import vue.insertion.Entretien;
+import vue.insertion.FactureEau;
+import vue.insertion.Impositions;
+import vue.insertion.NouveauTravaux;
+import vue.insertion.NouvelleChargeSupp;
+import vue.insertion.NouvelleLocation;
+import vue.insertion.ProtectionJuridique;
+import vue.insertion.TaxeFonciere;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,6 +30,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JTable;
 import java.awt.FlowLayout;
 import javax.swing.table.DefaultTableModel;
+
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
@@ -22,19 +39,13 @@ import java.awt.Color;
 import javax.swing.JToolBar;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
+import javax.swing.JScrollBar;
 import java.awt.Font;
-import javax.swing.JTextPane;
 
-public class Entretien extends JFrame implements ActionListener {
+public class ListeDiagnostic extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField textFieldNumFac;
-	private JTextField textFieldTelephone;
-	private JTextField textFieldLienPDF;
-	private JTextField textFieldMontantTotal;
-	private JTextField textField_2;
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -43,7 +54,7 @@ public class Entretien extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Entretien frame = new Entretien();
+					ListeDiagnostic frame = new ListeDiagnostic();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -55,10 +66,11 @@ public class Entretien extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public Entretien() {
-		setTitle("Nouveaux travaux");
+	public ListeDiagnostic() {
+		setBackground(new Color(240, 240, 240));
+		setTitle("Location en cours");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 480, 480);
+		setBounds(100, 100, 960, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
@@ -75,9 +87,9 @@ public class Entretien extends JFrame implements ActionListener {
 		MenuItemNouvelleLocation.addActionListener(this);
 		MenuLocations.add(MenuItemNouvelleLocation);
 		
-		JMenuItem MenuItemLocationEnCour = new JMenuItem("Locations en cours");
-		MenuItemLocationEnCour.addActionListener(this);
-		MenuLocations.add(MenuItemLocationEnCour);
+		JMenuItem MenuItemLocationEnCours = new JMenuItem("Locations en cours");
+		MenuItemLocationEnCours.addActionListener(this);
+		MenuLocations.add(MenuItemLocationEnCours);
 		
 		JMenuItem MenuItemAncienneLocation = new JMenuItem("Anciennes location");
 		MenuItemAncienneLocation.addActionListener(this);
@@ -152,89 +164,68 @@ public class Entretien extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textFieldNumFac = new JTextField();
-		textFieldNumFac.setBounds(165, 165, 132, 20);
-		contentPane.add(textFieldNumFac);
-		textFieldNumFac.setColumns(10);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(22, 49, 914, 278);
+		contentPane.add(scrollPane);
 		
-		textFieldTelephone = new JTextField();
-		textFieldTelephone.setColumns(10);
-		textFieldTelephone.setBounds(165, 218, 95, 20);
-		contentPane.add(textFieldTelephone);
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+			},
+			new String[] {
+				"Location", "Reference", "Nom", "Date d'obtention", "Date fin de validite", "Numero rapport", "Pdf"
+			}
+		));
+		scrollPane.setViewportView(table);
 		
-		JLabel lblLabelNumFac = new JLabel("* Numéro de facture :");
-		lblLabelNumFac.setBounds(37, 165, 132, 14);
-		contentPane.add(lblLabelNumFac);
+		JLabel TitreLocaCours = new JLabel("Diagnostics");
+		TitreLocaCours.setFont(new Font("Tahoma", Font.BOLD, 20));
+		TitreLocaCours.setBounds(10, 10, 189, 29);
+		contentPane.add(TitreLocaCours);
 		
-		JLabel lblLabelTelephone = new JLabel("N° de téléphone :");
-		lblLabelTelephone.setBounds(37, 218, 132, 14);
-		contentPane.add(lblLabelTelephone);
+		JButton btnCharger = new JButton("Charger");
+		btnCharger.addActionListener(this);
+		btnCharger.setBounds(35, 376, 85, 21);
+		contentPane.add(btnCharger);
 		
-		textFieldLienPDF = new JTextField();
-		textFieldLienPDF.setColumns(10);
-		textFieldLienPDF.setBounds(165, 191, 68, 20);
-		contentPane.add(textFieldLienPDF);
+		JButton btnInserer = new JButton("Inserer");
+		btnInserer.addActionListener(this);
+		btnInserer.setBounds(230, 376, 85, 21);
+		contentPane.add(btnInserer);
 		
-		JLabel lblLabelDateFac = new JLabel("Date de la facture  :");
-		lblLabelDateFac.setBounds(37, 191, 132, 14);
-		contentPane.add(lblLabelDateFac);
+		JButton btnMiseJour = new JButton("Mise à jour");
+		btnMiseJour.addActionListener(this);
+		btnMiseJour.setBounds(414, 376, 85, 21);
+		contentPane.add(btnMiseJour);
 		
-		JLabel lblLabelMontantTotal = new JLabel("Montant  total :");
-		lblLabelMontantTotal.setBounds(37, 245, 132, 14);
-		contentPane.add(lblLabelMontantTotal);
-		
-		textFieldMontantTotal = new JTextField();
-		textFieldMontantTotal.setColumns(10);
-		textFieldMontantTotal.setBounds(165, 245, 132, 20);
-		contentPane.add(textFieldMontantTotal);
-		
-		JButton btnAjouter = new JButton("Ajouter");
-		btnAjouter.setBounds(307, 384, 132, 23);
-		btnAjouter.addActionListener(this);
-		contentPane.add(btnAjouter);
+		JButton btnSupprimer = new JButton("Supprimer");
+		btnSupprimer.addActionListener(this);
+		btnSupprimer.setBounds(611, 376, 85, 21);
+		contentPane.add(btnSupprimer);
 		
 		JButton btnAnnuler = new JButton("Annuler");
-		btnAnnuler.setBounds(49, 384, 132, 23);
 		btnAnnuler.addActionListener(this);
+		btnAnnuler.setBounds(816, 376, 85, 21);
 		contentPane.add(btnAnnuler);
-		
-		JLabel lblNouveauEntretien = new JLabel("Nouveau entretien");
-		lblNouveauEntretien.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblNouveauEntretien.setBounds(37, 0, 260, 41);
-		contentPane.add(lblNouveauEntretien);
-		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(165, 277, 235, 20);
-		contentPane.add(textField_2);
-		
-		JLabel lblLabelLienPDF_1 = new JLabel("Lien pdf  :");
-		lblLabelLienPDF_1.setBounds(37, 277, 132, 14);
-		contentPane.add(lblLabelLienPDF_1);
-		
-		JLabel lblLabelEntreprise = new JLabel("* Entreprise :");
-		lblLabelEntreprise.setBounds(37, 135, 132, 14);
-		contentPane.add(lblLabelEntreprise);
-		
-		JComboBox comboBoxEntreprise = new JComboBox();
-		comboBoxEntreprise.setBounds(165, 131, 132, 22);
-		contentPane.add(comboBoxEntreprise);
-		
-		JButton btnNouvelleEntreprise = new JButton("Nouvelle entreprise");
-		btnNouvelleEntreprise.setBounds(307, 131, 132, 23);
-		contentPane.add(btnNouvelleEntreprise);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
-			case "Annuler":
-				this.dispose();
-				new Accueil().setVisible(true);
-				break;
-			case "Ajouter":
-				this.dispose();
-				new Accueil().setVisible(true);
-				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -282,12 +273,12 @@ public class Entretien extends JFrame implements ActionListener {
 				
 			case "Locations en cours":
 				this.dispose();
-				new LocationEnCours().setVisible(true);
+				new ListeDiagnostic().setVisible(true);
 				break;
 			
 			case "Nouveaux travaux":
 				this.dispose();
-				new Entretien().setVisible(true);
+				new NouveauTravaux().setVisible(true);
 				break;
 				
 			case "Nouvelle location":
@@ -313,10 +304,18 @@ public class Entretien extends JFrame implements ActionListener {
 				this.dispose();
 				new NouvelleChargeSupp().setVisible(true);
 				break;
-				
 			case "Travaux en cours":
 				this.dispose();
 				new TravauxEnCours().setVisible(true);
+				break;
+				
+			case "Inserer" :
+				this.dispose();
+				new ListeDiagnostic().setVisible(true);
+				break;
+			
+			case "Annuler" :
+				this.dispose();
 				break;
        
 			default:

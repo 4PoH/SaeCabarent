@@ -1,3 +1,5 @@
+package vue;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -14,6 +16,21 @@ import javax.swing.BoxLayout;
 import javax.swing.JTable;
 import java.awt.FlowLayout;
 import javax.swing.table.DefaultTableModel;
+
+import vue.consultation.AncienneLocation;
+import vue.consultation.AnciensTravaux;
+import vue.consultation.LocationEnCours;
+import vue.consultation.TravauxEnCours;
+import vue.insertion.Electricite;
+import vue.insertion.Entretien;
+import vue.insertion.FactureEau;
+import vue.insertion.Impositions;
+import vue.insertion.NouveauTravaux;
+import vue.insertion.NouvelleChargeSupp;
+import vue.insertion.NouvelleLocation;
+import vue.insertion.ProtectionJuridique;
+import vue.insertion.TaxeFonciere;
+
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
@@ -22,20 +39,12 @@ import java.awt.Color;
 import javax.swing.JToolBar;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
 import java.awt.Font;
-import javax.swing.JTextPane;
-import javax.swing.JCheckBox;
 
-public class NouveauBati extends JFrame implements ActionListener {
+public class IRL extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField textFieldAnneeFac;
-	private JTextField textFieldMontantPartieFixe;
-	private JTextField champlienpdf;
-	private JTextField textFieldRefAvis;
-	private JTextField textField;
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -44,7 +53,7 @@ public class NouveauBati extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					NouveauBati frame = new NouveauBati();
+					IRL frame = new IRL();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -56,8 +65,8 @@ public class NouveauBati extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public NouveauBati() {
-		setTitle("Nouveaux travaux");
+	public IRL() {
+		setTitle("IRL");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 480, 480);
 		
@@ -153,91 +162,48 @@ public class NouveauBati extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textFieldAnneeFac = new JTextField();
-		textFieldAnneeFac.setColumns(10);
-		textFieldAnneeFac.setBounds(179, 127, 68, 20);
-		contentPane.add(textFieldAnneeFac);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(36, 66, 376, 170);
+		contentPane.add(scrollPane);
 		
-		JLabel lblLabelAnneeFac = new JLabel("* Code postal :");
-		lblLabelAnneeFac.setBounds(37, 126, 132, 14);
-		contentPane.add(lblLabelAnneeFac);
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null},
+				{null, null, null},
+				{null, null, null},
+			},
+			new String[] {
+				"Annee", "Trimestre", "Montant"
+			}
+		));
+		scrollPane.setViewportView(table);
 		
-		JLabel lblLabelTotalOrdure = new JLabel("Ville :");
-		lblLabelTotalOrdure.setBounds(35, 158, 144, 14);
-		contentPane.add(lblLabelTotalOrdure);
+		JButton btnNewButton = new JButton("Annuler");
+		btnNewButton.setBounds(355, 389, 85, 21);
+		contentPane.add(btnNewButton);
 		
-		textFieldMontantPartieFixe = new JTextField();
-		textFieldMontantPartieFixe.setColumns(10);
-		textFieldMontantPartieFixe.setBounds(177, 159, 132, 20);
-		contentPane.add(textFieldMontantPartieFixe);
+		JButton btnConfirmer = new JButton("Supprimer");
+		btnConfirmer.setBounds(244, 389, 85, 21);
+		contentPane.add(btnConfirmer);
 		
-		JLabel lblLabelMontantTotal = new JLabel("Type d'habitat :");
-		lblLabelMontantTotal.setBounds(35, 189, 132, 14);
-		contentPane.add(lblLabelMontantTotal);
+		JButton btnInserer = new JButton("Inserer");
+		btnInserer.setBounds(21, 389, 85, 21);
+		contentPane.add(btnInserer);
 		
-		JButton btnAjouter = new JButton("Ajouter");
-		btnAjouter.setBounds(307, 384, 132, 23);
-		contentPane.add(btnAjouter);
+		JLabel lblNewLabel = new JLabel("IRL");
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblNewLabel.setBounds(10, 32, 45, 13);
+		contentPane.add(lblNewLabel);
 		
-		JButton btnAnnuler = new JButton("Annuler");
-		btnAnnuler.setBounds(49, 384, 132, 23);
-		contentPane.add(btnAnnuler);
-		
-		JLabel lblTaxeFonciere = new JLabel("Nouveau Bâtiment");
-		lblTaxeFonciere.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblTaxeFonciere.setBounds(37, 0, 260, 41);
-		contentPane.add(lblTaxeFonciere);
-		
-		champlienpdf = new JTextField();
-		champlienpdf.setColumns(10);
-		champlienpdf.setBounds(177, 222, 68, 20);
-		contentPane.add(champlienpdf);
-		
-		JLabel lblLabelLienPDF_1 = new JLabel("Année de construction :");
-		lblLabelLienPDF_1.setBounds(35, 221, 132, 14);
-		contentPane.add(lblLabelLienPDF_1);
-		
-		JLabel lblLabelEntreprise = new JLabel("* Adresse :");
-		lblLabelEntreprise.setBounds(37, 96, 132, 14);
-		contentPane.add(lblLabelEntreprise);
-		
-		textFieldRefAvis = new JTextField();
-		textFieldRefAvis.setColumns(10);
-		textFieldRefAvis.setBounds(179, 96, 233, 20);
-		contentPane.add(textFieldRefAvis);
-		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(179, 190, 130, 22);
-		contentPane.add(comboBox);
-		
-		JLabel lblListeDesParties = new JLabel("Liste des parties communes :");
-		lblListeDesParties.setBounds(37, 258, 132, 14);
-		contentPane.add(lblListeDesParties);
-		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(177, 253, 132, 20);
-		contentPane.add(textField);
-		
-		JLabel lblCoproprit = new JLabel("Copropriété :");
-		lblCoproprit.setBounds(37, 288, 132, 14);
-		contentPane.add(lblCoproprit);
-		
-		JCheckBox chckbxNewCheckBox = new JCheckBox("");
-		chckbxNewCheckBox.setBounds(174, 284, 97, 23);
-		contentPane.add(chckbxNewCheckBox);
+		JButton btnModifier = new JButton("Modifier");
+		btnModifier.addActionListener(this);
+		btnModifier.setBounds(135, 389, 85, 21);
+		contentPane.add(btnModifier);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
-			case "Annuler":
-				this.dispose();
-				new Accueil().setVisible(true);
-				break;
-			case "Ajouter":
-				this.dispose();
-				new Accueil().setVisible(true);
-				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -265,7 +231,7 @@ public class NouveauBati extends JFrame implements ActionListener {
 				
 			case "Facture d'eau":
 				this.dispose();
-				new NouveauBati().setVisible(true);
+				new FactureEau().setVisible(true);
 				break;
 			
 			case "Impositions":
@@ -290,7 +256,7 @@ public class NouveauBati extends JFrame implements ActionListener {
 			
 			case "Nouveaux travaux":
 				this.dispose();
-				new NouveauBati().setVisible(true);
+				new NouveauTravaux().setVisible(true);
 				break;
 				
 			case "Nouvelle location":
@@ -310,7 +276,7 @@ public class NouveauBati extends JFrame implements ActionListener {
 			
 			case "Taxe fonciere":
 				this.dispose();
-				new NouveauBati().setVisible(true);
+				new TaxeFonciere().setVisible(true);
 				break;
 			case "Autre":
 				this.dispose();

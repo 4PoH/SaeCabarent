@@ -1,3 +1,5 @@
+package vue.insertion;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -14,6 +16,16 @@ import javax.swing.BoxLayout;
 import javax.swing.JTable;
 import java.awt.FlowLayout;
 import javax.swing.table.DefaultTableModel;
+
+import vue.Accueil;
+import vue.IRL;
+import vue.InformationsBailleur;
+import vue.Quittances;
+import vue.consultation.AncienneLocation;
+import vue.consultation.AnciensTravaux;
+import vue.consultation.LocationEnCours;
+import vue.consultation.TravauxEnCours;
+
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
@@ -27,10 +39,11 @@ import javax.swing.JComboBox;
 import java.awt.Font;
 import javax.swing.JTextPane;
 
-public class Electricite extends JFrame implements ActionListener {
+public class Entretien extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JTextField textFieldNumFac;
+	private JTextField textFieldTelephone;
 	private JTextField textFieldLienPDF;
 	private JTextField textFieldMontantTotal;
 	private JTextField textField_2;
@@ -42,7 +55,7 @@ public class Electricite extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Electricite frame = new Electricite();
+					Entretien frame = new Entretien();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -54,7 +67,7 @@ public class Electricite extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public Electricite() {
+	public Entretien() {
 		setTitle("Nouveaux travaux");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 480, 480);
@@ -152,30 +165,39 @@ public class Electricite extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 		
 		textFieldNumFac = new JTextField();
-		textFieldNumFac.setBounds(165, 126, 132, 20);
+		textFieldNumFac.setBounds(165, 165, 132, 20);
 		contentPane.add(textFieldNumFac);
 		textFieldNumFac.setColumns(10);
 		
+		textFieldTelephone = new JTextField();
+		textFieldTelephone.setColumns(10);
+		textFieldTelephone.setBounds(165, 218, 95, 20);
+		contentPane.add(textFieldTelephone);
+		
 		JLabel lblLabelNumFac = new JLabel("* Numéro de facture :");
-		lblLabelNumFac.setBounds(37, 126, 132, 14);
+		lblLabelNumFac.setBounds(37, 165, 132, 14);
 		contentPane.add(lblLabelNumFac);
+		
+		JLabel lblLabelTelephone = new JLabel("N° de téléphone :");
+		lblLabelTelephone.setBounds(37, 218, 132, 14);
+		contentPane.add(lblLabelTelephone);
 		
 		textFieldLienPDF = new JTextField();
 		textFieldLienPDF.setColumns(10);
-		textFieldLienPDF.setBounds(165, 157, 68, 20);
+		textFieldLienPDF.setBounds(165, 191, 68, 20);
 		contentPane.add(textFieldLienPDF);
 		
 		JLabel lblLabelDateFac = new JLabel("Date de la facture  :");
-		lblLabelDateFac.setBounds(37, 157, 132, 14);
+		lblLabelDateFac.setBounds(37, 191, 132, 14);
 		contentPane.add(lblLabelDateFac);
 		
 		JLabel lblLabelMontantTotal = new JLabel("Montant  total :");
-		lblLabelMontantTotal.setBounds(37, 188, 132, 14);
+		lblLabelMontantTotal.setBounds(37, 245, 132, 14);
 		contentPane.add(lblLabelMontantTotal);
 		
 		textFieldMontantTotal = new JTextField();
 		textFieldMontantTotal.setColumns(10);
-		textFieldMontantTotal.setBounds(165, 188, 132, 20);
+		textFieldMontantTotal.setBounds(165, 245, 132, 20);
 		contentPane.add(textFieldMontantTotal);
 		
 		JButton btnAjouter = new JButton("Ajouter");
@@ -188,40 +210,35 @@ public class Electricite extends JFrame implements ActionListener {
 		btnAnnuler.addActionListener(this);
 		contentPane.add(btnAnnuler);
 		
-		JLabel lblFactureDElectricite = new JLabel("Nouvelle facture d'électricité");
-		lblFactureDElectricite.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblFactureDElectricite.setBounds(37, 0, 350, 41);
-		contentPane.add(lblFactureDElectricite);
+		JLabel lblNouveauEntretien = new JLabel("Nouveau entretien");
+		lblNouveauEntretien.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblNouveauEntretien.setBounds(37, 0, 260, 41);
+		contentPane.add(lblNouveauEntretien);
 		
 		textField_2 = new JTextField();
 		textField_2.setColumns(10);
-		textField_2.setBounds(165, 220, 235, 20);
+		textField_2.setBounds(165, 277, 235, 20);
 		contentPane.add(textField_2);
 		
 		JLabel lblLabelLienPDF_1 = new JLabel("Lien pdf  :");
-		lblLabelLienPDF_1.setBounds(37, 220, 132, 14);
+		lblLabelLienPDF_1.setBounds(37, 277, 132, 14);
 		contentPane.add(lblLabelLienPDF_1);
 		
 		JLabel lblLabelEntreprise = new JLabel("* Entreprise :");
-		lblLabelEntreprise.setBounds(37, 96, 132, 14);
+		lblLabelEntreprise.setBounds(37, 135, 132, 14);
 		contentPane.add(lblLabelEntreprise);
 		
 		JComboBox comboBoxEntreprise = new JComboBox();
-		comboBoxEntreprise.setBounds(165, 92, 132, 22);
+		comboBoxEntreprise.setBounds(165, 131, 132, 22);
 		contentPane.add(comboBoxEntreprise);
 		
 		JButton btnNouvelleEntreprise = new JButton("Nouvelle entreprise");
-		btnNouvelleEntreprise.setBounds(307, 92, 132, 23);
-		btnNouvelleEntreprise.addActionListener(this);
+		btnNouvelleEntreprise.setBounds(307, 131, 132, 23);
 		contentPane.add(btnNouvelleEntreprise);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
-			case "Nouvelle entreprise":
-				this.dispose();
-				new NouvelleEntreprise().setVisible(true);
-				break;
 			case "Annuler":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -257,7 +274,7 @@ public class Electricite extends JFrame implements ActionListener {
 				
 			case "Facture d'eau":
 				this.dispose();
-				new Electricite().setVisible(true);
+				new FactureEau().setVisible(true);
 				break;
 			
 			case "Impositions":
@@ -282,7 +299,7 @@ public class Electricite extends JFrame implements ActionListener {
 			
 			case "Nouveaux travaux":
 				this.dispose();
-				new Electricite().setVisible(true);
+				new Entretien().setVisible(true);
 				break;
 				
 			case "Nouvelle location":
@@ -308,6 +325,7 @@ public class Electricite extends JFrame implements ActionListener {
 				this.dispose();
 				new NouvelleChargeSupp().setVisible(true);
 				break;
+				
 			case "Travaux en cours":
 				this.dispose();
 				new TravauxEnCours().setVisible(true);

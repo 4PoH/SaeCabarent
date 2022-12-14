@@ -1,4 +1,20 @@
+package vue.consultation;
+
+
 import java.awt.EventQueue;
+import vue.Accueil;
+import vue.IRL;
+import vue.InformationsBailleur;
+import vue.Quittances;
+import vue.insertion.Electricite;
+import vue.insertion.Entretien;
+import vue.insertion.FactureEau;
+import vue.insertion.Impositions;
+import vue.insertion.NouveauTravaux;
+import vue.insertion.NouvelleChargeSupp;
+import vue.insertion.NouvelleLocation;
+import vue.insertion.ProtectionJuridique;
+import vue.insertion.TaxeFonciere;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,6 +30,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JTable;
 import java.awt.FlowLayout;
 import javax.swing.table.DefaultTableModel;
+
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
@@ -22,10 +39,12 @@ import java.awt.Color;
 import javax.swing.JToolBar;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Font;
 
-public class Quittances extends JFrame implements ActionListener {
+public class ListeTaxeFonciere extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -34,7 +53,7 @@ public class Quittances extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Quittances frame = new Quittances();
+					ListeTaxeFonciere frame = new ListeTaxeFonciere();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -46,10 +65,10 @@ public class Quittances extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public Quittances() {
-		setTitle("Quittances");
+	public ListeTaxeFonciere() {
+		setTitle("Travaux en cours");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 480, 300);
+		setBounds(100, 100, 980, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
@@ -141,11 +160,88 @@ public class Quittances extends JFrame implements ActionListener {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(new BorderLayout(0, 0));
+		contentPane.setLayout(null);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 64, 946, 269);
+		contentPane.add(scrollPane);
+		
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+			},
+			new String[] {
+				"Numero SIREN", "numero Facture", "numero Devis", "libelle", "date debut", "date fin", "detail", "montant payer", "montant non deductible", "reduction", "pdf"
+			}
+		));
+		scrollPane.setViewportView(table);
+		
+		JLabel TitreTravauxC = new JLabel("Travaux en cours");
+		TitreTravauxC.setFont(new Font("Tahoma", Font.BOLD, 20));
+		TitreTravauxC.setBounds(10, 10, 195, 32);
+		contentPane.add(TitreTravauxC);
+		
+		JButton btnCharger = new JButton("Charger");
+		btnCharger.addActionListener(this);
+		btnCharger.setBounds(87, 372, 85, 21);
+		contentPane.add(btnCharger);
+		
+		JButton btnInserer = new JButton("Inserer");
+		btnInserer.addActionListener(this);
+		btnInserer.setBounds(271, 372, 85, 21);
+		contentPane.add(btnInserer);
+		
+		JButton btnMiseJour = new JButton("Mise à jour");
+		btnMiseJour.addActionListener(this);
+		btnMiseJour.setBounds(459, 372, 85, 21);
+		contentPane.add(btnMiseJour);
+		
+		JButton btnSupprimer = new JButton("Supprimer");
+		btnSupprimer.addActionListener(this);
+		btnSupprimer.setBounds(640, 372, 85, 21);
+		contentPane.add(btnSupprimer);
+		
+		JButton btnAnnuler = new JButton("Annuler");
+		btnAnnuler.addActionListener(this);
+		btnAnnuler.setBounds(813, 372, 85, 21);
+		contentPane.add(btnAnnuler);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Charger" :
+			break;
+			
+			case "Inserer" :
+				this.dispose();
+				new NouveauTravaux().setVisible(true);
+				break;
+			
+			case "Mise à Jour":
+				break;
+			
+			case "Supprimer":
+				break;
+			
+			case "Annuler":
+				this.dispose();
+				break;
+		
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -226,7 +322,7 @@ public class Quittances extends JFrame implements ActionListener {
 				break;
 			case "Travaux en cours":
 				this.dispose();
-				new TravauxEnCours().setVisible(true);
+				new ListeTaxeFonciere().setVisible(true);
 				break;
        
 			default:
@@ -234,5 +330,4 @@ public class Quittances extends JFrame implements ActionListener {
 				break;
 		}
 	}
-	
 }

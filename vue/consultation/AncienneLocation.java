@@ -1,3 +1,5 @@
+package vue.consultation;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -14,6 +16,21 @@ import javax.swing.BoxLayout;
 import javax.swing.JTable;
 import java.awt.FlowLayout;
 import javax.swing.table.DefaultTableModel;
+
+import vue.Accueil;
+import vue.IRL;
+import vue.InformationsBailleur;
+import vue.Quittances;
+import vue.insertion.Electricite;
+import vue.insertion.Entretien;
+import vue.insertion.FactureEau;
+import vue.insertion.Impositions;
+import vue.insertion.NouveauTravaux;
+import vue.insertion.NouvelleChargeSupp;
+import vue.insertion.NouvelleLocation;
+import vue.insertion.ProtectionJuridique;
+import vue.insertion.TaxeFonciere;
+
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
@@ -22,20 +39,12 @@ import java.awt.Color;
 import javax.swing.JToolBar;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
 import java.awt.Font;
 
-public class NouveauLocataire extends JFrame implements ActionListener {
+public class AncienneLocation extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField textFieldNumFac;
-	private JTextField textFieldLibelle;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -44,7 +53,7 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					NouveauLocataire frame = new NouveauLocataire();
+					AncienneLocation frame = new AncienneLocation();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -56,10 +65,10 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public NouveauLocataire() {
-		setTitle("Nouveau locataire");
+	public AncienneLocation() {
+		setTitle("Ancienne Location");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 480, 480);
+		setBounds(100, 100, 980, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
@@ -150,98 +159,67 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textFieldNumFac = new JTextField();
-		textFieldNumFac.setBounds(166, 60, 132, 20);
-		contentPane.add(textFieldNumFac);
-		textFieldNumFac.setColumns(10);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(23, 50, 916, 270);
+		contentPane.add(scrollPane);
 		
-		JLabel lblLabelDateMiseEnEffet = new JLabel("Nom :");
-		lblLabelDateMiseEnEffet.setBounds(24, 63, 132, 14);
-		contentPane.add(lblLabelDateMiseEnEffet);
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null},
+			},
+			new String[] {
+				"Libelle", "Locataire", "Date fin", "montant r\u00E9gler loyer", "Montant loyer", "moyen de paiement", "Facture d'eau", "pdf contrat"
+			}
+		));
+		scrollPane.setViewportView(table);
 		
-		textFieldLibelle = new JTextField();
-		textFieldLibelle.setColumns(10);
-		textFieldLibelle.setBounds(166, 91, 132, 20);
-		contentPane.add(textFieldLibelle);
+		JLabel TitreLocationPasse = new JLabel("Ancienne Location");
+		TitreLocationPasse.setFont(new Font("Tahoma", Font.BOLD, 20));
+		TitreLocationPasse.setBounds(22, 10, 204, 30);
+		contentPane.add(TitreLocationPasse);
 		
-		JLabel lblLabelCaution = new JLabel("Prénom :");
-		lblLabelCaution.setBounds(24, 94, 132, 14);
-		contentPane.add(lblLabelCaution);
-		
-		JButton btnAjouter = new JButton("Ajouter");
-		btnAjouter.setBounds(307, 384, 132, 23);
-		btnAjouter.addActionListener(this);
-		contentPane.add(btnAjouter);
+		JButton btnCharger = new JButton("Charger");
+		btnCharger.addActionListener(this);
+		btnCharger.setBounds(216, 357, 85, 21);
+		contentPane.add(btnCharger);
 		
 		JButton btnAnnuler = new JButton("Annuler");
-		btnAnnuler.setBounds(49, 384, 132, 23);
 		btnAnnuler.addActionListener(this);
+		btnAnnuler.setBounds(642, 357, 85, 21);
 		contentPane.add(btnAnnuler);
 		
-		JLabel lblLocataire = new JLabel("Nouveau Locataire");
-		lblLocataire.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblLocataire.setBounds(24, 0, 307, 41);
-		contentPane.add(lblLocataire);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(166, 122, 228, 20);
-		contentPane.add(textField);
-		
-		JLabel lblAdresse = new JLabel("Adresse :");
-		lblAdresse.setBounds(24, 125, 132, 14);
-		contentPane.add(lblAdresse);
-		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(166, 153, 61, 20);
-		contentPane.add(textField_1);
-		
-		JLabel lblCodePostal = new JLabel("Code postal :");
-		lblCodePostal.setBounds(24, 156, 132, 14);
-		contentPane.add(lblCodePostal);
-		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(166, 184, 132, 20);
-		contentPane.add(textField_2);
-		
-		JLabel lblVille = new JLabel("Ville :");
-		lblVille.setBounds(24, 187, 132, 14);
-		contentPane.add(lblVille);
-		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(166, 215, 228, 20);
-		contentPane.add(textField_3);
-		
-		JLabel lblAdresseMail = new JLabel("Adresse mail :");
-		lblAdresseMail.setBounds(24, 218, 132, 14);
-		contentPane.add(lblAdresseMail);
-		
-		textField_4 = new JTextField();
-		textField_4.setColumns(10);
-		textField_4.setBounds(166, 246, 132, 20);
-		contentPane.add(textField_4);
-		
-		JLabel lblNumroDeTlphone = new JLabel("Numéro de téléphone :");
-		lblNumroDeTlphone.setBounds(24, 249, 132, 14);
-		contentPane.add(lblNumroDeTlphone);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			
+			case "Charger" :
+				break;
+			
 			case "Annuler":
 				this.dispose();
-				new Accueil().setVisible(true);
 				break;
-			case "Ajouter":
-				this.dispose();
-				new Accueil().setVisible(true);
-				break;
+
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -294,12 +272,12 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 			
 			case "Nouveaux travaux":
 				this.dispose();
-				new InformationsBailleur().setVisible(true);
+				new NouveauTravaux().setVisible(true);
 				break;
 				
 			case "Nouvelle location":
 				this.dispose();
-				new InformationsBailleur().setVisible(true);
+				new NouvelleLocation().setVisible(true);
 				break;
 				
 			case "Protection juridique":
@@ -320,6 +298,7 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 				this.dispose();
 				new NouvelleChargeSupp().setVisible(true);
 				break;
+				
 			case "Travaux en cours":
 				this.dispose();
 				new TravauxEnCours().setVisible(true);
@@ -330,4 +309,5 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 				break;
 		}
 	}
+	
 }

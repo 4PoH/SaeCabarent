@@ -1,16 +1,47 @@
-import java.awt.EventQueue;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+package vue;
 
-import javax.swing.JButton;
+import java.awt.EventQueue;
+
 import javax.swing.JFrame;
-import javax.swing.JMenu;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import java.awt.GridLayout;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
+import javax.swing.JMenu;
+import javax.swing.SwingConstants;
+import java.awt.Insets;
+import javax.swing.JButton;
+import javax.swing.BoxLayout;
+import javax.swing.JTable;
+import java.awt.FlowLayout;
+import javax.swing.table.DefaultTableModel;
 
-public class Bati extends JFrame implements ActionListener {
+import vue.consultation.AncienneLocation;
+import vue.consultation.AnciensTravaux;
+import vue.consultation.LocationEnCours;
+import vue.consultation.TravauxEnCours;
+import vue.insertion.Electricite;
+import vue.insertion.Entretien;
+import vue.insertion.FactureEau;
+import vue.insertion.Impositions;
+import vue.insertion.NouveauTravaux;
+import vue.insertion.NouvelleChargeSupp;
+import vue.insertion.NouvelleLocation;
+import vue.insertion.ProtectionJuridique;
+import vue.insertion.TaxeFonciere;
+
+import javax.swing.JScrollPane;
+import java.awt.BorderLayout;
+import javax.swing.JLabel;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
+import javax.swing.JToolBar;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.Font;
+
+public class Quittances extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 
@@ -21,7 +52,7 @@ public class Bati extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Bati frame = new Bati();
+					Quittances frame = new Quittances();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -33,10 +64,10 @@ public class Bati extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public Bati() {
-		setTitle("Bati");
+	public Quittances() {
+		setTitle("Quittances");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(149, 100, 480, 300);
+		setBounds(100, 100, 480, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
@@ -124,10 +155,31 @@ public class Bati extends JFrame implements ActionListener {
 		JMenuItem MenuItemImpositions = new JMenuItem("Impositions");
 		MenuItemImpositions.addActionListener(this);
 		MenuGenerer.add(MenuItemImpositions);
-
+		
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(new BorderLayout(0, 0));
+		
+		JPanel panel = new JPanel();
+		contentPane.add(panel, BorderLayout.CENTER);
+		panel.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Générer Quitances");
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblNewLabel.setForeground(new Color(0, 0, 0));
+		lblNewLabel.setBounds(10, 10, 235, 30);
+		panel.add(lblNewLabel);
+		
+		JButton btnNewButton = new JButton("Annuler");
+		btnNewButton.setBounds(20, 368, 85, 21);
+		panel.add(btnNewButton);
+		
+		JButton btnGnrer = new JButton("Générer");
+		btnGnrer.setBounds(326, 368, 85, 21);
+		panel.add(btnGnrer);
 	}
-
-	@Override
+	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
 			case "Accueil":
@@ -208,7 +260,6 @@ public class Bati extends JFrame implements ActionListener {
 				this.dispose();
 				new NouvelleChargeSupp().setVisible(true);
 				break;
-				
 			case "Travaux en cours":
 				this.dispose();
 				new TravauxEnCours().setVisible(true);

@@ -1,33 +1,29 @@
-import java.awt.EventQueue;
+package vue.insertion;
 
+import java.awt.EventQueue;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.awt.GridLayout;
+import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JMenu;
-import javax.swing.SwingConstants;
-import java.awt.Insets;
-import javax.swing.JButton;
-import javax.swing.BoxLayout;
-import javax.swing.JTable;
-import java.awt.FlowLayout;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JScrollPane;
-import java.awt.BorderLayout;
-import javax.swing.JLabel;
-import javax.swing.border.LineBorder;
-import java.awt.Color;
-import javax.swing.JToolBar;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.Font;
+import javax.swing.JPanel;
 
-public class AnciensTravaux extends JFrame implements ActionListener {
+import vue.Accueil;
+import vue.IRL;
+import vue.InformationsBailleur;
+import vue.Quittances;
+import vue.consultation.AncienneLocation;
+import vue.consultation.AnciensTravaux;
+import vue.consultation.LocationEnCours;
+import vue.consultation.TravauxEnCours;
+
+public class Bati extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -36,7 +32,7 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AnciensTravaux frame = new AnciensTravaux();
+					Bati frame = new Bati();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -48,10 +44,10 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public AnciensTravaux() {
-		setTitle("Anciens Travaux");
+	public Bati() {
+		setTitle("Bati");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 980, 480);
+		setBounds(149, 100, 480, 300);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
@@ -139,68 +135,12 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 		JMenuItem MenuItemImpositions = new JMenuItem("Impositions");
 		MenuItemImpositions.addActionListener(this);
 		MenuGenerer.add(MenuItemImpositions);
-		
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(16, 53, 940, 269);
-		contentPane.add(scrollPane);
-		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-			},
-			new String[] {
-				"date facturation", "libelle entreprise", "numero SIREN", "montant payer", "numero facture", "date debut", "date fin", "detail", "pdf"
-			}
-		));
-		scrollPane.setViewportView(table);
-		
-		JLabel TitreAncienTr = new JLabel("Ancien Travaux");
-		TitreAncienTr.setFont(new Font("Tahoma", Font.BOLD, 20));
-		TitreAncienTr.setBounds(16, 10, 179, 33);
-		contentPane.add(TitreAncienTr);
-		
-		JButton btnCharger = new JButton("Charger");
-		btnCharger.addActionListener(this);
-		btnCharger.setBounds(152, 362, 85, 21);
-		contentPane.add(btnCharger);
-		
-		JButton btnAnnuler = new JButton("Annuler");
-		btnAnnuler.addActionListener(this);
-		btnAnnuler.setBounds(730, 362, 85, 21);
-		contentPane.add(btnAnnuler);
 	}
-	
+
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
-			
-			case "Charger" :
-				break;
-			
-			case "Annuler":
-				this.dispose();
-				break;
-		
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -290,5 +230,4 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 				break;
 		}
 	}
-	
 }

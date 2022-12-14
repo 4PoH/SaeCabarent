@@ -1,3 +1,5 @@
+package vue.insertion;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -14,6 +16,16 @@ import javax.swing.BoxLayout;
 import javax.swing.JTable;
 import java.awt.FlowLayout;
 import javax.swing.table.DefaultTableModel;
+
+import vue.Accueil;
+import vue.IRL;
+import vue.InformationsBailleur;
+import vue.Quittances;
+import vue.consultation.AncienneLocation;
+import vue.consultation.AnciensTravaux;
+import vue.consultation.LocationEnCours;
+import vue.consultation.TravauxEnCours;
+
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
@@ -25,13 +37,19 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.Font;
+import javax.swing.JTextPane;
 
-public class NouveauLogement extends JFrame implements ActionListener {
+public class NouveauTravaux extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField textFieldDateFac;
+	private JTextField textFieldNumFac;
+	private JTextField textFieldNumDevis;
+	private JTextField textFieldLibelle;
+	private JTextField textFieldLienPDF;
+	private JTextField textFieldMontant;
 	private JTextField textField;
 	private JTextField textField_1;
+	private JTextField textField_2;
 	private JTextField textField_3;
 
 	/**
@@ -41,7 +59,7 @@ public class NouveauLogement extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					NouveauLogement frame = new NouveauLogement();
+					NouveauTravaux frame = new NouveauTravaux();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -53,10 +71,10 @@ public class NouveauLogement extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public NouveauLogement() {
+	public NouveauTravaux() {
 		setTitle("Nouveaux travaux");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 480, 480);
+		setBounds(105, 100, 480, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
@@ -150,43 +168,67 @@ public class NouveauLogement extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textFieldDateFac = new JTextField();
-		textFieldDateFac.setColumns(10);
-		textFieldDateFac.setBounds(165, 179, 23, 20);
-		contentPane.add(textFieldDateFac);
+		textFieldNumFac = new JTextField();
+		textFieldNumFac.setBounds(165, 68, 132, 20);
+		contentPane.add(textFieldNumFac);
+		textFieldNumFac.setColumns(10);
 		
-		JLabel lblLabelContrat = new JLabel("Surface :");
-		lblLabelContrat.setBounds(23, 151, 132, 14);
-		contentPane.add(lblLabelContrat);
+		textFieldNumDevis = new JTextField();
+		textFieldNumDevis.setColumns(10);
+		textFieldNumDevis.setBounds(165, 99, 132, 20);
+		contentPane.add(textFieldNumDevis);
 		
-		JLabel lblLabelDateFac = new JLabel("Nombre de pièces :");
-		lblLabelDateFac.setBounds(23, 182, 132, 14);
-		contentPane.add(lblLabelDateFac);
+		JLabel lblLabelNumFac = new JLabel("* Numéro de facture :");
+		lblLabelNumFac.setBounds(37, 68, 132, 14);
+		contentPane.add(lblLabelNumFac);
 		
-		JLabel lblLabelLibelle = new JLabel("* Bâtiment  :");
-		lblLabelLibelle.setBounds(23, 92, 132, 14);
+		JLabel lblLabelNumDevis = new JLabel("Numéro de devis :");
+		lblLabelNumDevis.setBounds(37, 99, 132, 14);
+		contentPane.add(lblLabelNumDevis);
+		
+		textFieldLibelle = new JTextField();
+		textFieldLibelle.setColumns(10);
+		textFieldLibelle.setBounds(165, 130, 132, 20);
+		contentPane.add(textFieldLibelle);
+		
+		JLabel lblLabelLibelle = new JLabel("Libellé  :");
+		lblLabelLibelle.setBounds(37, 130, 132, 14);
 		contentPane.add(lblLabelLibelle);
 		
-		JLabel lblLabelMontant = new JLabel("Type d'accés réseau :");
-		lblLabelMontant.setBounds(23, 214, 132, 14);
+		textFieldLienPDF = new JTextField();
+		textFieldLienPDF.setColumns(10);
+		textFieldLienPDF.setBounds(165, 161, 68, 20);
+		contentPane.add(textFieldLienPDF);
+		
+		JLabel lblLabelDateDebut = new JLabel("Date de début  :");
+		lblLabelDateDebut.setBounds(37, 161, 132, 14);
+		contentPane.add(lblLabelDateDebut);
+		
+		JLabel lblLabelMontant = new JLabel("Montant  :");
+		lblLabelMontant.setBounds(37, 264, 132, 14);
 		contentPane.add(lblLabelMontant);
 		
-		JLabel lblLabelMontantNonDeductible = new JLabel("Ancien compteur d'eau :");
-		lblLabelMontantNonDeductible.setBounds(23, 245, 132, 14);
+		textFieldMontant = new JTextField();
+		textFieldMontant.setColumns(10);
+		textFieldMontant.setBounds(165, 264, 132, 20);
+		contentPane.add(textFieldMontant);
+		
+		JLabel lblLabelMontantNonDeductible = new JLabel("Montant  non déductible :");
+		lblLabelMontantNonDeductible.setBounds(37, 295, 132, 14);
 		contentPane.add(lblLabelMontantNonDeductible);
 		
 		textField = new JTextField();
 		textField.setColumns(10);
-		textField.setBounds(165, 242, 132, 20);
+		textField.setBounds(165, 295, 132, 20);
 		contentPane.add(textField);
 		
-		JLabel lblLabelReduction = new JLabel("Libellé :");
-		lblLabelReduction.setBounds(23, 125, 132, 14);
+		JLabel lblLabelReduction = new JLabel("Réduction :");
+		lblLabelReduction.setBounds(37, 325, 132, 14);
 		contentPane.add(lblLabelReduction);
 		
 		textField_1 = new JTextField();
 		textField_1.setColumns(10);
-		textField_1.setBounds(165, 122, 132, 20);
+		textField_1.setBounds(165, 325, 132, 20);
 		contentPane.add(textField_1);
 		
 		JButton btnAjouter = new JButton("Ajouter");
@@ -199,63 +241,57 @@ public class NouveauLogement extends JFrame implements ActionListener {
 		btnAnnuler.addActionListener(this);
 		contentPane.add(btnAnnuler);
 		
-		JLabel lblNouvelleLocation = new JLabel("Nouveau Logement");
-		lblNouvelleLocation.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblNouvelleLocation.setBounds(24, 0, 307, 41);
-		contentPane.add(lblNouvelleLocation);
 		
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setBounds(165, 89, 132, 22);
-		contentPane.add(comboBox_1);
+		JLabel lblNouveauTravaux = new JLabel("Nouveaux Travaux");
+		lblNouveauTravaux.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblNouveauTravaux.setBounds(37, 0, 202, 41);
+		contentPane.add(lblNouveauTravaux);
 		
-		JButton btnNouveauLocataire = new JButton("Nouveau Bâtiment");
-		btnNouveauLocataire.setBounds(307, 88, 132, 23);
-		btnNouveauLocataire.addActionListener(this);
-		contentPane.add(btnNouveauLocataire);
+		textField_2 = new JTextField();
+		textField_2.setColumns(10);
+		textField_2.setBounds(165, 353, 235, 20);
+		contentPane.add(textField_2);
 		
-		JLabel lblParticipationlctricitCommune = new JLabel("Modalité de chauffage :");
-		lblParticipationlctricitCommune.setBounds(24, 273, 132, 14);
-		contentPane.add(lblParticipationlctricitCommune);
+		JLabel lblLabelLienPDF_1 = new JLabel("Lien pdf  :");
+		lblLabelLienPDF_1.setBounds(37, 353, 132, 14);
+		contentPane.add(lblLabelLienPDF_1);
+		
+		JLabel lblLabelDateFin = new JLabel("Date de fin :");
+		lblLabelDateFin.setBounds(255, 164, 93, 14);
+		contentPane.add(lblLabelDateFin);
 		
 		textField_3 = new JTextField();
 		textField_3.setColumns(10);
-		textField_3.setBounds(165, 148, 132, 20);
+		textField_3.setBounds(332, 161, 68, 20);
 		contentPane.add(textField_3);
 		
-		JComboBox comboBox_1_1 = new JComboBox();
-		comboBox_1_1.setBounds(165, 210, 132, 22);
-		contentPane.add(comboBox_1_1);
+		JLabel lblLabelDescription = new JLabel("Description  :");
+		lblLabelDescription.setBounds(37, 194, 132, 14);
+		contentPane.add(lblLabelDescription);
 		
-		JComboBox comboBox_1_1_1 = new JComboBox();
-		comboBox_1_1_1.setBounds(166, 273, 132, 22);
-		contentPane.add(comboBox_1_1_1);
+		JTextPane textPaneDescription = new JTextPane();
+		textPaneDescription.setBounds(165, 192, 235, 61);
+		contentPane.add(textPaneDescription);
 		
-		JLabel lblModalitDeLeau = new JLabel("Modalité de l'eau chaude :");
-		lblModalitDeLeau.setBounds(24, 307, 132, 14);
-		contentPane.add(lblModalitDeLeau);
+		JLabel lblLabelEntreprise = new JLabel("* Entreprise :");
+		lblLabelEntreprise.setBounds(37, 43, 132, 14);
+		contentPane.add(lblLabelEntreprise);
 		
-		JComboBox comboBox_1_1_1_1 = new JComboBox();
-		comboBox_1_1_1_1.setBounds(166, 307, 132, 22);
-		contentPane.add(comboBox_1_1_1_1);
+		JComboBox comboBoxEntreprise = new JComboBox();
+		comboBoxEntreprise.setBounds(165, 39, 132, 22);
+		contentPane.add(comboBoxEntreprise);
+		
+		JButton btnNouvelleEntreprise = new JButton("Nouvelle entreprise");
+		btnNouvelleEntreprise.setBounds(307, 39, 132, 23);
+		btnNouvelleEntreprise.addActionListener(this);
+		contentPane.add(btnNouvelleEntreprise);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
-			case"Nouveau Bâtiment":
+			case "Nouvelle entreprise":
 				this.dispose();
-				new NouveauBati().setVisible(true);
-				break;
-			case"Nouveau Locataire":
-				this.dispose();
-				new NouveauLocataire().setVisible(true);
-				break;
-			case"Nouveau Contrat":
-				this.dispose();
-				new NouveauContrat().setVisible(true);
-				break;
-			case"Nouveau Logement":
-				this.dispose();
-				new NouveauLogement().setVisible(true);
+				new NouvelleEntreprise().setVisible(true);
 				break;
 			case "Annuler":
 				this.dispose();
@@ -317,7 +353,7 @@ public class NouveauLogement extends JFrame implements ActionListener {
 			
 			case "Nouveaux travaux":
 				this.dispose();
-				new NouvelleLocation().setVisible(true);
+				new NouveauTravaux().setVisible(true);
 				break;
 				
 			case "Nouvelle location":

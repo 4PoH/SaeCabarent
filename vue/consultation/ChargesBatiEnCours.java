@@ -1,4 +1,19 @@
+package vue.consultation;
+
 import java.awt.EventQueue;
+import vue.Accueil;
+import vue.IRL;
+import vue.InformationsBailleur;
+import vue.Quittances;
+import vue.insertion.Electricite;
+import vue.insertion.Entretien;
+import vue.insertion.FactureEau;
+import vue.insertion.Impositions;
+import vue.insertion.NouveauTravaux;
+import vue.insertion.NouvelleChargeSupp;
+import vue.insertion.NouvelleLocation;
+import vue.insertion.ProtectionJuridique;
+import vue.insertion.TaxeFonciere;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,6 +29,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JTable;
 import java.awt.FlowLayout;
 import javax.swing.table.DefaultTableModel;
+
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
@@ -25,7 +41,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JScrollBar;
 import java.awt.Font;
 
-public class ListeDiagnostic extends JFrame implements ActionListener {
+public class ChargesBatiEnCours extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JTable table;
@@ -37,7 +53,7 @@ public class ListeDiagnostic extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ListeDiagnostic frame = new ListeDiagnostic();
+					ChargesBatiEnCours frame = new ChargesBatiEnCours();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -49,7 +65,7 @@ public class ListeDiagnostic extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public ListeDiagnostic() {
+	public ChargesBatiEnCours() {
 		setBackground(new Color(240, 240, 240));
 		setTitle("Location en cours");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -154,29 +170,29 @@ public class ListeDiagnostic extends JFrame implements ActionListener {
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
 			},
 			new String[] {
-				"Location", "Reference", "Nom", "Date d'obtention", "Date fin de validite", "Numero rapport", "Pdf"
+				"Libelle", "Locataire", "montant loyer", "montant charges", "mode de paiement", "montant payer", "facture d'eau", "pour\u00E7entage parti entretien", "pour\u00E7entage particip facture elec", "num\u00E9ro quitance", "pdf contrat"
 			}
 		));
 		scrollPane.setViewportView(table);
 		
-		JLabel TitreLocaCours = new JLabel("Diagnostics");
+		JLabel TitreLocaCours = new JLabel("Location en cours");
 		TitreLocaCours.setFont(new Font("Tahoma", Font.BOLD, 20));
 		TitreLocaCours.setBounds(10, 10, 189, 29);
 		contentPane.add(TitreLocaCours);
@@ -256,7 +272,7 @@ public class ListeDiagnostic extends JFrame implements ActionListener {
 				
 			case "Locations en cours":
 				this.dispose();
-				new ListeDiagnostic().setVisible(true);
+				new ChargesBatiEnCours().setVisible(true);
 				break;
 			
 			case "Nouveaux travaux":
@@ -294,7 +310,7 @@ public class ListeDiagnostic extends JFrame implements ActionListener {
 				
 			case "Inserer" :
 				this.dispose();
-				new ListeDiagnostic().setVisible(true);
+				new NouvelleLocation().setVisible(true);
 				break;
 			
 			case "Annuler" :

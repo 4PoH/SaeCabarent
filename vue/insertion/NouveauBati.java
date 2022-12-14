@@ -1,3 +1,5 @@
+package vue.insertion;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -14,6 +16,16 @@ import javax.swing.BoxLayout;
 import javax.swing.JTable;
 import java.awt.FlowLayout;
 import javax.swing.table.DefaultTableModel;
+
+import vue.Accueil;
+import vue.IRL;
+import vue.InformationsBailleur;
+import vue.Quittances;
+import vue.consultation.AncienneLocation;
+import vue.consultation.AnciensTravaux;
+import vue.consultation.LocationEnCours;
+import vue.consultation.TravauxEnCours;
+
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
@@ -26,16 +38,16 @@ import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.Font;
 import javax.swing.JTextPane;
+import javax.swing.JCheckBox;
 
-public class Bailleur extends JFrame implements ActionListener {
+public class NouveauBati extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField textFieldNom;
-	private JTextField textFieldPrenom;
-	private JTextField textFieldAdresse;
-	private JTextField textFieldCodeP;
-	private JTextField textFieldMail;
-	private JTextField textFieldTel;
+	private JTextField textFieldAnneeFac;
+	private JTextField textFieldMontantPartieFixe;
+	private JTextField champlienpdf;
+	private JTextField textFieldRefAvis;
+	private JTextField textField;
 
 	/**
 	 * Launch the application.
@@ -44,7 +56,7 @@ public class Bailleur extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Bailleur frame = new Bailleur();
+					NouveauBati frame = new NouveauBati();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -56,7 +68,7 @@ public class Bailleur extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public Bailleur() {
+	public NouveauBati() {
 		setTitle("Nouveaux travaux");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 480, 480);
@@ -153,82 +165,83 @@ public class Bailleur extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textFieldNom = new JTextField();
-		textFieldNom.setBounds(165, 65, 132, 20);
-		contentPane.add(textFieldNom);
-		textFieldNom.setColumns(10);
+		textFieldAnneeFac = new JTextField();
+		textFieldAnneeFac.setColumns(10);
+		textFieldAnneeFac.setBounds(179, 127, 68, 20);
+		contentPane.add(textFieldAnneeFac);
 		
-		textFieldPrenom = new JTextField();
-		textFieldPrenom.setColumns(10);
-		textFieldPrenom.setBounds(165, 100, 132, 20);
-		contentPane.add(textFieldPrenom);
+		JLabel lblLabelAnneeFac = new JLabel("* Code postal :");
+		lblLabelAnneeFac.setBounds(37, 126, 132, 14);
+		contentPane.add(lblLabelAnneeFac);
 		
-		JLabel lblLabelNom = new JLabel("* Nom");
-		lblLabelNom.setBounds(37, 71, 132, 14);
-		contentPane.add(lblLabelNom);
+		JLabel lblLabelTotalOrdure = new JLabel("Ville :");
+		lblLabelTotalOrdure.setBounds(35, 158, 144, 14);
+		contentPane.add(lblLabelTotalOrdure);
 		
-		JLabel lblLabelPrenom = new JLabel("*Prenom");
-		lblLabelPrenom.setBounds(37, 102, 132, 14);
-		contentPane.add(lblLabelPrenom);
+		textFieldMontantPartieFixe = new JTextField();
+		textFieldMontantPartieFixe.setColumns(10);
+		textFieldMontantPartieFixe.setBounds(177, 159, 132, 20);
+		contentPane.add(textFieldMontantPartieFixe);
 		
-		textFieldAdresse = new JTextField();
-		textFieldAdresse.setColumns(10);
-		textFieldAdresse.setBounds(165, 144, 132, 20);
-		contentPane.add(textFieldAdresse);
+		JLabel lblLabelMontantTotal = new JLabel("Type d'habitat :");
+		lblLabelMontantTotal.setBounds(35, 189, 132, 14);
+		contentPane.add(lblLabelMontantTotal);
 		
-		JLabel lblLabelLibelle = new JLabel("*Adresse");
-		lblLabelLibelle.setBounds(37, 146, 132, 14);
-		contentPane.add(lblLabelLibelle);
-		
-		JLabel lblLabelCp = new JLabel("*Code Postal");
-		lblLabelCp.setBounds(37, 185, 132, 14);
-		contentPane.add(lblLabelCp);
-		
-		textFieldCodeP = new JTextField();
-		textFieldCodeP.setColumns(10);
-		textFieldCodeP.setBounds(165, 183, 132, 20);
-		contentPane.add(textFieldCodeP);
-		
-		JLabel lblLabelMail = new JLabel("*Mail");
-		lblLabelMail.setBounds(37, 227, 132, 14);
-		contentPane.add(lblLabelMail);
-		
-		textFieldMail = new JTextField();
-		textFieldMail.setColumns(10);
-		textFieldMail.setBounds(165, 225, 132, 20);
-		contentPane.add(textFieldMail);
-		
-		JLabel lblLabelTel = new JLabel("*Telephone");
-		lblLabelTel.setBounds(37, 274, 132, 14);
-		contentPane.add(lblLabelTel);
-		
-		textFieldTel = new JTextField();
-		textFieldTel.setColumns(10);
-		textFieldTel.setBounds(165, 272, 132, 20);
-		contentPane.add(textFieldTel);
-		
-		JButton btnAjouter = new JButton("Confimer");
+		JButton btnAjouter = new JButton("Ajouter");
 		btnAjouter.setBounds(307, 384, 132, 23);
-		btnAjouter.addActionListener(this);
 		contentPane.add(btnAjouter);
 		
 		JButton btnAnnuler = new JButton("Annuler");
 		btnAnnuler.setBounds(49, 384, 132, 23);
-		btnAnnuler.addActionListener(this);
 		contentPane.add(btnAnnuler);
 		
-		JLabel lblFactureDEau = new JLabel("Information Bailleur");
-		lblFactureDEau.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblFactureDEau.setBounds(37, 0, 260, 41);
-		contentPane.add(lblFactureDEau);
+		JLabel lblTaxeFonciere = new JLabel("Nouveau Bâtiment");
+		lblTaxeFonciere.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblTaxeFonciere.setBounds(37, 0, 260, 41);
+		contentPane.add(lblTaxeFonciere);
+		
+		champlienpdf = new JTextField();
+		champlienpdf.setColumns(10);
+		champlienpdf.setBounds(177, 222, 68, 20);
+		contentPane.add(champlienpdf);
+		
+		JLabel lblLabelLienPDF_1 = new JLabel("Année de construction :");
+		lblLabelLienPDF_1.setBounds(35, 221, 132, 14);
+		contentPane.add(lblLabelLienPDF_1);
+		
+		JLabel lblLabelEntreprise = new JLabel("* Adresse :");
+		lblLabelEntreprise.setBounds(37, 96, 132, 14);
+		contentPane.add(lblLabelEntreprise);
+		
+		textFieldRefAvis = new JTextField();
+		textFieldRefAvis.setColumns(10);
+		textFieldRefAvis.setBounds(179, 96, 233, 20);
+		contentPane.add(textFieldRefAvis);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(179, 190, 130, 22);
+		contentPane.add(comboBox);
+		
+		JLabel lblListeDesParties = new JLabel("Liste des parties communes :");
+		lblListeDesParties.setBounds(37, 258, 132, 14);
+		contentPane.add(lblListeDesParties);
+		
+		textField = new JTextField();
+		textField.setColumns(10);
+		textField.setBounds(177, 253, 132, 20);
+		contentPane.add(textField);
+		
+		JLabel lblCoproprit = new JLabel("Copropriété :");
+		lblCoproprit.setBounds(37, 288, 132, 14);
+		contentPane.add(lblCoproprit);
+		
+		JCheckBox chckbxNewCheckBox = new JCheckBox("");
+		chckbxNewCheckBox.setBounds(174, 284, 97, 23);
+		contentPane.add(chckbxNewCheckBox);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
-			case "Nouvelle entreprise":
-				this.dispose();
-				new NouvelleEntreprise().setVisible(true);
-				break;
 			case "Annuler":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -264,7 +277,7 @@ public class Bailleur extends JFrame implements ActionListener {
 				
 			case "Facture d'eau":
 				this.dispose();
-				new Bailleur().setVisible(true);
+				new NouveauBati().setVisible(true);
 				break;
 			
 			case "Impositions":
@@ -289,7 +302,7 @@ public class Bailleur extends JFrame implements ActionListener {
 			
 			case "Nouveaux travaux":
 				this.dispose();
-				new Bailleur().setVisible(true);
+				new NouveauBati().setVisible(true);
 				break;
 				
 			case "Nouvelle location":
@@ -309,7 +322,7 @@ public class Bailleur extends JFrame implements ActionListener {
 			
 			case "Taxe fonciere":
 				this.dispose();
-				new TaxeFonciere().setVisible(true);
+				new NouveauBati().setVisible(true);
 				break;
 			case "Autre":
 				this.dispose();

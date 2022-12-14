@@ -1,4 +1,20 @@
+package vue.consultation;
+
 import java.awt.EventQueue;
+
+import vue.Accueil;
+import vue.IRL;
+import vue.InformationsBailleur;
+import vue.Quittances;
+import vue.insertion.Electricite;
+import vue.insertion.Entretien;
+import vue.insertion.FactureEau;
+import vue.insertion.Impositions;
+import vue.insertion.NouveauTravaux;
+import vue.insertion.NouvelleChargeSupp;
+import vue.insertion.NouvelleLocation;
+import vue.insertion.ProtectionJuridique;
+import vue.insertion.TaxeFonciere;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,6 +30,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JTable;
 import java.awt.FlowLayout;
 import javax.swing.table.DefaultTableModel;
+
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
@@ -22,9 +39,10 @@ import java.awt.Color;
 import javax.swing.JToolBar;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JScrollBar;
 import java.awt.Font;
 
-public class AncienneLocation extends JFrame implements ActionListener {
+public class ChargeLocationEnCours extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JTable table;
@@ -36,7 +54,7 @@ public class AncienneLocation extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AncienneLocation frame = new AncienneLocation();
+					ChargeLocationEnCours frame = new ChargeLocationEnCours();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -48,10 +66,11 @@ public class AncienneLocation extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public AncienneLocation() {
-		setTitle("Ancienne Location");
+	public ChargeLocationEnCours() {
+		setBackground(new Color(240, 240, 240));
+		setTitle("Location en cours");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 980, 480);
+		setBounds(100, 100, 960, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
@@ -68,9 +87,9 @@ public class AncienneLocation extends JFrame implements ActionListener {
 		MenuItemNouvelleLocation.addActionListener(this);
 		MenuLocations.add(MenuItemNouvelleLocation);
 		
-		JMenuItem MenuItemLocationEnCour = new JMenuItem("Locations en cours");
-		MenuItemLocationEnCour.addActionListener(this);
-		MenuLocations.add(MenuItemLocationEnCour);
+		JMenuItem MenuItemLocationEnCours = new JMenuItem("Locations en cours");
+		MenuItemLocationEnCours.addActionListener(this);
+		MenuLocations.add(MenuItemLocationEnCours);
 		
 		JMenuItem MenuItemAncienneLocation = new JMenuItem("Anciennes location");
 		MenuItemAncienneLocation.addActionListener(this);
@@ -142,12 +161,11 @@ public class AncienneLocation extends JFrame implements ActionListener {
 		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(23, 50, 916, 270);
+		scrollPane.setBounds(22, 49, 914, 278);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
@@ -170,39 +188,44 @@ public class AncienneLocation extends JFrame implements ActionListener {
 				{null, null, null, null, null, null, null, null},
 			},
 			new String[] {
-				"Libelle", "Locataire", "Date fin", "montant r\u00E9gler loyer", "Montant loyer", "moyen de paiement", "Facture d'eau", "pdf contrat"
+				"LIbelle", "Ordure menagere", "Taxe fonciere", "Partie commune", "Facture Electrique", "Prime", "Prime Jurisprudence", "Annee"
 			}
 		));
 		scrollPane.setViewportView(table);
 		
-		JLabel TitreLocationPasse = new JLabel("Ancienne Location");
-		TitreLocationPasse.setFont(new Font("Tahoma", Font.BOLD, 20));
-		TitreLocationPasse.setBounds(22, 10, 204, 30);
-		contentPane.add(TitreLocationPasse);
+		JLabel TitreLocaCours = new JLabel("Charges Bati");
+		TitreLocaCours.setFont(new Font("Tahoma", Font.BOLD, 20));
+		TitreLocaCours.setBounds(10, 10, 189, 29);
+		contentPane.add(TitreLocaCours);
 		
 		JButton btnCharger = new JButton("Charger");
 		btnCharger.addActionListener(this);
-		btnCharger.setBounds(216, 357, 85, 21);
+		btnCharger.setBounds(35, 376, 85, 21);
 		contentPane.add(btnCharger);
+		
+		JButton btnInserer = new JButton("Inserer");
+		btnInserer.addActionListener(this);
+		btnInserer.setBounds(230, 376, 85, 21);
+		contentPane.add(btnInserer);
+		
+		JButton btnMiseJour = new JButton("Mise à jour");
+		btnMiseJour.addActionListener(this);
+		btnMiseJour.setBounds(414, 376, 85, 21);
+		contentPane.add(btnMiseJour);
+		
+		JButton btnSupprimer = new JButton("Supprimer");
+		btnSupprimer.addActionListener(this);
+		btnSupprimer.setBounds(611, 376, 85, 21);
+		contentPane.add(btnSupprimer);
 		
 		JButton btnAnnuler = new JButton("Annuler");
 		btnAnnuler.addActionListener(this);
-		btnAnnuler.setBounds(642, 357, 85, 21);
+		btnAnnuler.setBounds(816, 376, 85, 21);
 		contentPane.add(btnAnnuler);
-		
-		
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
-			
-			case "Charger" :
-				break;
-			
-			case "Annuler":
-				this.dispose();
-				break;
-
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -250,7 +273,7 @@ public class AncienneLocation extends JFrame implements ActionListener {
 				
 			case "Locations en cours":
 				this.dispose();
-				new LocationEnCours().setVisible(true);
+				new ChargeLocationEnCours().setVisible(true);
 				break;
 			
 			case "Nouveaux travaux":
@@ -281,10 +304,18 @@ public class AncienneLocation extends JFrame implements ActionListener {
 				this.dispose();
 				new NouvelleChargeSupp().setVisible(true);
 				break;
-				
 			case "Travaux en cours":
 				this.dispose();
 				new TravauxEnCours().setVisible(true);
+				break;
+				
+			case "Inserer" :
+				this.dispose();
+				new NouvelleLocation().setVisible(true);
+				break;
+			
+			case "Annuler" :
+				this.dispose();
 				break;
        
 			default:
@@ -292,5 +323,4 @@ public class AncienneLocation extends JFrame implements ActionListener {
 				break;
 		}
 	}
-	
 }

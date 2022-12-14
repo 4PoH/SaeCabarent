@@ -1,3 +1,5 @@
+package vue.insertion;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -14,6 +16,16 @@ import javax.swing.BoxLayout;
 import javax.swing.JTable;
 import java.awt.FlowLayout;
 import javax.swing.table.DefaultTableModel;
+
+import vue.Accueil;
+import vue.IRL;
+import vue.InformationsBailleur;
+import vue.Quittances;
+import vue.consultation.AncienneLocation;
+import vue.consultation.AnciensTravaux;
+import vue.consultation.LocationEnCours;
+import vue.consultation.TravauxEnCours;
+
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
@@ -27,18 +39,13 @@ import javax.swing.JComboBox;
 import java.awt.Font;
 import javax.swing.JTextPane;
 
-public class NouveauTravaux extends JFrame implements ActionListener {
+public class Electricite extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JTextField textFieldNumFac;
-	private JTextField textFieldNumDevis;
-	private JTextField textFieldLibelle;
 	private JTextField textFieldLienPDF;
-	private JTextField textFieldMontant;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField textFieldMontantTotal;
 	private JTextField textField_2;
-	private JTextField textField_3;
 
 	/**
 	 * Launch the application.
@@ -47,7 +54,7 @@ public class NouveauTravaux extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					NouveauTravaux frame = new NouveauTravaux();
+					Electricite frame = new Electricite();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -59,10 +66,10 @@ public class NouveauTravaux extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public NouveauTravaux() {
+	public Electricite() {
 		setTitle("Nouveaux travaux");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(105, 100, 480, 480);
+		setBounds(100, 100, 480, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
@@ -157,67 +164,31 @@ public class NouveauTravaux extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 		
 		textFieldNumFac = new JTextField();
-		textFieldNumFac.setBounds(165, 68, 132, 20);
+		textFieldNumFac.setBounds(165, 126, 132, 20);
 		contentPane.add(textFieldNumFac);
 		textFieldNumFac.setColumns(10);
 		
-		textFieldNumDevis = new JTextField();
-		textFieldNumDevis.setColumns(10);
-		textFieldNumDevis.setBounds(165, 99, 132, 20);
-		contentPane.add(textFieldNumDevis);
-		
 		JLabel lblLabelNumFac = new JLabel("* Numéro de facture :");
-		lblLabelNumFac.setBounds(37, 68, 132, 14);
+		lblLabelNumFac.setBounds(37, 126, 132, 14);
 		contentPane.add(lblLabelNumFac);
-		
-		JLabel lblLabelNumDevis = new JLabel("Numéro de devis :");
-		lblLabelNumDevis.setBounds(37, 99, 132, 14);
-		contentPane.add(lblLabelNumDevis);
-		
-		textFieldLibelle = new JTextField();
-		textFieldLibelle.setColumns(10);
-		textFieldLibelle.setBounds(165, 130, 132, 20);
-		contentPane.add(textFieldLibelle);
-		
-		JLabel lblLabelLibelle = new JLabel("Libellé  :");
-		lblLabelLibelle.setBounds(37, 130, 132, 14);
-		contentPane.add(lblLabelLibelle);
 		
 		textFieldLienPDF = new JTextField();
 		textFieldLienPDF.setColumns(10);
-		textFieldLienPDF.setBounds(165, 161, 68, 20);
+		textFieldLienPDF.setBounds(165, 157, 68, 20);
 		contentPane.add(textFieldLienPDF);
 		
-		JLabel lblLabelDateDebut = new JLabel("Date de début  :");
-		lblLabelDateDebut.setBounds(37, 161, 132, 14);
-		contentPane.add(lblLabelDateDebut);
+		JLabel lblLabelDateFac = new JLabel("Date de la facture  :");
+		lblLabelDateFac.setBounds(37, 157, 132, 14);
+		contentPane.add(lblLabelDateFac);
 		
-		JLabel lblLabelMontant = new JLabel("Montant  :");
-		lblLabelMontant.setBounds(37, 264, 132, 14);
-		contentPane.add(lblLabelMontant);
+		JLabel lblLabelMontantTotal = new JLabel("Montant  total :");
+		lblLabelMontantTotal.setBounds(37, 188, 132, 14);
+		contentPane.add(lblLabelMontantTotal);
 		
-		textFieldMontant = new JTextField();
-		textFieldMontant.setColumns(10);
-		textFieldMontant.setBounds(165, 264, 132, 20);
-		contentPane.add(textFieldMontant);
-		
-		JLabel lblLabelMontantNonDeductible = new JLabel("Montant  non déductible :");
-		lblLabelMontantNonDeductible.setBounds(37, 295, 132, 14);
-		contentPane.add(lblLabelMontantNonDeductible);
-		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(165, 295, 132, 20);
-		contentPane.add(textField);
-		
-		JLabel lblLabelReduction = new JLabel("Réduction :");
-		lblLabelReduction.setBounds(37, 325, 132, 14);
-		contentPane.add(lblLabelReduction);
-		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(165, 325, 132, 20);
-		contentPane.add(textField_1);
+		textFieldMontantTotal = new JTextField();
+		textFieldMontantTotal.setColumns(10);
+		textFieldMontantTotal.setBounds(165, 188, 132, 20);
+		contentPane.add(textFieldMontantTotal);
 		
 		JButton btnAjouter = new JButton("Ajouter");
 		btnAjouter.setBounds(307, 384, 132, 23);
@@ -229,48 +200,30 @@ public class NouveauTravaux extends JFrame implements ActionListener {
 		btnAnnuler.addActionListener(this);
 		contentPane.add(btnAnnuler);
 		
-		
-		JLabel lblNouveauTravaux = new JLabel("Nouveaux Travaux");
-		lblNouveauTravaux.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblNouveauTravaux.setBounds(37, 0, 202, 41);
-		contentPane.add(lblNouveauTravaux);
+		JLabel lblFactureDElectricite = new JLabel("Nouvelle facture d'électricité");
+		lblFactureDElectricite.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblFactureDElectricite.setBounds(37, 0, 350, 41);
+		contentPane.add(lblFactureDElectricite);
 		
 		textField_2 = new JTextField();
 		textField_2.setColumns(10);
-		textField_2.setBounds(165, 353, 235, 20);
+		textField_2.setBounds(165, 220, 235, 20);
 		contentPane.add(textField_2);
 		
 		JLabel lblLabelLienPDF_1 = new JLabel("Lien pdf  :");
-		lblLabelLienPDF_1.setBounds(37, 353, 132, 14);
+		lblLabelLienPDF_1.setBounds(37, 220, 132, 14);
 		contentPane.add(lblLabelLienPDF_1);
 		
-		JLabel lblLabelDateFin = new JLabel("Date de fin :");
-		lblLabelDateFin.setBounds(255, 164, 93, 14);
-		contentPane.add(lblLabelDateFin);
-		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(332, 161, 68, 20);
-		contentPane.add(textField_3);
-		
-		JLabel lblLabelDescription = new JLabel("Description  :");
-		lblLabelDescription.setBounds(37, 194, 132, 14);
-		contentPane.add(lblLabelDescription);
-		
-		JTextPane textPaneDescription = new JTextPane();
-		textPaneDescription.setBounds(165, 192, 235, 61);
-		contentPane.add(textPaneDescription);
-		
 		JLabel lblLabelEntreprise = new JLabel("* Entreprise :");
-		lblLabelEntreprise.setBounds(37, 43, 132, 14);
+		lblLabelEntreprise.setBounds(37, 96, 132, 14);
 		contentPane.add(lblLabelEntreprise);
 		
 		JComboBox comboBoxEntreprise = new JComboBox();
-		comboBoxEntreprise.setBounds(165, 39, 132, 22);
+		comboBoxEntreprise.setBounds(165, 92, 132, 22);
 		contentPane.add(comboBoxEntreprise);
 		
 		JButton btnNouvelleEntreprise = new JButton("Nouvelle entreprise");
-		btnNouvelleEntreprise.setBounds(307, 39, 132, 23);
+		btnNouvelleEntreprise.setBounds(307, 92, 132, 23);
 		btnNouvelleEntreprise.addActionListener(this);
 		contentPane.add(btnNouvelleEntreprise);
 	}
@@ -316,7 +269,7 @@ public class NouveauTravaux extends JFrame implements ActionListener {
 				
 			case "Facture d'eau":
 				this.dispose();
-				new FactureEau().setVisible(true);
+				new Electricite().setVisible(true);
 				break;
 			
 			case "Impositions":
@@ -341,7 +294,7 @@ public class NouveauTravaux extends JFrame implements ActionListener {
 			
 			case "Nouveaux travaux":
 				this.dispose();
-				new NouveauTravaux().setVisible(true);
+				new Electricite().setVisible(true);
 				break;
 				
 			case "Nouvelle location":

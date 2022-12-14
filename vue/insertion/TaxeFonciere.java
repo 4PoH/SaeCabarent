@@ -1,3 +1,5 @@
+package vue.insertion;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -14,6 +16,16 @@ import javax.swing.BoxLayout;
 import javax.swing.JTable;
 import java.awt.FlowLayout;
 import javax.swing.table.DefaultTableModel;
+
+import vue.Accueil;
+import vue.IRL;
+import vue.InformationsBailleur;
+import vue.Quittances;
+import vue.consultation.AncienneLocation;
+import vue.consultation.AnciensTravaux;
+import vue.consultation.LocationEnCours;
+import vue.consultation.TravauxEnCours;
+
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
@@ -25,17 +37,16 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.Font;
+import javax.swing.JTextPane;
 
-public class InformationsBailleur extends JFrame implements ActionListener {
+public class TaxeFonciere extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField textFieldNumFac;
-	private JTextField textFieldDateFac;
-	private JTextField textFieldLibelle;
-	private JTextField textFieldLienPDF;
-	private JTextField textFieldMontant;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField textFieldAnneeFac;
+	private JTextField textFieldMontantPartieFixe;
+	private JTextField textFieldMontantTotal;
+	private JTextField champlienpdf;
+	private JTextField textFieldRefAvis;
 
 	/**
 	 * Launch the application.
@@ -44,7 +55,7 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					InformationsBailleur frame = new InformationsBailleur();
+					TaxeFonciere frame = new TaxeFonciere();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -56,7 +67,7 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public InformationsBailleur() {
+	public TaxeFonciere() {
 		setTitle("Nouveaux travaux");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 480, 480);
@@ -153,68 +164,32 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textFieldNumFac = new JTextField();
-		textFieldNumFac.setBounds(166, 60, 132, 20);
-		contentPane.add(textFieldNumFac);
-		textFieldNumFac.setColumns(10);
+		textFieldAnneeFac = new JTextField();
+		textFieldAnneeFac.setColumns(10);
+		textFieldAnneeFac.setBounds(179, 127, 68, 20);
+		contentPane.add(textFieldAnneeFac);
 		
-		textFieldDateFac = new JTextField();
-		textFieldDateFac.setColumns(10);
-		textFieldDateFac.setBounds(166, 91, 132, 20);
-		contentPane.add(textFieldDateFac);
+		JLabel lblLabelAnneeFac = new JLabel("Année de la facture  :");
+		lblLabelAnneeFac.setBounds(37, 126, 132, 14);
+		contentPane.add(lblLabelAnneeFac);
 		
-		JLabel lblLabelNom = new JLabel("* Nom :");
-		lblLabelNom.setBounds(24, 63, 132, 14);
-		contentPane.add(lblLabelNom);
+		JLabel lblLabelTotalOrdure = new JLabel("Montant ordure ménagère :");
+		lblLabelTotalOrdure.setBounds(35, 158, 144, 14);
+		contentPane.add(lblLabelTotalOrdure);
 		
-		JLabel lblLabelPrenom = new JLabel("* Prenom :");
-		lblLabelPrenom.setBounds(24, 94, 132, 14);
-		contentPane.add(lblLabelPrenom);
+		textFieldMontantPartieFixe = new JTextField();
+		textFieldMontantPartieFixe.setColumns(10);
+		textFieldMontantPartieFixe.setBounds(177, 159, 132, 20);
+		contentPane.add(textFieldMontantPartieFixe);
 		
-		textFieldLibelle = new JTextField();
-		textFieldLibelle.setColumns(10);
-		textFieldLibelle.setBounds(166, 122, 207, 20);
-		contentPane.add(textFieldLibelle);
+		JLabel lblLabelMontantTotal = new JLabel("Montant  total :");
+		lblLabelMontantTotal.setBounds(35, 189, 132, 14);
+		contentPane.add(lblLabelMontantTotal);
 		
-		JLabel lblLabelAdresse = new JLabel("Adresse :");
-		lblLabelAdresse.setBounds(24, 125, 132, 14);
-		contentPane.add(lblLabelAdresse);
-		
-		textFieldLienPDF = new JTextField();
-		textFieldLienPDF.setColumns(10);
-		textFieldLienPDF.setBounds(166, 153, 62, 20);
-		contentPane.add(textFieldLienPDF);
-		
-		JLabel lblLabelCodePostal = new JLabel("Code postal :");
-		lblLabelCodePostal.setBounds(24, 156, 132, 14);
-		contentPane.add(lblLabelCodePostal);
-		
-		JLabel lblLabelVille = new JLabel("Ville :");
-		lblLabelVille.setBounds(24, 184, 132, 14);
-		contentPane.add(lblLabelVille);
-		
-		textFieldMontant = new JTextField();
-		textFieldMontant.setColumns(10);
-		textFieldMontant.setBounds(166, 181, 132, 20);
-		contentPane.add(textFieldMontant);
-		
-		JLabel lblLabelMail = new JLabel("Adresse mail :");
-		lblLabelMail.setBounds(24, 209, 132, 14);
-		contentPane.add(lblLabelMail);
-		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(166, 212, 207, 20);
-		contentPane.add(textField);
-		
-		JLabel lblLabelTelephone = new JLabel("Numéro téléphone :");
-		lblLabelTelephone.setBounds(24, 245, 132, 14);
-		contentPane.add(lblLabelTelephone);
-		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(166, 242, 132, 20);
-		contentPane.add(textField_1);
+		textFieldMontantTotal = new JTextField();
+		textFieldMontantTotal.setColumns(10);
+		textFieldMontantTotal.setBounds(177, 190, 132, 20);
+		contentPane.add(textFieldMontantTotal);
 		
 		JButton btnAjouter = new JButton("Ajouter");
 		btnAjouter.setBounds(307, 384, 132, 23);
@@ -226,10 +201,28 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 		btnAnnuler.addActionListener(this);
 		contentPane.add(btnAnnuler);
 		
-		JLabel lblBailleur = new JLabel("Bailleur");
-		lblBailleur.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblBailleur.setBounds(24, 0, 307, 41);
-		contentPane.add(lblBailleur);
+		JLabel lblTaxeFonciere = new JLabel("Nouvelle taxe foncière");
+		lblTaxeFonciere.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblTaxeFonciere.setBounds(37, 0, 260, 41);
+		contentPane.add(lblTaxeFonciere);
+		
+		champlienpdf = new JTextField();
+		champlienpdf.setColumns(10);
+		champlienpdf.setBounds(177, 222, 235, 20);
+		contentPane.add(champlienpdf);
+		
+		JLabel lblLabelLienPDF_1 = new JLabel("Lien pdf  :");
+		lblLabelLienPDF_1.setBounds(35, 221, 132, 14);
+		contentPane.add(lblLabelLienPDF_1);
+		
+		JLabel lblLabelEntreprise = new JLabel("*Référence avis :");
+		lblLabelEntreprise.setBounds(37, 96, 132, 14);
+		contentPane.add(lblLabelEntreprise);
+		
+		textFieldRefAvis = new JTextField();
+		textFieldRefAvis.setColumns(10);
+		textFieldRefAvis.setBounds(179, 96, 132, 20);
+		contentPane.add(textFieldRefAvis);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -269,7 +262,7 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 				
 			case "Facture d'eau":
 				this.dispose();
-				new FactureEau().setVisible(true);
+				new TaxeFonciere().setVisible(true);
 				break;
 			
 			case "Impositions":
@@ -294,12 +287,12 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 			
 			case "Nouveaux travaux":
 				this.dispose();
-				new InformationsBailleur().setVisible(true);
+				new TaxeFonciere().setVisible(true);
 				break;
 				
 			case "Nouvelle location":
 				this.dispose();
-				new InformationsBailleur().setVisible(true);
+				new NouvelleLocation().setVisible(true);
 				break;
 				
 			case "Protection juridique":

@@ -1,3 +1,5 @@
+package vue.insertion;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -14,6 +16,16 @@ import javax.swing.BoxLayout;
 import javax.swing.JTable;
 import java.awt.FlowLayout;
 import javax.swing.table.DefaultTableModel;
+
+import vue.Accueil;
+import vue.IRL;
+import vue.InformationsBailleur;
+import vue.Quittances;
+import vue.consultation.AncienneLocation;
+import vue.consultation.AnciensTravaux;
+import vue.consultation.LocationEnCours;
+import vue.consultation.TravauxEnCours;
+
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
@@ -25,12 +37,15 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.Font;
+import javax.swing.JTextPane;
 
-public class NouveauContrat extends JFrame implements ActionListener {
+public class ProtectionJuridique extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JTextField textFieldNumFac;
-	private JTextField textFieldLibelle;
+	private JTextField textFieldPrime;
+	private JTextField textFieldLienPDF;
+	private JTextField textField_2;
 	private JTextField textField;
 
 	/**
@@ -40,7 +55,7 @@ public class NouveauContrat extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					NouveauContrat frame = new NouveauContrat();
+					ProtectionJuridique frame = new ProtectionJuridique();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -52,7 +67,7 @@ public class NouveauContrat extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public NouveauContrat() {
+	public ProtectionJuridique() {
 		setTitle("Nouveaux travaux");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 480, 480);
@@ -150,26 +165,31 @@ public class NouveauContrat extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 		
 		textFieldNumFac = new JTextField();
-		textFieldNumFac.setBounds(166, 60, 61, 20);
+		textFieldNumFac.setBounds(165, 126, 132, 20);
 		contentPane.add(textFieldNumFac);
 		textFieldNumFac.setColumns(10);
 		
-		JLabel lblLabelDateMiseEnEffet = new JLabel("* Date de mise en effet :");
-		lblLabelDateMiseEnEffet.setBounds(24, 63, 132, 14);
-		contentPane.add(lblLabelDateMiseEnEffet);
+		textFieldPrime = new JTextField();
+		textFieldPrime.setColumns(10);
+		textFieldPrime.setBounds(165, 157, 68, 20);
+		contentPane.add(textFieldPrime);
 		
-		textFieldLibelle = new JTextField();
-		textFieldLibelle.setColumns(10);
-		textFieldLibelle.setBounds(166, 182, 132, 20);
-		contentPane.add(textFieldLibelle);
+		JLabel lblLabelNumContrat = new JLabel("* Numéro de contrat :");
+		lblLabelNumContrat.setBounds(37, 126, 132, 14);
+		contentPane.add(lblLabelNumContrat);
 		
-		JLabel lblLabelCaution = new JLabel("Caution :");
-		lblLabelCaution.setBounds(24, 185, 132, 14);
-		contentPane.add(lblLabelCaution);
+		JLabel lblLabelPrime = new JLabel("Prime :");
+		lblLabelPrime.setBounds(37, 157, 132, 14);
+		contentPane.add(lblLabelPrime);
 		
-		JLabel lblLabelType = new JLabel("Type de location :");
-		lblLabelType.setBounds(24, 91, 132, 14);
-		contentPane.add(lblLabelType);
+		textFieldLienPDF = new JTextField();
+		textFieldLienPDF.setColumns(10);
+		textFieldLienPDF.setBounds(165, 184, 68, 20);
+		contentPane.add(textFieldLienPDF);
+		
+		JLabel lblLabelPrimeJuris = new JLabel("Prime de jurisprudence :");
+		lblLabelPrimeJuris.setBounds(37, 184, 132, 14);
+		contentPane.add(lblLabelPrimeJuris);
 		
 		JButton btnAjouter = new JButton("Ajouter");
 		btnAjouter.setBounds(307, 384, 132, 23);
@@ -181,60 +201,48 @@ public class NouveauContrat extends JFrame implements ActionListener {
 		btnAnnuler.addActionListener(this);
 		contentPane.add(btnAnnuler);
 		
-		JLabel lblContrat = new JLabel("Nouveau Contrat WIP");
-		lblContrat.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblContrat.setBounds(24, 0, 307, 41);
-		contentPane.add(lblContrat);
+		JLabel lblProtectionJuridique = new JLabel("Nouvelle protection juridique");
+		lblProtectionJuridique.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblProtectionJuridique.setBounds(37, 0, 363, 41);
+		contentPane.add(lblProtectionJuridique);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(166, 87, 132, 22);
-		contentPane.add(comboBox);
+		textField_2 = new JTextField();
+		textField_2.setColumns(10);
+		textField_2.setBounds(165, 245, 235, 20);
+		contentPane.add(textField_2);
 		
-		JLabel lblLabelLibelle = new JLabel("* Locataire(s)  :");
-		lblLabelLibelle.setBounds(23, 152, 132, 14);
-		contentPane.add(lblLabelLibelle);
+		JLabel lblLabelLienPDF_1 = new JLabel("Lien pdf  :");
+		lblLabelLienPDF_1.setBounds(37, 245, 132, 14);
+		contentPane.add(lblLabelLienPDF_1);
 		
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setBounds(165, 149, 132, 22);
-		contentPane.add(comboBox_1);
+		JLabel lblLabelSiren = new JLabel("* Entreprise :");
+		lblLabelSiren.setBounds(37, 96, 132, 14);
+		contentPane.add(lblLabelSiren);
 		
-		JButton btnNouveauLocataire = new JButton("Nouveau Locataire");
-		btnNouveauLocataire.setBounds(307, 148, 132, 23);
-		btnNouveauLocataire.addActionListener(this);
-		contentPane.add(btnNouveauLocataire);
+		JComboBox comboBoxEntreprise = new JComboBox();
+		comboBoxEntreprise.setBounds(165, 92, 132, 22);
+		contentPane.add(comboBoxEntreprise);
 		
-		JLabel lblNombreDeLocataires = new JLabel("Nombre de locataire(s) :");
-		lblNombreDeLocataires.setBounds(24, 119, 132, 14);
-		contentPane.add(lblNombreDeLocataires);
+		JButton btnNouvelleEntreprise = new JButton("Nouvelle entreprise");
+		btnNouvelleEntreprise.setBounds(307, 92, 132, 23);
+		btnNouvelleEntreprise.addActionListener(this);
+		contentPane.add(btnNouvelleEntreprise);
+		
+		JLabel lblLabelDateObtention = new JLabel("Date d'obtention :");
+		lblLabelDateObtention.setBounds(37, 215, 132, 14);
+		contentPane.add(lblLabelDateObtention);
 		
 		textField = new JTextField();
 		textField.setColumns(10);
-		textField.setBounds(166, 116, 19, 20);
+		textField.setBounds(165, 215, 68, 20);
 		contentPane.add(textField);
-		
-		JLabel lblDocumentss = new JLabel("* Documents(s)  :");
-		lblDocumentss.setBounds(23, 217, 132, 14);
-		contentPane.add(lblDocumentss);
-		
-		JComboBox comboBox_1_1 = new JComboBox();
-		comboBox_1_1.setBounds(165, 214, 132, 22);
-		contentPane.add(comboBox_1_1);
-		
-		JButton btnNouveauDocument = new JButton("Nouveau Document");
-		btnNouveauDocument.setBounds(307, 213, 132, 23);
-		btnNouveauDocument.addActionListener(this);
-		contentPane.add(btnNouveauDocument);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
-			case "Nouveau Document":
+			case "Nouvelle entreprise":
 				this.dispose();
-				new NouveauDocumentContrat().setVisible(true);
-				break;
-			case "Nouveau Locataire":
-				this.dispose();
-				new NouveauLocataire().setVisible(true);
+				new NouvelleEntreprise().setVisible(true);
 				break;
 			case "Annuler":
 				this.dispose();
@@ -271,7 +279,7 @@ public class NouveauContrat extends JFrame implements ActionListener {
 				
 			case "Facture d'eau":
 				this.dispose();
-				new FactureEau().setVisible(true);
+				new ProtectionJuridique().setVisible(true);
 				break;
 			
 			case "Impositions":
@@ -296,12 +304,12 @@ public class NouveauContrat extends JFrame implements ActionListener {
 			
 			case "Nouveaux travaux":
 				this.dispose();
-				new InformationsBailleur().setVisible(true);
+				new ProtectionJuridique().setVisible(true);
 				break;
 				
 			case "Nouvelle location":
 				this.dispose();
-				new InformationsBailleur().setVisible(true);
+				new NouvelleLocation().setVisible(true);
 				break;
 				
 			case "Protection juridique":

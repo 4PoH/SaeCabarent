@@ -1,30 +1,45 @@
-import java.awt.EventQueue;
+package vue;
 
+import java.awt.BorderLayout;
+import java.awt.DisplayMode;
+import java.awt.EventQueue;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.awt.GridLayout;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JMenu;
-import javax.swing.SwingConstants;
-import java.awt.Insets;
-import javax.swing.JButton;
-import javax.swing.BoxLayout;
-import javax.swing.JTable;
-import java.awt.FlowLayout;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import java.awt.BorderLayout;
-import javax.swing.JLabel;
-import javax.swing.border.LineBorder;
-import java.awt.Color;
-import javax.swing.JToolBar;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.Font;
+import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
-public class TravauxEnCours extends JFrame implements ActionListener {
+import vue.consultation.AncienneLocation;
+import vue.consultation.AnciensTravaux;
+import vue.consultation.LocationEnCours;
+import vue.consultation.TravauxEnCours;
+import vue.insertion.Bati;
+import vue.insertion.Electricite;
+import vue.insertion.Entretien;
+import vue.insertion.FactureEau;
+import vue.insertion.Impositions;
+import vue.insertion.NouveauTravaux;
+import vue.insertion.NouvelleChargeSupp;
+import vue.insertion.NouvelleLocation;
+import vue.insertion.ProtectionJuridique;
+import vue.insertion.TaxeFonciere;
+
+import javax.swing.ListSelectionModel;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
+import javax.swing.SwingConstants;
+
+public class Accueil extends JFrame implements ActionListener, MouseListener{
 
 	private JPanel contentPane;
 	private JTable table;
@@ -36,9 +51,9 @@ public class TravauxEnCours extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TravauxEnCours frame = new TravauxEnCours();
+					Accueil frame = new Accueil();
 					frame.setVisible(true);
-				} catch (Exception e) {
+					} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -48,13 +63,13 @@ public class TravauxEnCours extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public TravauxEnCours() {
-		setTitle("Travaux en cours");
+	public Accueil(){
+		setTitle("Accueil");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 980, 480);
+		setBounds(100, 100, 720, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
-		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
+		menuBarTop.setMargin(new Insets(5, 5, 5, 5));
 		setJMenuBar(menuBarTop);
 		
 		JButton ButtonAccueil = new JButton("Accueil");
@@ -146,85 +161,55 @@ public class TravauxEnCours extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 64, 946, 269);
+		scrollPane.setBounds(10, 10, 680, 300);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
+		table.addMouseListener(this);
+		table.setRowSelectionAllowed(false);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.setSurrendersFocusOnKeystroke(true);
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
+				{"75 Avenue des Pyr\u00E9n\u00E9es, 75m\u00B2, T3, Ivan LATERREUR", "+ 262.25 \u20AC", ""},
+				{"4 Rue du Sacré Graal, 143m², T4, Ni", "+ 353.45", ""},
+				{"6 Avenue de la Cantina, 232m², T5, Georges Lucas", "+ 799.50 €", ""},
+				{"12 Impasse Zoubida, 123m², T4, Gaston Lagaf", "+ 666.60 €", ""},
+				{null, null, null},
+				{null, null, null},
 			},
 			new String[] {
-				"Numero SIREN", "numero Facture", "numero Devis", "libelle", "date debut", "date fin", "detail", "montant payer", "montant non deductible", "reduction", "pdf"
+				"Adresse", "Revenue", ""
 			}
-		));
+		) {
+			Class[] columnTypes = new Class[] {
+				String.class, String.class, String.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+		});
+		table.getColumnModel().getColumn(0).setPreferredWidth(560);
+		table.getColumnModel().getColumn(1).setPreferredWidth(120);
+		table.getColumnModel().getColumn(2).setPreferredWidth(40);
 		scrollPane.setViewportView(table);
 		
-		JLabel TitreTravauxC = new JLabel("Travaux en cours");
-		TitreTravauxC.setFont(new Font("Tahoma", Font.BOLD, 20));
-		TitreTravauxC.setBounds(10, 10, 195, 32);
-		contentPane.add(TitreTravauxC);
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.setBounds(10, 380, 680, 30);
+		contentPane.add(menuBar);
 		
-		JButton btnCharger = new JButton("Charger");
-		btnCharger.addActionListener(this);
-		btnCharger.setBounds(87, 372, 85, 21);
-		contentPane.add(btnCharger);
+		JButton ButtonRegimeFoncier = new JButton("Regime foncier");
+		menuBar.add(ButtonRegimeFoncier);
 		
-		JButton btnInserer = new JButton("Inserer");
-		btnInserer.addActionListener(this);
-		btnInserer.setBounds(271, 372, 85, 21);
-		contentPane.add(btnInserer);
+		JLabel LabelTotal = new JLabel("Total : ");
+		LabelTotal.setHorizontalAlignment(SwingConstants.RIGHT);
+		menuBar.add(LabelTotal);
 		
-		JButton btnMiseJour = new JButton("Mise à jour");
-		btnMiseJour.addActionListener(this);
-		btnMiseJour.setBounds(459, 372, 85, 21);
-		contentPane.add(btnMiseJour);
-		
-		JButton btnSupprimer = new JButton("Supprimer");
-		btnSupprimer.addActionListener(this);
-		btnSupprimer.setBounds(640, 372, 85, 21);
-		contentPane.add(btnSupprimer);
-		
-		JButton btnAnnuler = new JButton("Annuler");
-		btnAnnuler.addActionListener(this);
-		btnAnnuler.setBounds(813, 372, 85, 21);
-		contentPane.add(btnAnnuler);
+		//table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
-			case "Charger" :
-			break;
-			
-			case "Inserer" :
-				this.dispose();
-				new NouveauTravaux().setVisible(true);
-				break;
-			
-			case "Mise à Jour":
-				break;
-			
-			case "Supprimer":
-				break;
-			
-			case "Annuler":
-				this.dispose();
-				break;
-		
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -302,7 +287,7 @@ public class TravauxEnCours extends JFrame implements ActionListener {
 			case "Autre":
 				this.dispose();
 				new NouvelleChargeSupp().setVisible(true);
-				break;
+				break;				
 			case "Travaux en cours":
 				this.dispose();
 				new TravauxEnCours().setVisible(true);
@@ -312,5 +297,17 @@ public class TravauxEnCours extends JFrame implements ActionListener {
 				System.out.println("Choix incorrect");
 				break;
 		}
+	}
+	public void mouseClicked(MouseEvent e) {
+		this.dispose();
+		new Bati().setVisible(true);
+	}
+	public void mouseEntered(MouseEvent e) {
+	}
+	public void mouseExited(MouseEvent e) {
+	}
+	public void mousePressed(MouseEvent e) {
+	}
+	public void mouseReleased(MouseEvent e) {
 	}
 }

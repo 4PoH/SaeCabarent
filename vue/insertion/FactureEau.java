@@ -1,3 +1,5 @@
+package vue.insertion;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -14,6 +16,16 @@ import javax.swing.BoxLayout;
 import javax.swing.JTable;
 import java.awt.FlowLayout;
 import javax.swing.table.DefaultTableModel;
+
+import vue.Accueil;
+import vue.IRL;
+import vue.InformationsBailleur;
+import vue.Quittances;
+import vue.consultation.AncienneLocation;
+import vue.consultation.AnciensTravaux;
+import vue.consultation.LocationEnCours;
+import vue.consultation.TravauxEnCours;
+
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
@@ -22,12 +34,23 @@ import java.awt.Color;
 import javax.swing.JToolBar;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
 import java.awt.Font;
+import javax.swing.JTextPane;
 
-public class IRL extends JFrame implements ActionListener {
+public class FactureEau extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTable table;
+	private JTextField textFieldNumFac;
+	private JTextField textFieldNumDevis;
+	private JTextField textFieldLibelle;
+	private JTextField textFieldLienPDF;
+	private JTextField textFieldMontant;
+	private JTextField textField;
+	private JTextField textField_1;
+	private JTextField textField_2;
+	private JTextField textField_3;
 
 	/**
 	 * Launch the application.
@@ -36,7 +59,7 @@ public class IRL extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					IRL frame = new IRL();
+					FactureEau frame = new FactureEau();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -48,8 +71,8 @@ public class IRL extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public IRL() {
-		setTitle("IRL");
+	public FactureEau() {
+		setTitle("Nouveaux travaux");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 480, 480);
 		
@@ -145,48 +168,138 @@ public class IRL extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(36, 66, 376, 170);
-		contentPane.add(scrollPane);
+		textFieldNumFac = new JTextField();
+		textFieldNumFac.setBounds(165, 65, 132, 20);
+		contentPane.add(textFieldNumFac);
+		textFieldNumFac.setColumns(10);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-			},
-			new String[] {
-				"Annee", "Trimestre", "Montant"
-			}
-		));
-		scrollPane.setViewportView(table);
+		textFieldNumDevis = new JTextField();
+		textFieldNumDevis.setColumns(10);
+		textFieldNumDevis.setBounds(165, 96, 132, 20);
+		contentPane.add(textFieldNumDevis);
 		
-		JButton btnNewButton = new JButton("Annuler");
-		btnNewButton.setBounds(355, 389, 85, 21);
-		contentPane.add(btnNewButton);
+		JLabel lblLabelNumFac = new JLabel("* Numéro de facture :");
+		lblLabelNumFac.setBounds(37, 65, 132, 14);
+		contentPane.add(lblLabelNumFac);
 		
-		JButton btnConfirmer = new JButton("Supprimer");
-		btnConfirmer.setBounds(244, 389, 85, 21);
-		contentPane.add(btnConfirmer);
+		JLabel lblLabelNumDevis = new JLabel("Numéro de devis :");
+		lblLabelNumDevis.setBounds(37, 96, 132, 14);
+		contentPane.add(lblLabelNumDevis);
 		
-		JButton btnInserer = new JButton("Inserer");
-		btnInserer.setBounds(21, 389, 85, 21);
-		contentPane.add(btnInserer);
+		textFieldLibelle = new JTextField();
+		textFieldLibelle.setColumns(10);
+		textFieldLibelle.setBounds(165, 127, 132, 20);
+		contentPane.add(textFieldLibelle);
 		
-		JLabel lblNewLabel = new JLabel("IRL");
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblNewLabel.setBounds(10, 32, 45, 13);
-		contentPane.add(lblNewLabel);
+		JLabel lblLabelLibelle = new JLabel("Libellé  :");
+		lblLabelLibelle.setBounds(37, 127, 132, 14);
+		contentPane.add(lblLabelLibelle);
 		
-		JButton btnModifier = new JButton("Modifier");
-		btnModifier.addActionListener(this);
-		btnModifier.setBounds(135, 389, 85, 21);
-		contentPane.add(btnModifier);
+		textFieldLienPDF = new JTextField();
+		textFieldLienPDF.setColumns(10);
+		textFieldLienPDF.setBounds(165, 158, 68, 20);
+		contentPane.add(textFieldLienPDF);
+		
+		JLabel lblLabelDateDebut = new JLabel("Date de début  :");
+		lblLabelDateDebut.setBounds(37, 158, 132, 14);
+		contentPane.add(lblLabelDateDebut);
+		
+		JLabel lblLabelMontant = new JLabel("Montant  :");
+		lblLabelMontant.setBounds(37, 261, 132, 14);
+		contentPane.add(lblLabelMontant);
+		
+		textFieldMontant = new JTextField();
+		textFieldMontant.setColumns(10);
+		textFieldMontant.setBounds(165, 261, 132, 20);
+		contentPane.add(textFieldMontant);
+		
+		JLabel lblLabelMontantNonDeductible = new JLabel("Montant  non déductible :");
+		lblLabelMontantNonDeductible.setBounds(37, 292, 132, 14);
+		contentPane.add(lblLabelMontantNonDeductible);
+		
+		textField = new JTextField();
+		textField.setColumns(10);
+		textField.setBounds(165, 292, 132, 20);
+		contentPane.add(textField);
+		
+		JLabel lblLabelReduction = new JLabel("Réduction :");
+		lblLabelReduction.setBounds(37, 322, 132, 14);
+		contentPane.add(lblLabelReduction);
+		
+		textField_1 = new JTextField();
+		textField_1.setColumns(10);
+		textField_1.setBounds(165, 322, 132, 20);
+		contentPane.add(textField_1);
+		
+		JButton btnAjouter = new JButton("Ajouter");
+		btnAjouter.setBounds(307, 384, 132, 23);
+		btnAjouter.addActionListener(this);
+		contentPane.add(btnAjouter);
+		
+		JButton btnAnnuler = new JButton("Annuler");
+		btnAnnuler.setBounds(49, 384, 132, 23);
+		btnAnnuler.addActionListener(this);
+		contentPane.add(btnAnnuler);
+		
+		JLabel lblFactureDEau = new JLabel("Nouvelle facture d'eau");
+		lblFactureDEau.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblFactureDEau.setBounds(37, 0, 260, 41);
+		contentPane.add(lblFactureDEau);
+		
+		textField_2 = new JTextField();
+		textField_2.setColumns(10);
+		textField_2.setBounds(165, 350, 235, 20);
+		contentPane.add(textField_2);
+		
+		JLabel lblLabelLienPDF_1 = new JLabel("Lien pdf  :");
+		lblLabelLienPDF_1.setBounds(37, 350, 132, 14);
+		contentPane.add(lblLabelLienPDF_1);
+		
+		JLabel lblLabelDateFin = new JLabel("Date de fin :");
+		lblLabelDateFin.setBounds(255, 161, 93, 14);
+		contentPane.add(lblLabelDateFin);
+		
+		textField_3 = new JTextField();
+		textField_3.setColumns(10);
+		textField_3.setBounds(332, 158, 68, 20);
+		contentPane.add(textField_3);
+		
+		JLabel lblLabelDescription = new JLabel("Description  :");
+		lblLabelDescription.setBounds(37, 191, 132, 14);
+		contentPane.add(lblLabelDescription);
+		
+		JTextPane textPaneDescription = new JTextPane();
+		textPaneDescription.setBounds(165, 189, 235, 60);
+		contentPane.add(textPaneDescription);
+		
+		JLabel lblLabelEntreprise = new JLabel("* Entreprise :");
+		lblLabelEntreprise.setBounds(37, 40, 132, 14);
+		contentPane.add(lblLabelEntreprise);
+		
+		JComboBox comboBoxEntreprise = new JComboBox();
+		comboBoxEntreprise.setBounds(165, 36, 132, 22);
+		contentPane.add(comboBoxEntreprise);
+		
+		JButton btnNouvelleEntreprise = new JButton("Nouvelle entreprise");
+		btnNouvelleEntreprise.setBounds(307, 36, 132, 23);
+		btnNouvelleEntreprise.addActionListener(this);
+		contentPane.add(btnNouvelleEntreprise);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Nouvelle entreprise":
+				this.dispose();
+				new NouvelleEntreprise().setVisible(true);
+				break;
+			case "Annuler":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
+			case "Ajouter":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -239,7 +352,7 @@ public class IRL extends JFrame implements ActionListener {
 			
 			case "Nouveaux travaux":
 				this.dispose();
-				new NouveauTravaux().setVisible(true);
+				new FactureEau().setVisible(true);
 				break;
 				
 			case "Nouvelle location":

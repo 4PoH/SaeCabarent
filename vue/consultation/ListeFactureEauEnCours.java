@@ -1,27 +1,48 @@
-import java.awt.BorderLayout;
-import java.awt.DisplayMode;
-import java.awt.EventQueue;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+package vue.consultation;
 
-import javax.swing.JButton;
+
+import java.awt.EventQueue;
+import vue.Accueil;
+import vue.IRL;
+import vue.InformationsBailleur;
+import vue.Quittances;
+import vue.insertion.Electricite;
+import vue.insertion.Entretien;
+import vue.insertion.FactureEau;
+import vue.insertion.Impositions;
+import vue.insertion.NouveauTravaux;
+import vue.insertion.NouvelleChargeSupp;
+import vue.insertion.NouvelleLocation;
+import vue.insertion.ProtectionJuridique;
+import vue.insertion.TaxeFonciere;
+
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import java.awt.GridLayout;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.ListSelectionModel;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
+import javax.swing.JMenu;
 import javax.swing.SwingConstants;
+import java.awt.Insets;
+import javax.swing.JButton;
+import javax.swing.BoxLayout;
+import javax.swing.JTable;
+import java.awt.FlowLayout;
+import javax.swing.table.DefaultTableModel;
 
-public class Accueil extends JFrame implements ActionListener, MouseListener{
+import javax.swing.JScrollPane;
+import java.awt.BorderLayout;
+import javax.swing.JLabel;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
+import javax.swing.JToolBar;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JScrollBar;
+import java.awt.Font;
+
+public class ListeFactureEauEnCours extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JTable table;
@@ -33,9 +54,9 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Accueil frame = new Accueil();
+					ListeFactureEauEnCours frame = new ListeFactureEauEnCours();
 					frame.setVisible(true);
-					} catch (Exception e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -45,13 +66,14 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 	/**
 	 * Create the frame.
 	 */
-	public Accueil(){
-		setTitle("Accueil");
+	public ListeFactureEauEnCours() {
+		setBackground(new Color(240, 240, 240));
+		setTitle("Location en cours");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 720, 480);
+		setBounds(100, 100, 960, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
-		menuBarTop.setMargin(new Insets(5, 5, 5, 5));
+		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
 		setJMenuBar(menuBarTop);
 		
 		JButton ButtonAccueil = new JButton("Accueil");
@@ -65,9 +87,9 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 		MenuItemNouvelleLocation.addActionListener(this);
 		MenuLocations.add(MenuItemNouvelleLocation);
 		
-		JMenuItem MenuItemLocationEnCour = new JMenuItem("Locations en cours");
-		MenuItemLocationEnCour.addActionListener(this);
-		MenuLocations.add(MenuItemLocationEnCour);
+		JMenuItem MenuItemLocationEnCours = new JMenuItem("Locations en cours");
+		MenuItemLocationEnCours.addActionListener(this);
+		MenuLocations.add(MenuItemLocationEnCours);
 		
 		JMenuItem MenuItemAncienneLocation = new JMenuItem("Anciennes location");
 		MenuItemAncienneLocation.addActionListener(this);
@@ -143,51 +165,63 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 		contentPane.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 10, 680, 300);
+		scrollPane.setBounds(22, 49, 914, 278);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
-		table.addMouseListener(this);
-		table.setRowSelectionAllowed(false);
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table.setSurrendersFocusOnKeystroke(true);
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{"75 Avenue des Pyr\u00E9n\u00E9es, 75m\u00B2, T3, Ivan LATERREUR", "+ 262.25 \u20AC", ""},
-				{"4 Rue du Sacré Graal, 143m², T4, Ni", "+ 353.45", ""},
-				{"6 Avenue de la Cantina, 232m², T5, Georges Lucas", "+ 799.50 €", ""},
-				{"12 Impasse Zoubida, 123m², T4, Gaston Lagaf", "+ 666.60 €", ""},
-				{null, null, null},
-				{null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
 			},
 			new String[] {
-				"Adresse", "Revenue", ""
+				"Location", "Numero facture", "Date facture", "Prix unitaire m3", "Mode de paiment", "Montant payer", "Partie fixe", "Total", "Pdf"
 			}
-		) {
-			Class[] columnTypes = new Class[] {
-				String.class, String.class, String.class
-			};
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-		});
-		table.getColumnModel().getColumn(0).setPreferredWidth(560);
-		table.getColumnModel().getColumn(1).setPreferredWidth(120);
-		table.getColumnModel().getColumn(2).setPreferredWidth(40);
+		));
 		scrollPane.setViewportView(table);
 		
-		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBounds(10, 380, 680, 30);
-		contentPane.add(menuBar);
+		JLabel TitreLocaCours = new JLabel("Facture d'eau");
+		TitreLocaCours.setFont(new Font("Tahoma", Font.BOLD, 20));
+		TitreLocaCours.setBounds(10, 10, 189, 29);
+		contentPane.add(TitreLocaCours);
 		
-		JButton ButtonRegimeFoncier = new JButton("Regime foncier");
-		menuBar.add(ButtonRegimeFoncier);
+		JButton btnCharger = new JButton("Charger");
+		btnCharger.addActionListener(this);
+		btnCharger.setBounds(35, 376, 85, 21);
+		contentPane.add(btnCharger);
 		
-		JLabel LabelTotal = new JLabel("Total : ");
-		LabelTotal.setHorizontalAlignment(SwingConstants.RIGHT);
-		menuBar.add(LabelTotal);
+		JButton btnInserer = new JButton("Inserer");
+		btnInserer.addActionListener(this);
+		btnInserer.setBounds(230, 376, 85, 21);
+		contentPane.add(btnInserer);
 		
-		//table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		JButton btnMiseJour = new JButton("Mise à jour");
+		btnMiseJour.addActionListener(this);
+		btnMiseJour.setBounds(414, 376, 85, 21);
+		contentPane.add(btnMiseJour);
+		
+		JButton btnSupprimer = new JButton("Supprimer");
+		btnSupprimer.addActionListener(this);
+		btnSupprimer.setBounds(611, 376, 85, 21);
+		contentPane.add(btnSupprimer);
+		
+		JButton btnAnnuler = new JButton("Annuler");
+		btnAnnuler.addActionListener(this);
+		btnAnnuler.setBounds(816, 376, 85, 21);
+		contentPane.add(btnAnnuler);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -239,7 +273,7 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 				
 			case "Locations en cours":
 				this.dispose();
-				new LocationEnCours().setVisible(true);
+				new ListeFactureEauEnCours().setVisible(true);
 				break;
 			
 			case "Nouveaux travaux":
@@ -269,27 +303,24 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 			case "Autre":
 				this.dispose();
 				new NouvelleChargeSupp().setVisible(true);
-				break;				
+				break;
 			case "Travaux en cours":
 				this.dispose();
 				new TravauxEnCours().setVisible(true);
+				break;
+				
+			case "Inserer" :
+				this.dispose();
+				new NouvelleLocation().setVisible(true);
+				break;
+			
+			case "Annuler" :
+				this.dispose();
 				break;
        
 			default:
 				System.out.println("Choix incorrect");
 				break;
 		}
-	}
-	public void mouseClicked(MouseEvent e) {
-		this.dispose();
-		new Bati().setVisible(true);
-	}
-	public void mouseEntered(MouseEvent e) {
-	}
-	public void mouseExited(MouseEvent e) {
-	}
-	public void mousePressed(MouseEvent e) {
-	}
-	public void mouseReleased(MouseEvent e) {
 	}
 }
