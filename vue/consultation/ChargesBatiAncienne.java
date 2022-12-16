@@ -1,6 +1,5 @@
 package vue.consultation;
 
-
 import java.awt.EventQueue;
 import vue.Accueil;
 import vue.IRL;
@@ -41,7 +40,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JScrollBar;
 import java.awt.Font;
 
-public class ListeFactureEauAncienne extends JFrame implements ActionListener {
+public class ChargesBatiAncienne extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JTable table;
@@ -53,7 +52,7 @@ public class ListeFactureEauAncienne extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ListeFactureEauAncienne frame = new ListeFactureEauAncienne();
+					ChargesBatiAncienne frame = new ChargesBatiAncienne();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -65,7 +64,7 @@ public class ListeFactureEauAncienne extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public ListeFactureEauAncienne() {
+	public ChargesBatiAncienne() {
 		setBackground(new Color(240, 240, 240));
 		setTitle("Location en cours");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -184,26 +183,27 @@ public class ListeFactureEauAncienne extends JFrame implements ActionListener {
 				{null, null, null, null, null, null, null, null},
 				{null, null, null, null, null, null, null, null},
 				{null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null},
 			},
 			new String[] {
-				"Location", "Numero facture", "Date facture", "Prix unitaire m3", "Montant payer", "Partie fixe", "Total", "Pdf"
+				"Libelle", "Locataire", "montant loyer", "montant charges", "montant payer", "facture d'eau", "num\u00E9ro quitance", "pdf contrat"
 			}
 		));
 		scrollPane.setViewportView(table);
 		
-		JLabel TitreLocaCours = new JLabel("Facture d'eau ancienne");
+		JLabel TitreLocaCours = new JLabel("Ancienne Location");
 		TitreLocaCours.setFont(new Font("Tahoma", Font.BOLD, 20));
-		TitreLocaCours.setBounds(10, 10, 257, 29);
+		TitreLocaCours.setBounds(10, 10, 189, 29);
 		contentPane.add(TitreLocaCours);
 		
 		JButton btnCharger = new JButton("Charger");
 		btnCharger.addActionListener(this);
-		btnCharger.setBounds(123, 376, 85, 21);
+		btnCharger.setBounds(98, 376, 85, 21);
 		contentPane.add(btnCharger);
 		
 		JButton btnAnnuler = new JButton("Annuler");
 		btnAnnuler.addActionListener(this);
-		btnAnnuler.setBounds(771, 376, 85, 21);
+		btnAnnuler.setBounds(774, 376, 85, 21);
 		contentPane.add(btnAnnuler);
 	}
 	
@@ -256,7 +256,7 @@ public class ListeFactureEauAncienne extends JFrame implements ActionListener {
 				
 			case "Locations en cours":
 				this.dispose();
-				new ListeFactureEauAncienne().setVisible(true);
+				new ChargesBatiAncienne().setVisible(true);
 				break;
 			
 			case "Nouveaux travaux":
