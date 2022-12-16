@@ -42,13 +42,13 @@ import java.awt.Font;
 public class NouveauLocataire extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField textFieldNumFac;
-	private JTextField textFieldLibelle;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
+	private JTextField textFieldNom;
+	private JTextField textFieldPrenom;
+	private JTextField textFieldAdresse;
+	private JTextField textFieldCodePostal;
+	private JTextField textFieldVille;
+	private JTextField textFieldMail;
+	private JTextField textFieldTelephone;
 
 	/**
 	 * Launch the application.
@@ -166,23 +166,23 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textFieldNumFac = new JTextField();
-		textFieldNumFac.setBounds(166, 60, 132, 20);
-		contentPane.add(textFieldNumFac);
-		textFieldNumFac.setColumns(10);
+		textFieldNom = new JTextField();
+		textFieldNom.setBounds(166, 60, 132, 20);
+		contentPane.add(textFieldNom);
+		textFieldNom.setColumns(10);
 		
-		JLabel lblLabelDateMiseEnEffet = new JLabel("Nom :");
-		lblLabelDateMiseEnEffet.setBounds(24, 63, 132, 14);
-		contentPane.add(lblLabelDateMiseEnEffet);
+		JLabel lblLabelNom = new JLabel("Nom :");
+		lblLabelNom.setBounds(24, 63, 132, 14);
+		contentPane.add(lblLabelNom);
 		
-		textFieldLibelle = new JTextField();
-		textFieldLibelle.setColumns(10);
-		textFieldLibelle.setBounds(166, 91, 132, 20);
-		contentPane.add(textFieldLibelle);
+		textFieldPrenom = new JTextField();
+		textFieldPrenom.setColumns(10);
+		textFieldPrenom.setBounds(166, 91, 132, 20);
+		contentPane.add(textFieldPrenom);
 		
-		JLabel lblLabelCaution = new JLabel("Prénom :");
-		lblLabelCaution.setBounds(24, 94, 132, 14);
-		contentPane.add(lblLabelCaution);
+		JLabel lblLabelPrenom = new JLabel("Prénom :");
+		lblLabelPrenom.setBounds(24, 94, 132, 14);
+		contentPane.add(lblLabelPrenom);
 		
 		JButton btnAjouter = new JButton("Ajouter");
 		btnAjouter.setBounds(307, 384, 132, 23);
@@ -199,50 +199,50 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 		lblLocataire.setBounds(24, 0, 307, 41);
 		contentPane.add(lblLocataire);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(166, 122, 228, 20);
-		contentPane.add(textField);
+		textFieldAdresse = new JTextField();
+		textFieldAdresse.setColumns(10);
+		textFieldAdresse.setBounds(166, 122, 228, 20);
+		contentPane.add(textFieldAdresse);
 		
-		JLabel lblAdresse = new JLabel("Adresse :");
-		lblAdresse.setBounds(24, 125, 132, 14);
-		contentPane.add(lblAdresse);
+		JLabel lblLabelAdresse = new JLabel("Adresse :");
+		lblLabelAdresse.setBounds(24, 125, 132, 14);
+		contentPane.add(lblLabelAdresse);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(166, 153, 61, 20);
-		contentPane.add(textField_1);
+		textFieldCodePostal = new JTextField();
+		textFieldCodePostal.setColumns(10);
+		textFieldCodePostal.setBounds(166, 153, 61, 20);
+		contentPane.add(textFieldCodePostal);
 		
-		JLabel lblCodePostal = new JLabel("Code postal :");
-		lblCodePostal.setBounds(24, 156, 132, 14);
-		contentPane.add(lblCodePostal);
+		JLabel lblLabelCodePostal = new JLabel("Code postal :");
+		lblLabelCodePostal.setBounds(24, 156, 132, 14);
+		contentPane.add(lblLabelCodePostal);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(166, 184, 132, 20);
-		contentPane.add(textField_2);
+		textFieldVille = new JTextField();
+		textFieldVille.setColumns(10);
+		textFieldVille.setBounds(166, 184, 132, 20);
+		contentPane.add(textFieldVille);
 		
-		JLabel lblVille = new JLabel("Ville :");
-		lblVille.setBounds(24, 187, 132, 14);
-		contentPane.add(lblVille);
+		JLabel lblLabelVille = new JLabel("Ville :");
+		lblLabelVille.setBounds(24, 187, 132, 14);
+		contentPane.add(lblLabelVille);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(166, 215, 228, 20);
-		contentPane.add(textField_3);
+		textFieldMail = new JTextField();
+		textFieldMail.setColumns(10);
+		textFieldMail.setBounds(166, 215, 228, 20);
+		contentPane.add(textFieldMail);
 		
-		JLabel lblAdresseMail = new JLabel("Adresse mail :");
-		lblAdresseMail.setBounds(24, 218, 132, 14);
-		contentPane.add(lblAdresseMail);
+		JLabel lblLabelMail = new JLabel("Adresse mail :");
+		lblLabelMail.setBounds(24, 218, 132, 14);
+		contentPane.add(lblLabelMail);
 		
-		textField_4 = new JTextField();
-		textField_4.setColumns(10);
-		textField_4.setBounds(166, 246, 132, 20);
-		contentPane.add(textField_4);
+		textFieldTelephone = new JTextField();
+		textFieldTelephone.setColumns(10);
+		textFieldTelephone.setBounds(166, 246, 132, 20);
+		contentPane.add(textFieldTelephone);
 		
-		JLabel lblNumroDeTlphone = new JLabel("Numéro de téléphone :");
-		lblNumroDeTlphone.setBounds(24, 249, 132, 14);
-		contentPane.add(lblNumroDeTlphone);
+		JLabel lblLabelTelephone = new JLabel("Numéro de téléphone :");
+		lblLabelTelephone.setBounds(24, 249, 132, 14);
+		contentPane.add(lblLabelTelephone);
 	}
 	
 	public void actionPerformed(ActionEvent e) {

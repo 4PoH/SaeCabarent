@@ -45,9 +45,9 @@ public class ProtectionJuridique extends JFrame implements ActionListener {
 	private JPanel contentPane;
 	private JTextField textFieldNumFac;
 	private JTextField textFieldPrime;
+	private JTextField textFieldPrimeJurisprudence;
 	private JTextField textFieldLienPDF;
-	private JTextField textField_2;
-	private JTextField textField;
+	private JTextField textFieldDate;
 
 	/**
 	 * Launch the application.
@@ -175,22 +175,22 @@ public class ProtectionJuridique extends JFrame implements ActionListener {
 		textFieldPrime.setBounds(165, 157, 68, 20);
 		contentPane.add(textFieldPrime);
 		
-		JLabel lblLabelNumContrat = new JLabel("* Numéro de contrat :");
-		lblLabelNumContrat.setBounds(37, 126, 132, 14);
-		contentPane.add(lblLabelNumContrat);
+		JLabel lblLabelNumeroContrat = new JLabel("* Numéro de contrat :");
+		lblLabelNumeroContrat.setBounds(37, 126, 132, 14);
+		contentPane.add(lblLabelNumeroContrat);
 		
 		JLabel lblLabelPrime = new JLabel("Prime :");
 		lblLabelPrime.setBounds(37, 157, 132, 14);
 		contentPane.add(lblLabelPrime);
 		
-		textFieldLienPDF = new JTextField();
-		textFieldLienPDF.setColumns(10);
-		textFieldLienPDF.setBounds(165, 184, 68, 20);
-		contentPane.add(textFieldLienPDF);
+		textFieldPrimeJurisprudence = new JTextField();
+		textFieldPrimeJurisprudence.setColumns(10);
+		textFieldPrimeJurisprudence.setBounds(165, 184, 68, 20);
+		contentPane.add(textFieldPrimeJurisprudence);
 		
-		JLabel lblLabelPrimeJuris = new JLabel("Prime de jurisprudence :");
-		lblLabelPrimeJuris.setBounds(37, 184, 132, 14);
-		contentPane.add(lblLabelPrimeJuris);
+		JLabel lblLabelPrimeJurisprudence = new JLabel("Prime de jurisprudence :");
+		lblLabelPrimeJurisprudence.setBounds(37, 184, 132, 14);
+		contentPane.add(lblLabelPrimeJurisprudence);
 		
 		JButton btnAjouter = new JButton("Ajouter");
 		btnAjouter.setBounds(307, 384, 132, 23);
@@ -207,18 +207,18 @@ public class ProtectionJuridique extends JFrame implements ActionListener {
 		lblProtectionJuridique.setBounds(37, 0, 363, 41);
 		contentPane.add(lblProtectionJuridique);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(165, 245, 235, 20);
-		contentPane.add(textField_2);
+		textFieldLienPDF = new JTextField();
+		textFieldLienPDF.setColumns(10);
+		textFieldLienPDF.setBounds(165, 245, 235, 20);
+		contentPane.add(textFieldLienPDF);
 		
-		JLabel lblLabelLienPDF_1 = new JLabel("Lien pdf  :");
-		lblLabelLienPDF_1.setBounds(37, 245, 132, 14);
-		contentPane.add(lblLabelLienPDF_1);
+		JLabel lblLabelLienPDF = new JLabel("Lien pdf  :");
+		lblLabelLienPDF.setBounds(37, 245, 132, 14);
+		contentPane.add(lblLabelLienPDF);
 		
-		JLabel lblLabelSiren = new JLabel("* Entreprise :");
-		lblLabelSiren.setBounds(37, 96, 132, 14);
-		contentPane.add(lblLabelSiren);
+		JLabel lblLabelEntreprise = new JLabel("* Entreprise :");
+		lblLabelEntreprise.setBounds(37, 96, 132, 14);
+		contentPane.add(lblLabelEntreprise);
 		
 		JComboBox comboBoxEntreprise = new JComboBox();
 		comboBoxEntreprise.setBounds(165, 92, 132, 22);
@@ -233,10 +233,10 @@ public class ProtectionJuridique extends JFrame implements ActionListener {
 		lblLabelDateObtention.setBounds(37, 215, 132, 14);
 		contentPane.add(lblLabelDateObtention);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(165, 215, 68, 20);
-		contentPane.add(textField);
+		textFieldDate = new JTextField();
+		textFieldDate.setColumns(10);
+		textFieldDate.setBounds(165, 215, 68, 20);
+		contentPane.add(textFieldDate);
 	}
 	
 	public void actionPerformed(ActionEvent e) {

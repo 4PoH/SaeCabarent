@@ -42,9 +42,9 @@ import java.awt.Font;
 public class NouveauDocumentContrat extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField textFieldNumFac;
-	private JTextField textFieldDateFac;
 	private JTextField textFieldLibelle;
+	private JTextField textFieldDate;
+	private JTextField textFieldLienPDF;
 
 	/**
 	 * Launch the application.
@@ -162,32 +162,32 @@ public class NouveauDocumentContrat extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textFieldNumFac = new JTextField();
-		textFieldNumFac.setBounds(166, 60, 132, 20);
-		contentPane.add(textFieldNumFac);
-		textFieldNumFac.setColumns(10);
-		
-		textFieldDateFac = new JTextField();
-		textFieldDateFac.setColumns(10);
-		textFieldDateFac.setBounds(166, 91, 67, 20);
-		contentPane.add(textFieldDateFac);
-		
-		JLabel lblLabelNom = new JLabel("* Libellé :");
-		lblLabelNom.setBounds(24, 63, 132, 14);
-		contentPane.add(lblLabelNom);
-		
-		JLabel lblLabelPrenom = new JLabel("Date d'ajout :");
-		lblLabelPrenom.setBounds(24, 94, 132, 14);
-		contentPane.add(lblLabelPrenom);
-		
 		textFieldLibelle = new JTextField();
-		textFieldLibelle.setColumns(10);
-		textFieldLibelle.setBounds(166, 122, 207, 20);
+		textFieldLibelle.setBounds(166, 60, 132, 20);
 		contentPane.add(textFieldLibelle);
+		textFieldLibelle.setColumns(10);
 		
-		JLabel lblLabelAdresse = new JLabel("Lien pdf :");
-		lblLabelAdresse.setBounds(24, 125, 132, 14);
-		contentPane.add(lblLabelAdresse);
+		textFieldDate = new JTextField();
+		textFieldDate.setColumns(10);
+		textFieldDate.setBounds(166, 91, 67, 20);
+		contentPane.add(textFieldDate);
+		
+		JLabel lblLabelLibelle = new JLabel("* Libellé :");
+		lblLabelLibelle.setBounds(24, 63, 132, 14);
+		contentPane.add(lblLabelLibelle);
+		
+		JLabel lblLabelDate = new JLabel("Date d'ajout :");
+		lblLabelDate.setBounds(24, 94, 132, 14);
+		contentPane.add(lblLabelDate);
+		
+		textFieldLienPDF = new JTextField();
+		textFieldLienPDF.setColumns(10);
+		textFieldLienPDF.setBounds(166, 122, 207, 20);
+		contentPane.add(textFieldLienPDF);
+		
+		JLabel lblLabelLienPDF = new JLabel("Lien pdf :");
+		lblLabelLienPDF.setBounds(24, 125, 132, 14);
+		contentPane.add(lblLabelLienPDF);
 		
 		JButton btnAjouter = new JButton("Ajouter");
 		btnAjouter.setBounds(307, 384, 132, 23);

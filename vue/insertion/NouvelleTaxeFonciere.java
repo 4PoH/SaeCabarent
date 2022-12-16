@@ -43,11 +43,11 @@ import javax.swing.JTextPane;
 public class NouvelleTaxeFonciere extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField textFieldAnneeFac;
+	private JTextField textFieldAnneeFacture;
 	private JTextField textFieldMontantPartieFixe;
 	private JTextField textFieldMontantTotal;
-	private JTextField champlienpdf;
-	private JTextField textFieldRefAvis;
+	private JTextField textFieldLienPDF;
+	private JTextField textFieldReferenceAvis;
 
 	/**
 	 * Launch the application.
@@ -165,18 +165,18 @@ public class NouvelleTaxeFonciere extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textFieldAnneeFac = new JTextField();
-		textFieldAnneeFac.setColumns(10);
-		textFieldAnneeFac.setBounds(179, 127, 68, 20);
-		contentPane.add(textFieldAnneeFac);
+		textFieldAnneeFacture = new JTextField();
+		textFieldAnneeFacture.setColumns(10);
+		textFieldAnneeFacture.setBounds(179, 127, 68, 20);
+		contentPane.add(textFieldAnneeFacture);
 		
-		JLabel lblLabelAnneeFac = new JLabel("Année de la facture  :");
-		lblLabelAnneeFac.setBounds(37, 126, 132, 14);
-		contentPane.add(lblLabelAnneeFac);
+		JLabel lblLabelAnneeFacture = new JLabel("Année de la facture  :");
+		lblLabelAnneeFacture.setBounds(37, 126, 132, 14);
+		contentPane.add(lblLabelAnneeFacture);
 		
-		JLabel lblLabelTotalOrdure = new JLabel("Montant ordure ménagère :");
-		lblLabelTotalOrdure.setBounds(35, 158, 144, 14);
-		contentPane.add(lblLabelTotalOrdure);
+		JLabel lblLabelMontantPartieFixe = new JLabel("Montant ordure ménagère :");
+		lblLabelMontantPartieFixe.setBounds(35, 158, 144, 14);
+		contentPane.add(lblLabelMontantPartieFixe);
 		
 		textFieldMontantPartieFixe = new JTextField();
 		textFieldMontantPartieFixe.setColumns(10);
@@ -207,23 +207,23 @@ public class NouvelleTaxeFonciere extends JFrame implements ActionListener {
 		lblTaxeFonciere.setBounds(37, 0, 260, 41);
 		contentPane.add(lblTaxeFonciere);
 		
-		champlienpdf = new JTextField();
-		champlienpdf.setColumns(10);
-		champlienpdf.setBounds(177, 222, 235, 20);
-		contentPane.add(champlienpdf);
+		textFieldLienPDF = new JTextField();
+		textFieldLienPDF.setColumns(10);
+		textFieldLienPDF.setBounds(177, 222, 235, 20);
+		contentPane.add(textFieldLienPDF);
 		
-		JLabel lblLabelLienPDF_1 = new JLabel("Lien pdf  :");
-		lblLabelLienPDF_1.setBounds(35, 221, 132, 14);
-		contentPane.add(lblLabelLienPDF_1);
+		JLabel lblLabelLienPDF = new JLabel("Lien pdf  :");
+		lblLabelLienPDF.setBounds(35, 221, 132, 14);
+		contentPane.add(lblLabelLienPDF);
 		
-		JLabel lblLabelEntreprise = new JLabel("*Référence avis :");
-		lblLabelEntreprise.setBounds(37, 96, 132, 14);
-		contentPane.add(lblLabelEntreprise);
+		JLabel lblLabelReferenceAvis = new JLabel("*Référence avis :");
+		lblLabelReferenceAvis.setBounds(37, 96, 132, 14);
+		contentPane.add(lblLabelReferenceAvis);
 		
-		textFieldRefAvis = new JTextField();
-		textFieldRefAvis.setColumns(10);
-		textFieldRefAvis.setBounds(179, 96, 132, 20);
-		contentPane.add(textFieldRefAvis);
+		textFieldReferenceAvis = new JTextField();
+		textFieldReferenceAvis.setColumns(10);
+		textFieldReferenceAvis.setBounds(179, 96, 132, 20);
+		contentPane.add(textFieldReferenceAvis);
 	}
 	
 	public void actionPerformed(ActionEvent e) {

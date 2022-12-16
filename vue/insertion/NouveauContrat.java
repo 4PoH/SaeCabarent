@@ -42,9 +42,9 @@ import java.awt.Font;
 public class NouveauContrat extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField textFieldNumFac;
-	private JTextField textFieldLibelle;
-	private JTextField textField;
+	private JTextField textFieldDate;
+	private JTextField textFieldCaution;
+	private JTextField textFieldNbLocataire;
 
 	/**
 	 * Launch the application.
@@ -162,19 +162,19 @@ public class NouveauContrat extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textFieldNumFac = new JTextField();
-		textFieldNumFac.setBounds(166, 60, 61, 20);
-		contentPane.add(textFieldNumFac);
-		textFieldNumFac.setColumns(10);
+		textFieldDate = new JTextField();
+		textFieldDate.setBounds(166, 60, 61, 20);
+		contentPane.add(textFieldDate);
+		textFieldDate.setColumns(10);
 		
 		JLabel lblLabelDateMiseEnEffet = new JLabel("* Date de mise en effet :");
 		lblLabelDateMiseEnEffet.setBounds(24, 63, 132, 14);
 		contentPane.add(lblLabelDateMiseEnEffet);
 		
-		textFieldLibelle = new JTextField();
-		textFieldLibelle.setColumns(10);
-		textFieldLibelle.setBounds(166, 182, 132, 20);
-		contentPane.add(textFieldLibelle);
+		textFieldCaution = new JTextField();
+		textFieldCaution.setColumns(10);
+		textFieldCaution.setBounds(166, 182, 132, 20);
+		contentPane.add(textFieldCaution);
 		
 		JLabel lblLabelCaution = new JLabel("Caution :");
 		lblLabelCaution.setBounds(24, 185, 132, 14);
@@ -199,17 +199,17 @@ public class NouveauContrat extends JFrame implements ActionListener {
 		lblContrat.setBounds(24, 0, 307, 41);
 		contentPane.add(lblContrat);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(166, 87, 132, 22);
-		contentPane.add(comboBox);
+		JComboBox comboBoxTypeLocation = new JComboBox();
+		comboBoxTypeLocation.setBounds(166, 87, 132, 22);
+		contentPane.add(comboBoxTypeLocation);
 		
 		JLabel lblLabelLibelle = new JLabel("* Locataire(s)  :");
 		lblLabelLibelle.setBounds(23, 152, 132, 14);
 		contentPane.add(lblLabelLibelle);
 		
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setBounds(165, 149, 132, 22);
-		contentPane.add(comboBox_1);
+		JComboBox comboBoxLocataires = new JComboBox();
+		comboBoxLocataires.setBounds(165, 149, 132, 22);
+		contentPane.add(comboBoxLocataires);
 		
 		JButton btnNouveauLocataire = new JButton("Nouveau Locataire");
 		btnNouveauLocataire.setBounds(307, 148, 132, 23);
@@ -220,18 +220,18 @@ public class NouveauContrat extends JFrame implements ActionListener {
 		lblNombreDeLocataires.setBounds(24, 119, 132, 14);
 		contentPane.add(lblNombreDeLocataires);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(166, 116, 19, 20);
-		contentPane.add(textField);
+		textFieldNbLocataire = new JTextField();
+		textFieldNbLocataire.setColumns(10);
+		textFieldNbLocataire.setBounds(166, 116, 19, 20);
+		contentPane.add(textFieldNbLocataire);
 		
 		JLabel lblDocumentss = new JLabel("* Documents(s)  :");
 		lblDocumentss.setBounds(23, 217, 132, 14);
 		contentPane.add(lblDocumentss);
 		
-		JComboBox comboBox_1_1 = new JComboBox();
-		comboBox_1_1.setBounds(165, 214, 132, 22);
-		contentPane.add(comboBox_1_1);
+		JComboBox comboBoxDocuments = new JComboBox();
+		comboBoxDocuments.setBounds(165, 214, 132, 22);
+		contentPane.add(comboBoxDocuments);
 		
 		JButton btnNouveauDocument = new JButton("Nouveau Document");
 		btnNouveauDocument.setBounds(307, 213, 132, 23);

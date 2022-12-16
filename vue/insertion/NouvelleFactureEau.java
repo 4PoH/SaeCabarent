@@ -43,15 +43,15 @@ import javax.swing.JTextPane;
 public class NouvelleFactureEau extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField textFieldNumFac;
+	private JTextField textFieldNumeroFacture;
 	private JTextField textFieldNumDevis;
 	private JTextField textFieldLibelle;
-	private JTextField textFieldLienPDF;
+	private JTextField textFieldDateDebut;
 	private JTextField textFieldMontant;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
+	private JTextField textFieldMontantNonDeductible;
+	private JTextField textFieldReduction;
+	private JTextField textFieldLienPDF;
+	private JTextField textFieldDateFin;
 
 	/**
 	 * Launch the application.
@@ -169,23 +169,23 @@ public class NouvelleFactureEau extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textFieldNumFac = new JTextField();
-		textFieldNumFac.setBounds(165, 65, 132, 20);
-		contentPane.add(textFieldNumFac);
-		textFieldNumFac.setColumns(10);
+		textFieldNumeroFacture = new JTextField();
+		textFieldNumeroFacture.setBounds(165, 65, 132, 20);
+		contentPane.add(textFieldNumeroFacture);
+		textFieldNumeroFacture.setColumns(10);
 		
 		textFieldNumDevis = new JTextField();
 		textFieldNumDevis.setColumns(10);
 		textFieldNumDevis.setBounds(165, 96, 132, 20);
 		contentPane.add(textFieldNumDevis);
 		
-		JLabel lblLabelNumFac = new JLabel("* Numéro de facture :");
-		lblLabelNumFac.setBounds(37, 65, 132, 14);
-		contentPane.add(lblLabelNumFac);
+		JLabel lblLabelNumeroFacture = new JLabel("* Numéro de facture :");
+		lblLabelNumeroFacture.setBounds(37, 65, 132, 14);
+		contentPane.add(lblLabelNumeroFacture);
 		
-		JLabel lblLabelNumDevis = new JLabel("Numéro de devis :");
-		lblLabelNumDevis.setBounds(37, 96, 132, 14);
-		contentPane.add(lblLabelNumDevis);
+		JLabel lblLabelNumeroDevis = new JLabel("Numéro de devis :");
+		lblLabelNumeroDevis.setBounds(37, 96, 132, 14);
+		contentPane.add(lblLabelNumeroDevis);
 		
 		textFieldLibelle = new JTextField();
 		textFieldLibelle.setColumns(10);
@@ -196,10 +196,10 @@ public class NouvelleFactureEau extends JFrame implements ActionListener {
 		lblLabelLibelle.setBounds(37, 127, 132, 14);
 		contentPane.add(lblLabelLibelle);
 		
-		textFieldLienPDF = new JTextField();
-		textFieldLienPDF.setColumns(10);
-		textFieldLienPDF.setBounds(165, 158, 68, 20);
-		contentPane.add(textFieldLienPDF);
+		textFieldDateDebut = new JTextField();
+		textFieldDateDebut.setColumns(10);
+		textFieldDateDebut.setBounds(165, 158, 68, 20);
+		contentPane.add(textFieldDateDebut);
 		
 		JLabel lblLabelDateDebut = new JLabel("Date de début  :");
 		lblLabelDateDebut.setBounds(37, 158, 132, 14);
@@ -218,19 +218,19 @@ public class NouvelleFactureEau extends JFrame implements ActionListener {
 		lblLabelMontantNonDeductible.setBounds(37, 292, 132, 14);
 		contentPane.add(lblLabelMontantNonDeductible);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(165, 292, 132, 20);
-		contentPane.add(textField);
+		textFieldMontantNonDeductible = new JTextField();
+		textFieldMontantNonDeductible.setColumns(10);
+		textFieldMontantNonDeductible.setBounds(165, 292, 132, 20);
+		contentPane.add(textFieldMontantNonDeductible);
 		
 		JLabel lblLabelReduction = new JLabel("Réduction :");
 		lblLabelReduction.setBounds(37, 322, 132, 14);
 		contentPane.add(lblLabelReduction);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(165, 322, 132, 20);
-		contentPane.add(textField_1);
+		textFieldReduction = new JTextField();
+		textFieldReduction.setColumns(10);
+		textFieldReduction.setBounds(165, 322, 132, 20);
+		contentPane.add(textFieldReduction);
 		
 		JButton btnAjouter = new JButton("Ajouter");
 		btnAjouter.setBounds(307, 384, 132, 23);
@@ -247,23 +247,23 @@ public class NouvelleFactureEau extends JFrame implements ActionListener {
 		lblFactureDEau.setBounds(37, 0, 260, 41);
 		contentPane.add(lblFactureDEau);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(165, 350, 235, 20);
-		contentPane.add(textField_2);
+		textFieldLienPDF = new JTextField();
+		textFieldLienPDF.setColumns(10);
+		textFieldLienPDF.setBounds(165, 350, 235, 20);
+		contentPane.add(textFieldLienPDF);
 		
-		JLabel lblLabelLienPDF_1 = new JLabel("Lien pdf  :");
-		lblLabelLienPDF_1.setBounds(37, 350, 132, 14);
-		contentPane.add(lblLabelLienPDF_1);
+		JLabel lblLabelLienPDF = new JLabel("Lien pdf  :");
+		lblLabelLienPDF.setBounds(37, 350, 132, 14);
+		contentPane.add(lblLabelLienPDF);
 		
 		JLabel lblLabelDateFin = new JLabel("Date de fin :");
 		lblLabelDateFin.setBounds(255, 161, 93, 14);
 		contentPane.add(lblLabelDateFin);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(332, 158, 68, 20);
-		contentPane.add(textField_3);
+		textFieldDateFin = new JTextField();
+		textFieldDateFin.setColumns(10);
+		textFieldDateFin.setBounds(332, 158, 68, 20);
+		contentPane.add(textFieldDateFin);
 		
 		JLabel lblLabelDescription = new JLabel("Description  :");
 		lblLabelDescription.setBounds(37, 191, 132, 14);
