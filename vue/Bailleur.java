@@ -19,16 +19,16 @@ import javax.swing.table.DefaultTableModel;
 
 import vue.consultation.AncienneLocation;
 import vue.consultation.AnciensTravaux;
+import vue.consultation.Impositions;
 import vue.consultation.LocationEnCours;
 import vue.consultation.TravauxEnCours;
-import vue.insertion.Electricite;
-import vue.insertion.Entretien;
-import vue.insertion.Impositions;
+import vue.insertion.NouvelleFactureElectricite;
+import vue.insertion.NouvelleFactureEntretien;
 import vue.insertion.NouvelleChargeSupp;
 import vue.insertion.NouvelleEntreprise;
 import vue.insertion.NouvelleLocation;
 import vue.insertion.ProtectionJuridique;
-import vue.insertion.TaxeFonciere;
+import vue.insertion.NouvelleTaxeFonciere;
 
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
@@ -270,12 +270,12 @@ public class Bailleur extends JFrame implements ActionListener {
 				
 			case "Electricite":
 				this.dispose();
-				new Electricite().setVisible(true);
+				new NouvelleFactureElectricite().setVisible(true);
 				break;
 				
 			case "Entretien":
 				this.dispose();
-				new Entretien().setVisible(true);
+				new NouvelleFactureEntretien().setVisible(true);
 				break;
 				
 			case "Facture d'eau":
@@ -325,7 +325,7 @@ public class Bailleur extends JFrame implements ActionListener {
 			
 			case "Taxe fonciere":
 				this.dispose();
-				new TaxeFonciere().setVisible(true);
+				new NouvelleTaxeFonciere().setVisible(true);
 				break;
 			case "Autre":
 				this.dispose();

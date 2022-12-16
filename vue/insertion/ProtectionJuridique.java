@@ -23,6 +23,7 @@ import vue.InformationsBailleur;
 import vue.Quittances;
 import vue.consultation.AncienneLocation;
 import vue.consultation.AnciensTravaux;
+import vue.consultation.Impositions;
 import vue.consultation.LocationEnCours;
 import vue.consultation.TravauxEnCours;
 
@@ -269,12 +270,12 @@ public class ProtectionJuridique extends JFrame implements ActionListener {
 				
 			case "Electricite":
 				this.dispose();
-				new Electricite().setVisible(true);
+				new NouvelleFactureElectricite().setVisible(true);
 				break;
 				
 			case "Entretien":
 				this.dispose();
-				new Entretien().setVisible(true);
+				new NouvelleFactureEntretien().setVisible(true);
 				break;
 				
 			case "Facture d'eau":
@@ -324,7 +325,7 @@ public class ProtectionJuridique extends JFrame implements ActionListener {
 			
 			case "Taxe fonciere":
 				this.dispose();
-				new TaxeFonciere().setVisible(true);
+				new NouvelleTaxeFonciere().setVisible(true);
 				break;
 			case "Autre":
 				this.dispose();

@@ -6,15 +6,14 @@ import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.insertion.Electricite;
-import vue.insertion.Entretien;
-import vue.insertion.FactureEau;
-import vue.insertion.Impositions;
+import vue.insertion.NouvelleFactureElectricite;
+import vue.insertion.NouvelleFactureEntretien;
+import vue.insertion.NouvelleFactureEau;
 import vue.insertion.NouveauTravaux;
 import vue.insertion.NouvelleChargeSupp;
 import vue.insertion.NouvelleLocation;
 import vue.insertion.ProtectionJuridique;
-import vue.insertion.TaxeFonciere;
+import vue.insertion.NouvelleTaxeFonciere;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -259,17 +258,17 @@ public class TravauxEnCours extends JFrame implements ActionListener {
 				
 			case "Electricite":
 				this.dispose();
-				new Electricite().setVisible(true);
+				new NouvelleFactureElectricite().setVisible(true);
 				break;
 				
 			case "Entretien":
 				this.dispose();
-				new Entretien().setVisible(true);
+				new NouvelleFactureEntretien().setVisible(true);
 				break;
 				
 			case "Facture d'eau":
 				this.dispose();
-				new FactureEau().setVisible(true);
+				new NouvelleFactureEau().setVisible(true);
 				break;
 			
 			case "Impositions":
@@ -314,7 +313,7 @@ public class TravauxEnCours extends JFrame implements ActionListener {
 			
 			case "Taxe fonciere":
 				this.dispose();
-				new TaxeFonciere().setVisible(true);
+				new NouvelleTaxeFonciere().setVisible(true);
 				break;
 			case "Autre":
 				this.dispose();

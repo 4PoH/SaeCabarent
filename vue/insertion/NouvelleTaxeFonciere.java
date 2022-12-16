@@ -23,6 +23,7 @@ import vue.InformationsBailleur;
 import vue.Quittances;
 import vue.consultation.AncienneLocation;
 import vue.consultation.AnciensTravaux;
+import vue.consultation.Impositions;
 import vue.consultation.LocationEnCours;
 import vue.consultation.TravauxEnCours;
 
@@ -39,7 +40,7 @@ import javax.swing.JComboBox;
 import java.awt.Font;
 import javax.swing.JTextPane;
 
-public class TaxeFonciere extends JFrame implements ActionListener {
+public class NouvelleTaxeFonciere extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JTextField textFieldAnneeFac;
@@ -55,7 +56,7 @@ public class TaxeFonciere extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TaxeFonciere frame = new TaxeFonciere();
+					NouvelleTaxeFonciere frame = new NouvelleTaxeFonciere();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -67,7 +68,7 @@ public class TaxeFonciere extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public TaxeFonciere() {
+	public NouvelleTaxeFonciere() {
 		setTitle("Nouveaux travaux");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 480, 480);
@@ -252,17 +253,17 @@ public class TaxeFonciere extends JFrame implements ActionListener {
 				
 			case "Electricite":
 				this.dispose();
-				new Electricite().setVisible(true);
+				new NouvelleFactureElectricite().setVisible(true);
 				break;
 				
 			case "Entretien":
 				this.dispose();
-				new Entretien().setVisible(true);
+				new NouvelleFactureEntretien().setVisible(true);
 				break;
 				
 			case "Facture d'eau":
 				this.dispose();
-				new TaxeFonciere().setVisible(true);
+				new NouvelleTaxeFonciere().setVisible(true);
 				break;
 			
 			case "Impositions":
@@ -287,7 +288,7 @@ public class TaxeFonciere extends JFrame implements ActionListener {
 			
 			case "Nouveaux travaux":
 				this.dispose();
-				new TaxeFonciere().setVisible(true);
+				new NouvelleTaxeFonciere().setVisible(true);
 				break;
 				
 			case "Nouvelle location":
@@ -307,7 +308,7 @@ public class TaxeFonciere extends JFrame implements ActionListener {
 			
 			case "Taxe fonciere":
 				this.dispose();
-				new TaxeFonciere().setVisible(true);
+				new NouvelleTaxeFonciere().setVisible(true);
 				break;
 			case "Autre":
 				this.dispose();

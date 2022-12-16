@@ -1,4 +1,4 @@
-package vue.insertion;
+package vue.consultation;
 
 import java.awt.EventQueue;
 
@@ -21,10 +21,14 @@ import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.AncienneLocation;
-import vue.consultation.AnciensTravaux;
-import vue.consultation.LocationEnCours;
-import vue.consultation.TravauxEnCours;
+import vue.insertion.NouveauTravaux;
+import vue.insertion.NouvelleChargeSupp;
+import vue.insertion.NouvelleFactureEau;
+import vue.insertion.NouvelleFactureElectricite;
+import vue.insertion.NouvelleFactureEntretien;
+import vue.insertion.NouvelleLocation;
+import vue.insertion.NouvelleTaxeFonciere;
+import vue.insertion.ProtectionJuridique;
 
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
@@ -34,18 +38,10 @@ import java.awt.Color;
 import javax.swing.JToolBar;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
-import java.awt.Font;
-import javax.swing.JTextPane;
 
-public class Electricite extends JFrame implements ActionListener {
+public class Impositions extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField textFieldNumFac;
-	private JTextField textFieldLienPDF;
-	private JTextField textFieldMontantTotal;
-	private JTextField textField_2;
 
 	/**
 	 * Launch the application.
@@ -54,7 +50,7 @@ public class Electricite extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Electricite frame = new Electricite();
+					Impositions frame = new Impositions();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -66,10 +62,10 @@ public class Electricite extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public Electricite() {
-		setTitle("Nouveaux travaux");
+	public Impositions() {
+		setTitle("Impositions");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 480, 480);
+		setBounds(100, 100, 480, 300);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
@@ -161,87 +157,11 @@ public class Electricite extends JFrame implements ActionListener {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
-		textFieldNumFac = new JTextField();
-		textFieldNumFac.setBounds(165, 126, 132, 20);
-		contentPane.add(textFieldNumFac);
-		textFieldNumFac.setColumns(10);
-		
-		JLabel lblLabelNumFac = new JLabel("* Numéro de facture :");
-		lblLabelNumFac.setBounds(37, 126, 132, 14);
-		contentPane.add(lblLabelNumFac);
-		
-		textFieldLienPDF = new JTextField();
-		textFieldLienPDF.setColumns(10);
-		textFieldLienPDF.setBounds(165, 157, 68, 20);
-		contentPane.add(textFieldLienPDF);
-		
-		JLabel lblLabelDateFac = new JLabel("Date de la facture  :");
-		lblLabelDateFac.setBounds(37, 157, 132, 14);
-		contentPane.add(lblLabelDateFac);
-		
-		JLabel lblLabelMontantTotal = new JLabel("Montant  total :");
-		lblLabelMontantTotal.setBounds(37, 188, 132, 14);
-		contentPane.add(lblLabelMontantTotal);
-		
-		textFieldMontantTotal = new JTextField();
-		textFieldMontantTotal.setColumns(10);
-		textFieldMontantTotal.setBounds(165, 188, 132, 20);
-		contentPane.add(textFieldMontantTotal);
-		
-		JButton btnAjouter = new JButton("Ajouter");
-		btnAjouter.setBounds(307, 384, 132, 23);
-		btnAjouter.addActionListener(this);
-		contentPane.add(btnAjouter);
-		
-		JButton btnAnnuler = new JButton("Annuler");
-		btnAnnuler.setBounds(49, 384, 132, 23);
-		btnAnnuler.addActionListener(this);
-		contentPane.add(btnAnnuler);
-		
-		JLabel lblFactureDElectricite = new JLabel("Nouvelle facture d'électricité");
-		lblFactureDElectricite.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblFactureDElectricite.setBounds(37, 0, 350, 41);
-		contentPane.add(lblFactureDElectricite);
-		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(165, 220, 235, 20);
-		contentPane.add(textField_2);
-		
-		JLabel lblLabelLienPDF_1 = new JLabel("Lien pdf  :");
-		lblLabelLienPDF_1.setBounds(37, 220, 132, 14);
-		contentPane.add(lblLabelLienPDF_1);
-		
-		JLabel lblLabelEntreprise = new JLabel("* Entreprise :");
-		lblLabelEntreprise.setBounds(37, 96, 132, 14);
-		contentPane.add(lblLabelEntreprise);
-		
-		JComboBox comboBoxEntreprise = new JComboBox();
-		comboBoxEntreprise.setBounds(165, 92, 132, 22);
-		contentPane.add(comboBoxEntreprise);
-		
-		JButton btnNouvelleEntreprise = new JButton("Nouvelle entreprise");
-		btnNouvelleEntreprise.setBounds(307, 92, 132, 23);
-		btnNouvelleEntreprise.addActionListener(this);
-		contentPane.add(btnNouvelleEntreprise);
+		contentPane.setLayout(new BorderLayout(0, 0));
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
-			case "Nouvelle entreprise":
-				this.dispose();
-				new NouvelleEntreprise().setVisible(true);
-				break;
-			case "Annuler":
-				this.dispose();
-				new Accueil().setVisible(true);
-				break;
-			case "Ajouter":
-				this.dispose();
-				new Accueil().setVisible(true);
-				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -259,17 +179,17 @@ public class Electricite extends JFrame implements ActionListener {
 				
 			case "Electricite":
 				this.dispose();
-				new Electricite().setVisible(true);
+				new NouvelleFactureElectricite().setVisible(true);
 				break;
 				
 			case "Entretien":
 				this.dispose();
-				new Entretien().setVisible(true);
+				new NouvelleFactureEntretien().setVisible(true);
 				break;
 				
 			case "Facture d'eau":
 				this.dispose();
-				new Electricite().setVisible(true);
+				new NouvelleFactureEau().setVisible(true);
 				break;
 			
 			case "Impositions":
@@ -294,7 +214,7 @@ public class Electricite extends JFrame implements ActionListener {
 			
 			case "Nouveaux travaux":
 				this.dispose();
-				new Electricite().setVisible(true);
+				new NouveauTravaux().setVisible(true);
 				break;
 				
 			case "Nouvelle location":
@@ -314,12 +234,13 @@ public class Electricite extends JFrame implements ActionListener {
 			
 			case "Taxe fonciere":
 				this.dispose();
-				new TaxeFonciere().setVisible(true);
+				new NouvelleTaxeFonciere().setVisible(true);
 				break;
 			case "Autre":
 				this.dispose();
 				new NouvelleChargeSupp().setVisible(true);
 				break;
+				
 			case "Travaux en cours":
 				this.dispose();
 				new TravauxEnCours().setVisible(true);
@@ -330,4 +251,5 @@ public class Electricite extends JFrame implements ActionListener {
 				break;
 		}
 	}
+	
 }
