@@ -23,8 +23,6 @@ public class CictOracleDataSource extends OracleDataSource {
 		
 		Connection cn = bd.getConnection();
 		System.out.println("Connexion reussi");
-		
-		cn.close();
-		System.out.println("La connexion est fermee la");
+
 	}	
 }
