@@ -187,39 +187,24 @@ public class ChargeLocationEnCours extends JFrame implements ActionListener {
 				{null, null, null, null, null, null, null, null},
 			},
 			new String[] {
-				"LIbelle", "Ordure menagere", "Taxe fonciere", "Partie commune", "Facture Electrique", "Prime", "Prime Jurisprudence", "Annee"
+				"Libelle", "Ordure menagere", "Taxe fonciere", "Partie commune", "Facture Electrique", "Prime", "Prime Jurisprudence", "Annee"
 			}
 		));
 		scrollPane.setViewportView(table);
 		
-		JLabel TitreLocaCours = new JLabel("Charges Bati");
+		JLabel TitreLocaCours = new JLabel("Anciennes Charges Bati");
 		TitreLocaCours.setFont(new Font("Tahoma", Font.BOLD, 20));
-		TitreLocaCours.setBounds(10, 10, 189, 29);
+		TitreLocaCours.setBounds(10, 10, 269, 29);
 		contentPane.add(TitreLocaCours);
 		
 		JButton btnCharger = new JButton("Charger");
 		btnCharger.addActionListener(this);
-		btnCharger.setBounds(35, 376, 85, 21);
+		btnCharger.setBounds(110, 376, 85, 21);
 		contentPane.add(btnCharger);
-		
-		JButton btnInserer = new JButton("Inserer");
-		btnInserer.addActionListener(this);
-		btnInserer.setBounds(230, 376, 85, 21);
-		contentPane.add(btnInserer);
-		
-		JButton btnMiseJour = new JButton("Mise à jour");
-		btnMiseJour.addActionListener(this);
-		btnMiseJour.setBounds(414, 376, 85, 21);
-		contentPane.add(btnMiseJour);
-		
-		JButton btnSupprimer = new JButton("Supprimer");
-		btnSupprimer.addActionListener(this);
-		btnSupprimer.setBounds(611, 376, 85, 21);
-		contentPane.add(btnSupprimer);
 		
 		JButton btnAnnuler = new JButton("Annuler");
 		btnAnnuler.addActionListener(this);
-		btnAnnuler.setBounds(816, 376, 85, 21);
+		btnAnnuler.setBounds(742, 376, 85, 21);
 		contentPane.add(btnAnnuler);
 	}
 	

@@ -1,19 +1,6 @@
-package vue.consultation;
-
+package vue;
 
 import java.awt.EventQueue;
-import vue.Accueil;
-import vue.IRL;
-import vue.InformationsBailleur;
-import vue.Quittances;
-import vue.insertion.NouvelleFactureElectricite;
-import vue.insertion.NouvelleFactureEntretien;
-import vue.insertion.NouvelleFactureEau;
-import vue.insertion.NouveauTravaux;
-import vue.insertion.NouvelleChargeSupp;
-import vue.insertion.NouvelleLocation;
-import vue.insertion.ProtectionJuridique;
-import vue.insertion.NouvelleTaxeFonciere;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -30,6 +17,25 @@ import javax.swing.JTable;
 import java.awt.FlowLayout;
 import javax.swing.table.DefaultTableModel;
 
+import vue.Accueil;
+import vue.IRL;
+import vue.InformationsBailleur;
+import vue.Quittances;
+import vue.consultation.AncienneLocation;
+import vue.consultation.AnciensTravaux;
+import vue.consultation.Impositions;
+import vue.consultation.LocationEnCours;
+import vue.consultation.TravauxEnCours;
+import vue.insertion.NouveauContrat;
+import vue.insertion.NouveauLocataire;
+import vue.insertion.NouveauLogement;
+import vue.insertion.NouvelleChargeSupp;
+import vue.insertion.NouvelleFactureEau;
+import vue.insertion.NouvelleFactureElectricite;
+import vue.insertion.NouvelleFactureEntretien;
+import vue.insertion.NouvelleTaxeFonciere;
+import vue.insertion.ProtectionJuridique;
+
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
@@ -38,13 +44,13 @@ import java.awt.Color;
 import javax.swing.JToolBar;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JScrollBar;
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
 import java.awt.Font;
 
-public class ListeFactureEauAncienne extends JFrame implements ActionListener {
+public class RegimeFoncier extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -53,7 +59,7 @@ public class ListeFactureEauAncienne extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ListeFactureEauAncienne frame = new ListeFactureEauAncienne();
+					RegimeFoncier frame = new RegimeFoncier();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -65,11 +71,10 @@ public class ListeFactureEauAncienne extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public ListeFactureEauAncienne() {
-		setBackground(new Color(240, 240, 240));
-		setTitle("Location en cours");
+	public RegimeFoncier() {
+		setTitle("Nouveaux travaux");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 960, 480);
+		setBounds(100, 100, 480, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
@@ -86,9 +91,9 @@ public class ListeFactureEauAncienne extends JFrame implements ActionListener {
 		MenuItemNouvelleLocation.addActionListener(this);
 		MenuLocations.add(MenuItemNouvelleLocation);
 		
-		JMenuItem MenuItemLocationEnCours = new JMenuItem("Locations en cours");
-		MenuItemLocationEnCours.addActionListener(this);
-		MenuLocations.add(MenuItemLocationEnCours);
+		JMenuItem MenuItemLocationEnCour = new JMenuItem("Locations en cours");
+		MenuItemLocationEnCour.addActionListener(this);
+		MenuLocations.add(MenuItemLocationEnCour);
 		
 		JMenuItem MenuItemAncienneLocation = new JMenuItem("Anciennes location");
 		MenuItemAncienneLocation.addActionListener(this);
@@ -163,52 +168,60 @@ public class ListeFactureEauAncienne extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(22, 49, 914, 278);
-		contentPane.add(scrollPane);
+		JLabel lblLabelContrat = new JLabel("Annee courante");
+		lblLabelContrat.setBounds(24, 138, 132, 14);
+		contentPane.add(lblLabelContrat);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-			},
-			new String[] {
-				"Location", "Numero facture", "Date facture", "Prix unitaire m3", "Montant payer", "Partie fixe", "Total", "Pdf"
-			}
-		));
-		scrollPane.setViewportView(table);
+		JLabel lblLabelDateFac = new JLabel("Micro foncier");
+		lblLabelDateFac.setBounds(24, 206, 132, 14);
+		contentPane.add(lblLabelDateFac);
 		
-		JLabel TitreLocaCours = new JLabel("Facture d'eau ancienne");
-		TitreLocaCours.setFont(new Font("Tahoma", Font.BOLD, 20));
-		TitreLocaCours.setBounds(10, 10, 257, 29);
-		contentPane.add(TitreLocaCours);
-		
-		JButton btnCharger = new JButton("Charger");
-		btnCharger.addActionListener(this);
-		btnCharger.setBounds(123, 376, 85, 21);
-		contentPane.add(btnCharger);
+		JButton btnAjouter = new JButton("Confirmer");
+		btnAjouter.setBounds(307, 384, 132, 23);
+		btnAjouter.addActionListener(this);
+		contentPane.add(btnAjouter);
 		
 		JButton btnAnnuler = new JButton("Annuler");
+		btnAnnuler.setBounds(49, 384, 132, 23);
 		btnAnnuler.addActionListener(this);
-		btnAnnuler.setBounds(771, 376, 85, 21);
 		contentPane.add(btnAnnuler);
+		
+		JLabel lblNouvelleLocation = new JLabel("Regime foncier");
+		lblNouvelleLocation.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblNouvelleLocation.setBounds(24, 10, 307, 41);
+		contentPane.add(lblNouvelleLocation);
+		
+		JComboBox comboBox_1_1 = new JComboBox();
+		comboBox_1_1.setBounds(166, 134, 132, 22);
+		contentPane.add(comboBox_1_1);
+		
+		JComboBox comboBox_1_1_1 = new JComboBox();
+		comboBox_1_1_1.setBounds(166, 198, 132, 22);
+		contentPane.add(comboBox_1_1_1);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case"Nouveau Locataire":
+				this.dispose();
+				new NouveauLocataire().setVisible(true);
+				break;
+			case"Nouveau Contrat":
+				this.dispose();
+				new NouveauContrat().setVisible(true);
+				break;
+			case"Nouveau Logement":
+				this.dispose();
+				new NouveauLogement().setVisible(true);
+				break;
+			case "Annuler":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
+			case "Ajouter":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -256,17 +269,17 @@ public class ListeFactureEauAncienne extends JFrame implements ActionListener {
 				
 			case "Locations en cours":
 				this.dispose();
-				new ListeFactureEauAncienne().setVisible(true);
+				new LocationEnCours().setVisible(true);
 				break;
 			
 			case "Nouveaux travaux":
 				this.dispose();
-				new NouveauTravaux().setVisible(true);
+				new RegimeFoncier().setVisible(true);
 				break;
 				
 			case "Nouvelle location":
 				this.dispose();
-				new NouvelleLocation().setVisible(true);
+				new RegimeFoncier().setVisible(true);
 				break;
 				
 			case "Protection juridique":
@@ -290,15 +303,6 @@ public class ListeFactureEauAncienne extends JFrame implements ActionListener {
 			case "Travaux en cours":
 				this.dispose();
 				new TravauxEnCours().setVisible(true);
-				break;
-				
-			case "Inserer" :
-				this.dispose();
-				new NouvelleLocation().setVisible(true);
-				break;
-			
-			case "Annuler" :
-				this.dispose();
 				break;
        
 			default:
