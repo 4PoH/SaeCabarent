@@ -207,7 +207,7 @@ public class ListeFactureEauEnCours extends JFrame implements ActionListener {
 		btnInserer.setBounds(230, 376, 85, 21);
 		contentPane.add(btnInserer);
 		
-		JButton btnMiseJour = new JButton("Mise à jour");
+		JButton btnMiseJour = new JButton("Mise à jours");
 		btnMiseJour.addActionListener(this);
 		btnMiseJour.setBounds(414, 376, 85, 21);
 		contentPane.add(btnMiseJour);
