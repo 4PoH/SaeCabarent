@@ -1,7 +1,7 @@
 package vue.consultation;
 
-
 import java.awt.EventQueue;
+
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
@@ -41,7 +41,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JScrollBar;
 import java.awt.Font;
 
-public class ListeFactureEauAncienne extends JFrame implements ActionListener {
+public class AncienneListeEntretienPartie extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JTable table;
@@ -53,7 +53,7 @@ public class ListeFactureEauAncienne extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ListeFactureEauAncienne frame = new ListeFactureEauAncienne();
+					AncienneListeEntretienPartie frame = new AncienneListeEntretienPartie();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -65,7 +65,7 @@ public class ListeFactureEauAncienne extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public ListeFactureEauAncienne() {
+	public AncienneListeEntretienPartie() {
 		setBackground(new Color(240, 240, 240));
 		setTitle("Location en cours");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -170,40 +170,41 @@ public class ListeFactureEauAncienne extends JFrame implements ActionListener {
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
 			},
 			new String[] {
-				"Location", "Numero facture", "Date facture", "Prix unitaire m3", "Montant payer", "Partie fixe", "Total", "Pdf"
+				"Bati", "numero facture", "total", "date paiement", "pdf"
 			}
 		));
 		scrollPane.setViewportView(table);
 		
-		JLabel TitreLocaCours = new JLabel("Facture d'eau ancienne");
+		JLabel TitreLocaCours = new JLabel("Entretien Partie Communes ancienne");
 		TitreLocaCours.setFont(new Font("Tahoma", Font.BOLD, 20));
-		TitreLocaCours.setBounds(10, 10, 257, 29);
+		TitreLocaCours.setBounds(10, 10, 430, 29);
 		contentPane.add(TitreLocaCours);
 		
 		JButton btnCharger = new JButton("Charger");
 		btnCharger.addActionListener(this);
-		btnCharger.setBounds(123, 376, 85, 21);
+		btnCharger.setBounds(114, 376, 85, 21);
 		contentPane.add(btnCharger);
 		
 		JButton btnAnnuler = new JButton("Annuler");
 		btnAnnuler.addActionListener(this);
-		btnAnnuler.setBounds(771, 376, 85, 21);
+		btnAnnuler.setBounds(769, 376, 85, 21);
 		contentPane.add(btnAnnuler);
 	}
 	
@@ -256,7 +257,7 @@ public class ListeFactureEauAncienne extends JFrame implements ActionListener {
 				
 			case "Locations en cours":
 				this.dispose();
-				new ListeFactureEauAncienne().setVisible(true);
+				new AncienneListeEntretienPartie().setVisible(true);
 				break;
 			
 			case "Nouveaux travaux":
