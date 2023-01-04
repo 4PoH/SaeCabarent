@@ -43,10 +43,10 @@ import javax.swing.JTextPane;
 public class NouvelleFactureElectricite extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField textFieldNumFac;
+	private JTextField textFieldNumeroFacture;
+	private JTextField textFieldDateFac;
+	private JTextField textFieldMontant;
 	private JTextField textFieldLienPDF;
-	private JTextField textFieldMontantTotal;
-	private JTextField textField_2;
 
 	/**
 	 * Launch the application.
@@ -164,32 +164,32 @@ public class NouvelleFactureElectricite extends JFrame implements ActionListener
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textFieldNumFac = new JTextField();
-		textFieldNumFac.setBounds(165, 126, 132, 20);
-		contentPane.add(textFieldNumFac);
-		textFieldNumFac.setColumns(10);
+		textFieldNumeroFacture = new JTextField();
+		textFieldNumeroFacture.setBounds(165, 126, 132, 20);
+		contentPane.add(textFieldNumeroFacture);
+		textFieldNumeroFacture.setColumns(10);
 		
-		JLabel lblLabelNumFac = new JLabel("* Numéro de facture :");
-		lblLabelNumFac.setBounds(37, 126, 132, 14);
-		contentPane.add(lblLabelNumFac);
+		JLabel lblLabelNumeroFacture = new JLabel("* Numéro de facture :");
+		lblLabelNumeroFacture.setBounds(37, 126, 132, 14);
+		contentPane.add(lblLabelNumeroFacture);
 		
-		textFieldLienPDF = new JTextField();
-		textFieldLienPDF.setColumns(10);
-		textFieldLienPDF.setBounds(165, 157, 68, 20);
-		contentPane.add(textFieldLienPDF);
+		textFieldDateFac = new JTextField();
+		textFieldDateFac.setColumns(10);
+		textFieldDateFac.setBounds(165, 157, 68, 20);
+		contentPane.add(textFieldDateFac);
 		
-		JLabel lblLabelDateFac = new JLabel("Date de la facture  :");
-		lblLabelDateFac.setBounds(37, 157, 132, 14);
-		contentPane.add(lblLabelDateFac);
+		JLabel lblLabelDateFacture = new JLabel("Date de la facture  :");
+		lblLabelDateFacture.setBounds(37, 157, 132, 14);
+		contentPane.add(lblLabelDateFacture);
 		
-		JLabel lblLabelMontantTotal = new JLabel("Montant  total :");
-		lblLabelMontantTotal.setBounds(37, 188, 132, 14);
-		contentPane.add(lblLabelMontantTotal);
+		JLabel lblLabelMontant = new JLabel("Montant  total :");
+		lblLabelMontant.setBounds(37, 188, 132, 14);
+		contentPane.add(lblLabelMontant);
 		
-		textFieldMontantTotal = new JTextField();
-		textFieldMontantTotal.setColumns(10);
-		textFieldMontantTotal.setBounds(165, 188, 132, 20);
-		contentPane.add(textFieldMontantTotal);
+		textFieldMontant = new JTextField();
+		textFieldMontant.setColumns(10);
+		textFieldMontant.setBounds(165, 188, 132, 20);
+		contentPane.add(textFieldMontant);
 		
 		JButton btnAjouter = new JButton("Ajouter");
 		btnAjouter.setBounds(307, 384, 132, 23);
@@ -206,14 +206,14 @@ public class NouvelleFactureElectricite extends JFrame implements ActionListener
 		lblFactureDElectricite.setBounds(37, 0, 350, 41);
 		contentPane.add(lblFactureDElectricite);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(165, 220, 235, 20);
-		contentPane.add(textField_2);
+		textFieldLienPDF = new JTextField();
+		textFieldLienPDF.setColumns(10);
+		textFieldLienPDF.setBounds(165, 220, 235, 20);
+		contentPane.add(textFieldLienPDF);
 		
-		JLabel lblLabelLienPDF_1 = new JLabel("Lien pdf  :");
-		lblLabelLienPDF_1.setBounds(37, 220, 132, 14);
-		contentPane.add(lblLabelLienPDF_1);
+		JLabel lblLabelLienPDF = new JLabel("Lien pdf  :");
+		lblLabelLienPDF.setBounds(37, 220, 132, 14);
+		contentPane.add(lblLabelLienPDF);
 		
 		JLabel lblLabelEntreprise = new JLabel("* Entreprise :");
 		lblLabelEntreprise.setBounds(37, 96, 132, 14);

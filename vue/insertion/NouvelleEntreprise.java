@@ -43,13 +43,13 @@ import javax.swing.JTextPane;
 public class NouvelleEntreprise extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField textFieldNumSiren;
-	private JTextField textFieldNomEntreprise;
-	private JTextField textFieldLibelle;
-	private JTextField textFieldLienPDF;
-	private JTextField textFieldMontant;
-	private JTextField textFieldNumSiret;
-	private JTextField textField_3;
+	private JTextField textFieldNumeroSiren;
+	private JTextField textFieldNom;
+	private JTextField textFieldTelephone;
+	private JTextField textFieldVille;
+	private JTextField textFieldMail;
+	private JTextField textFieldNumeroSiret;
+	private JTextField textFieldCodePostal;
 
 	/**
 	 * Launch the application.
@@ -167,37 +167,37 @@ public class NouvelleEntreprise extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textFieldNumSiren = new JTextField();
-		textFieldNumSiren.setBounds(165, 63, 132, 20);
-		contentPane.add(textFieldNumSiren);
-		textFieldNumSiren.setColumns(10);
+		textFieldNumeroSiren = new JTextField();
+		textFieldNumeroSiren.setBounds(165, 63, 132, 20);
+		contentPane.add(textFieldNumeroSiren);
+		textFieldNumeroSiren.setColumns(10);
 		
-		textFieldNomEntreprise = new JTextField();
-		textFieldNomEntreprise.setColumns(10);
-		textFieldNomEntreprise.setBounds(165, 125, 132, 20);
-		contentPane.add(textFieldNomEntreprise);
+		textFieldNom = new JTextField();
+		textFieldNom.setColumns(10);
+		textFieldNom.setBounds(165, 125, 132, 20);
+		contentPane.add(textFieldNom);
 		
-		JLabel lblLabelNumSiren = new JLabel("* Numéro de SIREN :");
-		lblLabelNumSiren.setBounds(37, 63, 132, 14);
-		contentPane.add(lblLabelNumSiren);
+		JLabel lblLabelNumeroSiren = new JLabel("* Numéro de SIREN :");
+		lblLabelNumeroSiren.setBounds(37, 63, 132, 14);
+		contentPane.add(lblLabelNumeroSiren);
 		
 		JLabel lblLabelNom = new JLabel("Nom :");
 		lblLabelNom.setBounds(37, 125, 132, 14);
 		contentPane.add(lblLabelNom);
 		
-		textFieldLibelle = new JTextField();
-		textFieldLibelle.setColumns(10);
-		textFieldLibelle.setBounds(165, 156, 132, 20);
-		contentPane.add(textFieldLibelle);
+		textFieldTelephone = new JTextField();
+		textFieldTelephone.setColumns(10);
+		textFieldTelephone.setBounds(165, 156, 132, 20);
+		contentPane.add(textFieldTelephone);
 		
 		JLabel lblLabelTelephone = new JLabel("Téléphone :");
 		lblLabelTelephone.setBounds(37, 156, 132, 14);
 		contentPane.add(lblLabelTelephone);
 		
-		textFieldLienPDF = new JTextField();
-		textFieldLienPDF.setColumns(10);
-		textFieldLienPDF.setBounds(165, 187, 132, 20);
-		contentPane.add(textFieldLienPDF);
+		textFieldVille = new JTextField();
+		textFieldVille.setColumns(10);
+		textFieldVille.setBounds(165, 187, 132, 20);
+		contentPane.add(textFieldVille);
 		
 		JLabel lblLabelVille = new JLabel("Ville :");
 		lblLabelVille.setBounds(37, 187, 132, 14);
@@ -207,19 +207,19 @@ public class NouvelleEntreprise extends JFrame implements ActionListener {
 		lblLabelEmail.setBounds(37, 248, 132, 14);
 		contentPane.add(lblLabelEmail);
 		
-		textFieldMontant = new JTextField();
-		textFieldMontant.setColumns(10);
-		textFieldMontant.setBounds(165, 248, 132, 20);
-		contentPane.add(textFieldMontant);
+		textFieldMail = new JTextField();
+		textFieldMail.setColumns(10);
+		textFieldMail.setBounds(165, 248, 132, 20);
+		contentPane.add(textFieldMail);
 		
-		JLabel lblLabelNumSiret = new JLabel("Numéro de SIRET :");
-		lblLabelNumSiret.setBounds(37, 94, 132, 14);
-		contentPane.add(lblLabelNumSiret);
+		JLabel lblLabelNumeroSiret = new JLabel("Numéro de SIRET :");
+		lblLabelNumeroSiret.setBounds(37, 94, 132, 14);
+		contentPane.add(lblLabelNumeroSiret);
 		
-		textFieldNumSiret = new JTextField();
-		textFieldNumSiret.setColumns(10);
-		textFieldNumSiret.setBounds(165, 94, 132, 20);
-		contentPane.add(textFieldNumSiret);
+		textFieldNumeroSiret = new JTextField();
+		textFieldNumeroSiret.setColumns(10);
+		textFieldNumeroSiret.setBounds(165, 94, 132, 20);
+		contentPane.add(textFieldNumeroSiret);
 		
 		JButton btnAjouter = new JButton("Ajouter");
 		btnAjouter.setBounds(307, 384, 132, 23);
@@ -241,10 +241,10 @@ public class NouvelleEntreprise extends JFrame implements ActionListener {
 		lblLabelCodePostal.setBounds(37, 220, 132, 14);
 		contentPane.add(lblLabelCodePostal);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(165, 217, 132, 20);
-		contentPane.add(textField_3);
+		textFieldCodePostal = new JTextField();
+		textFieldCodePostal.setColumns(10);
+		textFieldCodePostal.setBounds(165, 217, 132, 20);
+		contentPane.add(textFieldCodePostal);
 	}
 	
 	public void actionPerformed(ActionEvent e) {

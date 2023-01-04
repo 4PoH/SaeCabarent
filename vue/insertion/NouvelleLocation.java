@@ -42,11 +42,11 @@ import java.awt.Font;
 public class NouvelleLocation extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField textFieldDateFac;
+	private JTextField textFieldNombreLocataires;
 	private JTextField textFieldMontant;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
+	private JTextField textFieldMontantCharges;
+	private JTextField textFieldParticipationEntretien;
+	private JTextField textFieldParticipationElectricite;
 
 	/**
 	 * Launch the application.
@@ -164,26 +164,26 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textFieldDateFac = new JTextField();
-		textFieldDateFac.setColumns(10);
-		textFieldDateFac.setBounds(166, 91, 26, 20);
-		contentPane.add(textFieldDateFac);
+		textFieldNombreLocataires = new JTextField();
+		textFieldNombreLocataires.setColumns(10);
+		textFieldNombreLocataires.setBounds(166, 91, 26, 20);
+		contentPane.add(textFieldNombreLocataires);
 		
 		JLabel lblLabelContrat = new JLabel("* Contrat :");
 		lblLabelContrat.setBounds(24, 63, 132, 14);
 		contentPane.add(lblLabelContrat);
 		
-		JLabel lblLabelDateFac = new JLabel("Nombre de locataire :");
-		lblLabelDateFac.setBounds(24, 94, 132, 14);
-		contentPane.add(lblLabelDateFac);
+		JLabel lblLabelNombreLocataire = new JLabel("Nombre de locataire :");
+		lblLabelNombreLocataire.setBounds(24, 94, 132, 14);
+		contentPane.add(lblLabelNombreLocataire);
 		
-		JLabel lblLabelLibelle = new JLabel("* Locataire(s)  :");
-		lblLabelLibelle.setBounds(24, 125, 132, 14);
-		contentPane.add(lblLabelLibelle);
+		JLabel lblLabelLocataires = new JLabel("* Locataire(s)  :");
+		lblLabelLocataires.setBounds(24, 125, 132, 14);
+		contentPane.add(lblLabelLocataires);
 		
-		JLabel lblLabelLienPDF = new JLabel("* Logement  :");
-		lblLabelLienPDF.setBounds(24, 156, 132, 14);
-		contentPane.add(lblLabelLienPDF);
+		JLabel lblLabelLogements = new JLabel("* Logement  :");
+		lblLabelLogements.setBounds(24, 156, 132, 14);
+		contentPane.add(lblLabelLogements);
 		
 		JLabel lblLabelMontant = new JLabel("Montant du loyer  :");
 		lblLabelMontant.setBounds(24, 184, 132, 14);
@@ -194,23 +194,23 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 		textFieldMontant.setBounds(166, 181, 132, 20);
 		contentPane.add(textFieldMontant);
 		
-		JLabel lblLabelMontantNonDeductible = new JLabel("Montant des charges :");
-		lblLabelMontantNonDeductible.setBounds(24, 215, 132, 14);
-		contentPane.add(lblLabelMontantNonDeductible);
+		JLabel lblLabelMontantCharges = new JLabel("Montant des charges :");
+		lblLabelMontantCharges.setBounds(24, 215, 132, 14);
+		contentPane.add(lblLabelMontantCharges);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(166, 212, 132, 20);
-		contentPane.add(textField);
+		textFieldMontantCharges = new JTextField();
+		textFieldMontantCharges.setColumns(10);
+		textFieldMontantCharges.setBounds(166, 212, 132, 20);
+		contentPane.add(textFieldMontantCharges);
 		
-		JLabel lblLabelReduction = new JLabel("Participation entretien :");
-		lblLabelReduction.setBounds(24, 245, 132, 14);
-		contentPane.add(lblLabelReduction);
+		JLabel lblLabelParticipationEntretien = new JLabel("Participation entretien :");
+		lblLabelParticipationEntretien.setBounds(24, 245, 132, 14);
+		contentPane.add(lblLabelParticipationEntretien);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(166, 242, 132, 20);
-		contentPane.add(textField_1);
+		textFieldParticipationEntretien = new JTextField();
+		textFieldParticipationEntretien.setColumns(10);
+		textFieldParticipationEntretien.setBounds(166, 242, 132, 20);
+		contentPane.add(textFieldParticipationEntretien);
 		
 		JButton btnAjouter = new JButton("Ajouter");
 		btnAjouter.setBounds(307, 384, 132, 23);
@@ -227,9 +227,9 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 		lblNouvelleLocation.setBounds(24, 0, 307, 41);
 		contentPane.add(lblNouvelleLocation);
 		
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setBounds(166, 122, 132, 22);
-		contentPane.add(comboBox_1);
+		JComboBox comboBoxLocataires = new JComboBox();
+		comboBoxLocataires.setBounds(166, 122, 132, 22);
+		contentPane.add(comboBoxLocataires);
 		
 		JButton btnNouveauLocataire = new JButton("Nouveau Locataire");
 		btnNouveauLocataire.setBounds(308, 121, 132, 23);
@@ -241,27 +241,27 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 		btnNouveauContrat.addActionListener(this);
 		contentPane.add(btnNouveauContrat);
 		
-		JComboBox comboBox_1_1 = new JComboBox();
-		comboBox_1_1.setBounds(166, 59, 132, 22);
-		contentPane.add(comboBox_1_1);
+		JComboBox comboBoxContrats = new JComboBox();
+		comboBoxContrats.setBounds(166, 59, 132, 22);
+		contentPane.add(comboBoxContrats);
 		
-		JComboBox comboBox_2 = new JComboBox();
-		comboBox_2.setBounds(166, 150, 132, 22);
-		contentPane.add(comboBox_2);
+		JComboBox comboBoxLogements = new JComboBox();
+		comboBoxLogements.setBounds(166, 150, 132, 22);
+		contentPane.add(comboBoxLogements);
 		
 		JButton btnNouveauLogement = new JButton("Nouveau Logement");
 		btnNouveauLogement.setBounds(308, 150, 132, 23);
 		btnNouveauLogement.addActionListener(this);
 		contentPane.add(btnNouveauLogement);
 		
-		JLabel lblParticipationlctricitCommune = new JLabel("Participation éléctricité :");
-		lblParticipationlctricitCommune.setBounds(24, 273, 132, 14);
-		contentPane.add(lblParticipationlctricitCommune);
+		JLabel lblLabelParticipationElectricite = new JLabel("Participation éléctricité :");
+		lblLabelParticipationElectricite.setBounds(24, 273, 132, 14);
+		contentPane.add(lblLabelParticipationElectricite);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(166, 270, 132, 20);
-		contentPane.add(textField_2);
+		textFieldParticipationElectricite = new JTextField();
+		textFieldParticipationElectricite.setColumns(10);
+		textFieldParticipationElectricite.setBounds(166, 270, 132, 20);
+		contentPane.add(textFieldParticipationElectricite);
 	}
 	
 	public void actionPerformed(ActionEvent e) {

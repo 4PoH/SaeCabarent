@@ -44,11 +44,11 @@ import javax.swing.JCheckBox;
 public class NouveauBati extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField textFieldAnneeFac;
-	private JTextField textFieldMontantPartieFixe;
-	private JTextField champlienpdf;
-	private JTextField textFieldRefAvis;
-	private JTextField textField;
+	private JTextField textFieldCodePostal;
+	private JTextField textFieldVille;
+	private JTextField textFieldAnnee;
+	private JTextField textFieldAddresse;
+	private JTextField textFieldPartiesCommunes;
 
 	/**
 	 * Launch the application.
@@ -166,27 +166,27 @@ public class NouveauBati extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textFieldAnneeFac = new JTextField();
-		textFieldAnneeFac.setColumns(10);
-		textFieldAnneeFac.setBounds(179, 127, 68, 20);
-		contentPane.add(textFieldAnneeFac);
+		textFieldCodePostal = new JTextField();
+		textFieldCodePostal.setColumns(10);
+		textFieldCodePostal.setBounds(179, 127, 68, 20);
+		contentPane.add(textFieldCodePostal);
 		
-		JLabel lblLabelAnneeFac = new JLabel("* Code postal :");
-		lblLabelAnneeFac.setBounds(37, 126, 132, 14);
-		contentPane.add(lblLabelAnneeFac);
+		JLabel lblLabelCodePostal = new JLabel("* Code postal :");
+		lblLabelCodePostal.setBounds(37, 126, 132, 14);
+		contentPane.add(lblLabelCodePostal);
 		
-		JLabel lblLabelTotalOrdure = new JLabel("Ville :");
-		lblLabelTotalOrdure.setBounds(35, 158, 144, 14);
-		contentPane.add(lblLabelTotalOrdure);
+		JLabel lblLabelVille = new JLabel("Ville :");
+		lblLabelVille.setBounds(35, 158, 144, 14);
+		contentPane.add(lblLabelVille);
 		
-		textFieldMontantPartieFixe = new JTextField();
-		textFieldMontantPartieFixe.setColumns(10);
-		textFieldMontantPartieFixe.setBounds(177, 159, 132, 20);
-		contentPane.add(textFieldMontantPartieFixe);
+		textFieldVille = new JTextField();
+		textFieldVille.setColumns(10);
+		textFieldVille.setBounds(177, 159, 132, 20);
+		contentPane.add(textFieldVille);
 		
-		JLabel lblLabelMontantTotal = new JLabel("Type d'habitat :");
-		lblLabelMontantTotal.setBounds(35, 189, 132, 14);
-		contentPane.add(lblLabelMontantTotal);
+		JLabel lblLabelTypeHabitat = new JLabel("Type d'habitat :");
+		lblLabelTypeHabitat.setBounds(35, 189, 132, 14);
+		contentPane.add(lblLabelTypeHabitat);
 		
 		JButton btnAjouter = new JButton("Ajouter");
 		btnAjouter.setBounds(307, 384, 132, 23);
@@ -201,44 +201,44 @@ public class NouveauBati extends JFrame implements ActionListener {
 		lblTaxeFonciere.setBounds(37, 0, 260, 41);
 		contentPane.add(lblTaxeFonciere);
 		
-		champlienpdf = new JTextField();
-		champlienpdf.setColumns(10);
-		champlienpdf.setBounds(177, 222, 68, 20);
-		contentPane.add(champlienpdf);
+		textFieldAnnee = new JTextField();
+		textFieldAnnee.setColumns(10);
+		textFieldAnnee.setBounds(177, 222, 68, 20);
+		contentPane.add(textFieldAnnee);
 		
-		JLabel lblLabelLienPDF_1 = new JLabel("Année de construction :");
-		lblLabelLienPDF_1.setBounds(35, 221, 132, 14);
-		contentPane.add(lblLabelLienPDF_1);
+		JLabel lblLabelAnnee = new JLabel("Année de construction :");
+		lblLabelAnnee.setBounds(35, 221, 132, 14);
+		contentPane.add(lblLabelAnnee);
 		
-		JLabel lblLabelEntreprise = new JLabel("* Adresse :");
-		lblLabelEntreprise.setBounds(37, 96, 132, 14);
-		contentPane.add(lblLabelEntreprise);
+		JLabel lblLabelAdresse = new JLabel("* Adresse :");
+		lblLabelAdresse.setBounds(37, 96, 132, 14);
+		contentPane.add(lblLabelAdresse);
 		
-		textFieldRefAvis = new JTextField();
-		textFieldRefAvis.setColumns(10);
-		textFieldRefAvis.setBounds(179, 96, 233, 20);
-		contentPane.add(textFieldRefAvis);
+		textFieldAddresse = new JTextField();
+		textFieldAddresse.setColumns(10);
+		textFieldAddresse.setBounds(179, 96, 233, 20);
+		contentPane.add(textFieldAddresse);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(179, 190, 130, 22);
-		contentPane.add(comboBox);
+		JComboBox comboBoxTypeHabitat = new JComboBox();
+		comboBoxTypeHabitat.setBounds(179, 190, 130, 22);
+		contentPane.add(comboBoxTypeHabitat);
 		
-		JLabel lblListeDesParties = new JLabel("Liste des parties communes :");
-		lblListeDesParties.setBounds(37, 258, 132, 14);
-		contentPane.add(lblListeDesParties);
+		JLabel lblLabelPartiesCommunes = new JLabel("Liste des parties communes :");
+		lblLabelPartiesCommunes.setBounds(37, 258, 132, 14);
+		contentPane.add(lblLabelPartiesCommunes);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(177, 253, 132, 20);
-		contentPane.add(textField);
+		textFieldPartiesCommunes = new JTextField();
+		textFieldPartiesCommunes.setColumns(10);
+		textFieldPartiesCommunes.setBounds(177, 253, 132, 20);
+		contentPane.add(textFieldPartiesCommunes);
 		
-		JLabel lblCoproprit = new JLabel("Copropriété :");
-		lblCoproprit.setBounds(37, 288, 132, 14);
-		contentPane.add(lblCoproprit);
+		JLabel lblLabelCopropriete = new JLabel("Copropriété :");
+		lblLabelCopropriete.setBounds(37, 288, 132, 14);
+		contentPane.add(lblLabelCopropriete);
 		
-		JCheckBox chckbxNewCheckBox = new JCheckBox("");
-		chckbxNewCheckBox.setBounds(174, 284, 97, 23);
-		contentPane.add(chckbxNewCheckBox);
+		JCheckBox chckbxCopropriete = new JCheckBox("");
+		chckbxCopropriete.setBounds(174, 284, 97, 23);
+		contentPane.add(chckbxCopropriete);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
