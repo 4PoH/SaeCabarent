@@ -35,14 +35,18 @@ import vue.insertion.NouvelleTaxeFonciere;
 
 import javax.swing.ListSelectionModel;
 import java.awt.event.MouseListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.awt.event.MouseEvent;
 import javax.swing.SwingConstants;
+
+import Requetes.Requete;
 
 public class Accueil extends JFrame implements ActionListener, MouseListener{
 
 	private JPanel contentPane;
 	private JTable table;
-
+	
 	/**
 	 * Launch the application.
 	 */
@@ -61,8 +65,9 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 
 	/**
 	 * Create the frame.
+	 * @throws SQLException 
 	 */
-	public Accueil(){
+	public Accueil() {
 		setTitle("Accueil");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 720, 480);
@@ -168,15 +173,17 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 		table.setRowSelectionAllowed(false);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setSurrendersFocusOnKeystroke(true);
+		//Appel pour obtenir le resultSet
+		try {
+			ResultSet rsEnsBati = RequeteTableauBati();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		
+		
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{"75 Avenue des Pyr\u00E9n\u00E9es, 75m\u00B2, T3, Ivan LATERREUR", "+ 262.25 \u20AC", ""},
-				{"4 Rue du Sacré Graal, 143m², T4, Ni", "+ 353.45", ""},
-				{"6 Avenue de la Cantina, 232m², T5, Georges Lucas", "+ 799.50 €", ""},
-				{"12 Impasse Zoubida, 123m², T4, Gaston Lagaf", "+ 666.60 €", ""},
-				{null, null, null},
-				{null, null, null},
-			},
+				{"75 Avenue des Pyr\u00E9n\u00E9es, 75m\u00B2, T3, Ivan LATERREUR", "+ 262.25 \u20AC", ""},},
 			new String[] {
 				"Adresse", "Revenue", ""
 			}
@@ -308,4 +315,13 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 	}
 	public void mouseReleased(MouseEvent e) {
 	}
+	
+	private ResultSet RequeteTableauBati() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "SELECT * FROM Bati";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	
 }
