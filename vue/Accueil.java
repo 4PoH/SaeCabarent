@@ -45,7 +45,7 @@ import Requetes.Requete;
 public class Accueil extends JFrame implements ActionListener, MouseListener{
 
 	private JPanel contentPane;
-	private JTable table;
+	private JTable tableAcceuilBati;
 	
 	/**
 	 * Launch the application.
@@ -168,20 +168,19 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 		scrollPane.setBounds(10, 10, 680, 300);
 		contentPane.add(scrollPane);
 		
-		table = new JTable();
-		table.addMouseListener(this);
-		table.setRowSelectionAllowed(false);
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table.setSurrendersFocusOnKeystroke(true);
-		//Appel pour obtenir le resultSet
-		try {
-			ResultSet rsEnsBati = RequeteTableauBati();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} 
+		// Header de JTable 
+	    final String[] columns = {"Nom", "Age", "Adresse"};
+		// Créer le modèle de table
+	    final DefaultTableModel model = new DefaultTableModel(columns, 0);
+		tableAcceuilBati = new JTable(model);
+		tableAcceuilBati.addMouseListener(this);
+		tableAcceuilBati.setRowSelectionAllowed(false);
+		tableAcceuilBati.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableAcceuilBati.setSurrendersFocusOnKeystroke(true);
 		
 		
-		table.setModel(new DefaultTableModel(
+		
+		tableAcceuilBati.setModel(new DefaultTableModel(
 			new Object[][] {
 				{"75 Avenue des Pyr\u00E9n\u00E9es, 75m\u00B2, T3, Ivan LATERREUR", "+ 262.25 \u20AC", ""},},
 			new String[] {
@@ -195,10 +194,28 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 				return columnTypes[columnIndex];
 			}
 		});
-		table.getColumnModel().getColumn(0).setPreferredWidth(560);
-		table.getColumnModel().getColumn(1).setPreferredWidth(120);
-		table.getColumnModel().getColumn(2).setPreferredWidth(40);
-		scrollPane.setViewportView(table);
+		
+		//Appel pour obtenir le resultSet
+		
+
+		
+		try {
+			ResultSet rsEnsBati = RequeteTableauBati();
+			int i = -1;
+			rsEnsBati.next();
+			while ( i < rsEnsBati.getRow()) {
+				model.addRow(
+						new Object[]{rsEnsBati.getString("ADRESSE") });
+				rsEnsBati.next();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		
+		tableAcceuilBati.getColumnModel().getColumn(0).setPreferredWidth(560);
+		tableAcceuilBati.getColumnModel().getColumn(1).setPreferredWidth(120);
+		tableAcceuilBati.getColumnModel().getColumn(2).setPreferredWidth(40);
+		scrollPane.setViewportView(tableAcceuilBati);
 		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBounds(10, 380, 680, 30);
