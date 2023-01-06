@@ -5,24 +5,22 @@ import java.sql.SQLException;
 import oracle.jdbc.datasource.impl.OracleDataSource;
 
 public class CictOracleDataSource extends OracleDataSource {
+	
 	public CictOracleDataSource() throws SQLException {
-		super();
+		this.setURL("jdbc:oracle:thin:@telline.univ-tlse3.fr" + ":1521:etupre");
+		this.setUser("DRR3096A"); 
+		this.setPassword("$iutinfo");
 	}
 
 	public static void main(String [] arg) throws SQLException {
-		String url = new String("jdbc:oracle:thin:@telline.univ-tlse3.fr" + ":1521:etupre");
-		String nom_utilisateur = new String("DRR3096A"); 
-		String mot_passe = new String("$iutinfo");
+		
 		OracleDataSource bd = new OracleDataSource();
-
-		System.out.println(String.format("Tentative de connexion à : %s", url));
-		
-		bd.setURL(url);
-		bd.setUser(nom_utilisateur);
-		bd.setPassword(mot_passe);
-		
-		Connection cn = bd.getConnection();
-		System.out.println("Connexion reussi");
-
+		try {
+			Connection connex = bd.getConnection();
+			System.out.println("Connexion reussi");
+			connex.close();
+		} catch(SQLException e) {
+			System.out.println("Connexion rate");
+		}
 	}	
 }
