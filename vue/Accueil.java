@@ -71,7 +71,13 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 	private ResultSet RequeteTableauBati() throws SQLException {
 		ResultSet retourRequete = null;
 		Requete requete = new Requetes.Requete();
-		String texteSQL = "SELECT * FROM Bati";
+		String texteSQL = "select distinct lieuxdelocations.adresse, lieuxdelocations.codepostal, lieuxdelocations.libelle, locataire.nom, locataire.prenom\r\n"
+							+ "from loue, lieuxdelocations, contrat, relie, locataire\r\n"
+							+ "where loue.idlogement = lieuxdelocations.idlogement\r\n"
+							+ "and loue.idcontrat = contrat.idcontrat\r\n"
+							+ "and contrat.idcontrat = relie.idcontrat\r\n"
+							+ "and relie.idlocataire = locataire.idlocataire\r\n"
+							+ "and to_date(ADD_MONTHS(SYSDATE, -2), 'mm-yyyy') < to_date(loue.datelocation, 'mm-yyyy')";
 		retourRequete = requete.requeteSelection(texteSQL);
 		return retourRequete;
 	}
@@ -178,7 +184,7 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 		contentPane.add(scrollPane);
 		
 		// Header de JTable 
-	    final String[] columns = {"Nom", "Age", "Adresse"};
+	    final String[] columns = {"Adresse", "Argent", ""};
 		// Créer le modèle de table
 	    final DefaultTableModel model = new DefaultTableModel(columns, 0);
 		tableAcceuilBati = new JTable(model);
@@ -186,32 +192,23 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 		tableAcceuilBati.setRowSelectionAllowed(false);
 		tableAcceuilBati.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableAcceuilBati.setSurrendersFocusOnKeystroke(true);
-		
-		
-		
-		tableAcceuilBati.setModel(new DefaultTableModel(
-			new Object[][] {
-				{"75 Avenue des Pyr\u00E9n\u00E9es, 75m\u00B2, T3, Ivan LATERREUR", "+ 262.25 \u20AC", ""},},
-			new String[] {
-				"Adresse", "Revenue", ""
-			}
-		) {
-			Class[] columnTypes = new Class[] {
-				String.class, String.class, String.class
-			};
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-		});
-		
 				
 		try {
 			ResultSet rsEnsBati = RequeteTableauBati();
 			int i = 0;
 			rsEnsBati.next();
 			while ( i < rsEnsBati.getRow()) {
-				model.addRow(
-						new Object[]{rsEnsBati.getString("ADRESSE") });
+				String adresse = rsEnsBati.getString("ADRESSE");
+				adresse += ", ";
+				adresse += rsEnsBati.getString("CODEPOSTAL");
+				adresse += ", ";
+				adresse += rsEnsBati.getString("LIBELLE");
+				adresse += ", ";
+				adresse += rsEnsBati.getString("NOM");
+				adresse += ", ";
+				adresse += rsEnsBati.getString("PRENOM");
+				adresse += ", ";
+				model.addRow(new String[]{adresse,"",""});
 				rsEnsBati.next();
 			}
 		} catch (SQLException e) {
