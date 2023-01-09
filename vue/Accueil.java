@@ -67,6 +67,15 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 	 * Create the frame.
 	 * @throws SQLException 
 	 */
+	
+	private ResultSet RequeteTableauBati() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "SELECT * FROM Bati";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	
 	public Accueil() {
 		setTitle("Accueil");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -195,13 +204,10 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 			}
 		});
 		
-		//Appel pour obtenir le resultSet
-		
-
-		
+				
 		try {
 			ResultSet rsEnsBati = RequeteTableauBati();
-			int i = -1;
+			int i = 0;
 			rsEnsBati.next();
 			while ( i < rsEnsBati.getRow()) {
 				model.addRow(
@@ -331,14 +337,6 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 	public void mousePressed(MouseEvent e) {
 	}
 	public void mouseReleased(MouseEvent e) {
-	}
-	
-	private ResultSet RequeteTableauBati() throws SQLException {
-		ResultSet retourRequete = null;
-		Requete requete = new Requetes.Requete();
-		String texteSQL = "SELECT * FROM Bati";
-		retourRequete = requete.requeteSelection(texteSQL);
-		return retourRequete;
 	}
 	
 }
