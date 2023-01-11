@@ -13,7 +13,7 @@ public class CictOracleDataSource extends OracleDataSource {
 	}
 
 	public static void main(String [] arg) throws SQLException {
-		OracleDataSource bd = new OracleDataSource();
+		CictOracleDataSource bd = new CictOracleDataSource();
 		try {
 			Connection connex = bd.getConnection();
 			System.out.println("Connexion reussi");
