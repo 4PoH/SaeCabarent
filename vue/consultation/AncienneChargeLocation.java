@@ -62,6 +62,8 @@ public class AncienneChargeLocation extends JFrame implements ActionListener {
 		});
 	}
 
+	
+	
 	/**
 	 * Create the frame.
 	 */

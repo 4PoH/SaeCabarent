@@ -1,6 +1,7 @@
 package vue;
 
 import java.awt.BorderLayout;
+
 import java.awt.DisplayMode;
 import java.awt.EventQueue;
 import java.awt.Insets;
