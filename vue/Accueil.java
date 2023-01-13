@@ -72,12 +72,9 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 		ResultSet retourRequete = null;
 		Requete requete = new Requetes.Requete();
 		String texteSQL = "select distinct lieuxdelocations.adresse, lieuxdelocations.codepostal, lieuxdelocations.libelle, locataire.nom, locataire.prenom\r\n"
-							+ "from loue, lieuxdelocations, contrat, relie, locataire\r\n"
-							+ "where loue.idlogement = lieuxdelocations.idlogement\r\n"
-							+ "and loue.idcontrat = contrat.idcontrat\r\n"
-							+ "and contrat.idcontrat = relie.idcontrat\r\n"
-							+ "and relie.idlocataire = locataire.idlocataire\r\n"
-							+ "and to_date(ADD_MONTHS(SYSDATE, -2), 'mm-yyyy') < to_date(loue.datelocation, 'mm-yyyy')";
+						+ "from loue, lieuxdelocations, contrat, relie, locataire \r\n"
+						+ "where loue.idlogement = lieuxdelocations.idlogement and loue.idcontrat = contrat.idcontrat and contrat.idcontrat = relie.idcontrat \r\n"
+						+ "and relie.idlocataire = locataire.idlocataire and to_date(add_months(sysdate, -12),'dd/mm/yyyy') < to_date(loue.datelocation, 'dd/mm/yyyy')";
 		retourRequete = requete.requeteSelection(texteSQL);
 		return retourRequete;
 	}
@@ -98,59 +95,103 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 		JMenu MenuLocations = new JMenu("Locations");
 		menuBarTop.add(MenuLocations);
 		
-		JMenuItem MenuItemNouvelleLocation = new JMenuItem("Nouvelle location");
-		MenuItemNouvelleLocation.addActionListener(this);
-		MenuLocations.add(MenuItemNouvelleLocation);
+		JMenuItem MenuItemAncienneLocation = new JMenuItem("Anciennes location");
+		MenuItemAncienneLocation.addActionListener(this);
+		MenuLocations.add(MenuItemAncienneLocation);
 		
 		JMenuItem MenuItemLocationEnCour = new JMenuItem("Locations en cours");
 		MenuItemLocationEnCour.addActionListener(this);
 		MenuLocations.add(MenuItemLocationEnCour);
 		
-		JMenuItem MenuItemAncienneLocation = new JMenuItem("Anciennes location");
-		MenuItemAncienneLocation.addActionListener(this);
-		MenuLocations.add(MenuItemAncienneLocation);
+		JMenuItem MenuItemNouvelleLocation = new JMenuItem("Nouvelle location");
+		MenuItemNouvelleLocation.addActionListener(this);
+		MenuLocations.add(MenuItemNouvelleLocation);
 		
 		JMenu MenuCharges = new JMenu("Charges");
 		menuBarTop.add(MenuCharges);
 		
-		JMenuItem MenuItemFactureEau = new JMenuItem("Facture d'eau");
-		MenuItemFactureEau.addActionListener(this);
-		MenuCharges.add(MenuItemFactureEau);
+		JMenu MenuEntretiens = new JMenu("Entretiens");
+		MenuCharges.add(MenuEntretiens);
 		
-		JMenuItem MenuItemEntretien = new JMenuItem("Entretien");
-		MenuItemEntretien.addActionListener(this);
-		MenuCharges.add(MenuItemEntretien);
+		JMenuItem MenuItemAnciensEntretiens = new JMenuItem("Anciens entretiens");
+		MenuItemAnciensEntretiens.setSelected(true);
+		MenuEntretiens.add(MenuItemAnciensEntretiens);
 		
-		JMenuItem MenuItemTaxeFonciere = new JMenuItem("Taxe fonciere");
-		MenuItemTaxeFonciere.addActionListener(this);
-		MenuCharges.add(MenuItemTaxeFonciere);
+		JMenuItem mntmEntretiensEnCours = new JMenuItem("Entretiens en cours");
+		mntmEntretiensEnCours.setSelected(true);
+		MenuEntretiens.add(mntmEntretiensEnCours);
 		
-		JMenuItem MenuItemElectricite = new JMenuItem("Electricite");
-		MenuItemElectricite.addActionListener(this);
-		MenuCharges.add(MenuItemElectricite);
+		JMenuItem MenuItemNouveauxEntretiens = new JMenuItem("Nouveaux entretiens");
+		MenuItemNouveauxEntretiens.setSelected(true);
+		MenuEntretiens.add(MenuItemNouveauxEntretiens);
 		
-		JMenuItem MenuItemProtectionJuridique = new JMenuItem("Protection juridique");
-		MenuItemProtectionJuridique.addActionListener(this);
-		MenuCharges.add(MenuItemProtectionJuridique);
+		JMenu MenuFacturesEau = new JMenu("Factures d'eau");
+		MenuCharges.add(MenuFacturesEau);
 		
-		JMenuItem MenuItemAutre = new JMenuItem("Autre");
-		MenuItemAutre.addActionListener(this);
-		MenuCharges.add(MenuItemAutre);
+		JMenuItem MenuItemAnciennesFacturesEau = new JMenuItem("Anciennes factures d'eau");
+		MenuFacturesEau.add(MenuItemAnciennesFacturesEau);
+		
+		JMenuItem MenuItemFacturesEauEnCours = new JMenuItem("Factures d'eau en cours");
+		MenuFacturesEau.add(MenuItemFacturesEauEnCours);
+		
+		JMenuItem MenuItemNouvellesFactureEau = new JMenuItem("Nouvelles factures d'eau");
+		MenuFacturesEau.add(MenuItemNouvellesFactureEau);
+		
+		JMenu MenuElectricite = new JMenu("Electricité");
+		MenuCharges.add(MenuElectricite);
+		
+		JMenuItem MenuItemAnciennesFacturesElectricite = new JMenuItem("Anciennes factures d'électricité");
+		MenuElectricite.add(MenuItemAnciennesFacturesElectricite);
+		
+		JMenuItem mntmFacturesDlectricitEn = new JMenuItem("Factures d'électricité en cours");
+		MenuElectricite.add(mntmFacturesDlectricitEn);
+		
+		JMenuItem MenuItemNouvellesFacturesElectricite = new JMenuItem("Nouvelles factures d'électricité");
+		MenuElectricite.add(MenuItemNouvellesFacturesElectricite);
+		MenuItemNouvellesFacturesElectricite.addActionListener(this);
+		
+		JMenu MenuTaxesFoncieres = new JMenu("Taxes foncières");
+		MenuCharges.add(MenuTaxesFoncieres);
+		
+		JMenuItem MenuItemConsultationTaxesFonciere = new JMenuItem("Consultation taxes foncières");
+		MenuTaxesFoncieres.add(MenuItemConsultationTaxesFonciere);
+		
+		JMenuItem MenuItemNouvellesTaxesFonciere = new JMenuItem("Nouvelles taxes foncières");
+		MenuTaxesFoncieres.add(MenuItemNouvellesTaxesFonciere);
+		
+		JMenu MenuProtectionJuridique = new JMenu("Protection juridique");
+		MenuCharges.add(MenuProtectionJuridique);
+		
+		JMenuItem MenuItemConsultationProtectionsJuridiques = new JMenuItem("Consultation protection juridique");
+		MenuProtectionJuridique.add(MenuItemConsultationProtectionsJuridiques);
+		MenuItemConsultationProtectionsJuridiques.addActionListener(this);
+		
+		JMenuItem MenuItemNouvelleProtectionJuridique = new JMenuItem("Nouvelle protection juridique");
+		MenuProtectionJuridique.add(MenuItemNouvelleProtectionJuridique);
+		
+		JMenu MenuChargesSupplementaires = new JMenu("Charges supplémentaires");
+		MenuCharges.add(MenuChargesSupplementaires);
+		
+		JMenuItem MenuItemConsultationChargesSupplmentaires = new JMenuItem("Consultation charges supplémentaires");
+		MenuChargesSupplementaires.add(MenuItemConsultationChargesSupplmentaires);
+		
+		JMenuItem MenuItemNouvelleChargesSupplmentaires = new JMenuItem("Nouvelle charges supplémentaires");
+		MenuChargesSupplementaires.add(MenuItemNouvelleChargesSupplmentaires);
 		
 		JMenu MenuTravaux = new JMenu("Travaux");
 		menuBarTop.add(MenuTravaux);
 		
-		JMenuItem MenuItemNouveauTravaux = new JMenuItem("Nouveaux travaux");
-		MenuItemNouveauTravaux.addActionListener(this);
-		MenuTravaux.add(MenuItemNouveauTravaux);
+		JMenuItem MenuItemAncienTravaux = new JMenuItem("Anciens travaux");
+		MenuItemAncienTravaux.addActionListener(this);
+		MenuTravaux.add(MenuItemAncienTravaux);
 		
 		JMenuItem mntmNewMenuItem = new JMenuItem("Travaux en cours");
 		mntmNewMenuItem.addActionListener(this);
 		MenuTravaux.add(mntmNewMenuItem);
 		
-		JMenuItem MenuItemAncienTravaux = new JMenuItem("Anciens travaux");
-		MenuItemAncienTravaux.addActionListener(this);
-		MenuTravaux.add(MenuItemAncienTravaux);
+		JMenuItem MenuItemNouveauTravaux = new JMenuItem("Nouveaux travaux");
+		MenuItemNouveauTravaux.addActionListener(this);
+		MenuTravaux.add(MenuItemNouveauTravaux);
 		
 		JMenu MenuParametres = new JMenu("Parametres");
 		menuBarTop.add(MenuParametres);
@@ -184,7 +225,7 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 		contentPane.add(scrollPane);
 		
 		// Header de JTable 
-	    final String[] columns = {"Adresse", "Argent", ""};
+	    final String[] columns = {"Adresse", "Loyer", ""};
 		// Créer le modèle de table
 	    final DefaultTableModel model = new DefaultTableModel(columns, 0);
 		tableAcceuilBati = new JTable(model);
@@ -222,9 +263,6 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBounds(10, 380, 680, 30);
 		contentPane.add(menuBar);
-		
-		JButton ButtonRegimeFoncier = new JButton("Regime foncier");
-		menuBar.add(ButtonRegimeFoncier);
 		
 		JLabel LabelTotal = new JLabel("Total : ");
 		LabelTotal.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -334,5 +372,4 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 	}
 	public void mouseReleased(MouseEvent e) {
 	}
-	
 }

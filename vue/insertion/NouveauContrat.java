@@ -177,7 +177,7 @@ public class NouveauContrat extends JFrame implements ActionListener {
 		contentPane.add(textFieldCaution);
 		
 		JLabel lblLabelCaution = new JLabel("Caution :");
-		lblLabelCaution.setBounds(24, 185, 132, 14);
+		lblLabelCaution.setBounds(24, 184, 132, 14);
 		contentPane.add(lblLabelCaution);
 		
 		JLabel lblLabelType = new JLabel("Type de location :");
