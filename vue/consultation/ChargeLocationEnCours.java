@@ -67,7 +67,7 @@ public class ChargeLocationEnCours extends JFrame implements ActionListener {
 	 */
 	public ChargeLocationEnCours() {
 		setBackground(new Color(240, 240, 240));
-		setTitle("Location en cours");
+		setTitle("Charges des locations en cours");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 960, 480);
 		

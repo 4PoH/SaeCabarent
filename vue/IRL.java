@@ -174,7 +174,7 @@ public class IRL extends JFrame implements ActionListener {
 				{null, null, null},
 			},
 			new String[] {
-				"Annee", "Trimestre", "Montant"
+				"Année", "Trimestre", "Montant"
 			}
 		));
 		scrollPane.setViewportView(table);

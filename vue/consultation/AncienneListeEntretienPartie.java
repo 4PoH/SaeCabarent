@@ -67,7 +67,7 @@ public class AncienneListeEntretienPartie extends JFrame implements ActionListen
 	 */
 	public AncienneListeEntretienPartie() {
 		setBackground(new Color(240, 240, 240));
-		setTitle("Location en cours");
+		setTitle("Anciens entretiens des parties communes");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 960, 480);
 		
@@ -187,14 +187,14 @@ public class AncienneListeEntretienPartie extends JFrame implements ActionListen
 				{null, null, null, null, null},
 			},
 			new String[] {
-				"Bati", "numero facture", "total", "date paiement", "pdf"
+				"Bâti", "Numéro facture", "Date de paiement", "Total", "PDF"
 			}
 		));
 		scrollPane.setViewportView(table);
 		
-		JLabel TitreLocaCours = new JLabel("Entretien Partie Communes ancienne");
+		JLabel TitreLocaCours = new JLabel("Anciens entretiens des parties communes");
 		TitreLocaCours.setFont(new Font("Tahoma", Font.BOLD, 20));
-		TitreLocaCours.setBounds(10, 10, 430, 29);
+		TitreLocaCours.setBounds(10, 10, 500, 29);
 		contentPane.add(TitreLocaCours);
 		
 		JButton btnCharger = new JButton("Charger");

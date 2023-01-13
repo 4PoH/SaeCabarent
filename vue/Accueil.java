@@ -207,7 +207,6 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 				adresse += rsEnsBati.getString("NOM");
 				adresse += ", ";
 				adresse += rsEnsBati.getString("PRENOM");
-				adresse += ", ";
 				model.addRow(new String[]{adresse,"",""});
 				rsEnsBati.next();
 			}

@@ -186,12 +186,12 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 				{null, null, null, null, null, null, null, null, null},
 			},
 			new String[] {
-				"date facturation", "libelle entreprise", "numero SIREN", "montant payer", "numero facture", "date debut", "date fin", "detail", "pdf"
+				"Date de facturation", "Libelle entreprise", "Numéro SIREN", "Montant payer", "Numéro facture", "Date de début", "Date de fin", "Détail", "PDF"
 			}
 		));
 		scrollPane.setViewportView(table);
 		
-		JLabel TitreAncienTr = new JLabel("Ancien Travaux");
+		JLabel TitreAncienTr = new JLabel("Anciens travaux");
 		TitreAncienTr.setFont(new Font("Tahoma", Font.BOLD, 20));
 		TitreAncienTr.setBounds(16, 10, 179, 33);
 		contentPane.add(TitreAncienTr);

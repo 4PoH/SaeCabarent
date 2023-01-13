@@ -66,7 +66,7 @@ public class ChargesBatiAncienne extends JFrame implements ActionListener {
 	 */
 	public ChargesBatiAncienne() {
 		setBackground(new Color(240, 240, 240));
-		setTitle("Location en cours");
+		setTitle("Anciennes charges bati");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 960, 480);
 		
@@ -191,9 +191,9 @@ public class ChargesBatiAncienne extends JFrame implements ActionListener {
 		));
 		scrollPane.setViewportView(table);
 		
-		JLabel TitreLocaCours = new JLabel("Ancienne Location");
+		JLabel TitreLocaCours = new JLabel("Anciennes locations");
 		TitreLocaCours.setFont(new Font("Tahoma", Font.BOLD, 20));
-		TitreLocaCours.setBounds(10, 10, 189, 29);
+		TitreLocaCours.setBounds(10, 10, 294, 29);
 		contentPane.add(TitreLocaCours);
 		
 		JButton btnCharger = new JButton("Charger");

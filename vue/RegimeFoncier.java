@@ -72,7 +72,7 @@ public class RegimeFoncier extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public RegimeFoncier() {
-		setTitle("Nouveaux travaux");
+		setTitle("Régime foncier");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 480, 480);
 		

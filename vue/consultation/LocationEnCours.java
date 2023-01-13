@@ -1,45 +1,37 @@
 package vue.consultation;
 
 
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.insertion.NouvelleFactureElectricite;
-import vue.insertion.NouvelleFactureEntretien;
-import vue.insertion.NouvelleFactureEau;
 import vue.insertion.NouveauTravaux;
 import vue.insertion.NouvelleChargeSupp;
+import vue.insertion.NouvelleFactureEau;
+import vue.insertion.NouvelleFactureElectricite;
+import vue.insertion.NouvelleFactureEntretien;
 import vue.insertion.NouvelleLocation;
-import vue.insertion.ProtectionJuridique;
 import vue.insertion.NouvelleTaxeFonciere;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.awt.GridLayout;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JMenu;
-import javax.swing.SwingConstants;
-import java.awt.Insets;
-import javax.swing.JButton;
-import javax.swing.BoxLayout;
-import javax.swing.JTable;
-import java.awt.FlowLayout;
-import javax.swing.table.DefaultTableModel;
-
-import javax.swing.JScrollPane;
-import java.awt.BorderLayout;
-import javax.swing.JLabel;
-import javax.swing.border.LineBorder;
-import java.awt.Color;
-import javax.swing.JToolBar;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JScrollBar;
-import java.awt.Font;
+import vue.insertion.ProtectionJuridique;
 
 public class LocationEnCours extends JFrame implements ActionListener {
 
@@ -295,7 +287,7 @@ public class LocationEnCours extends JFrame implements ActionListener {
 				new Quittances().setVisible(true);
 				break;
 			
-			case "Taxe fonciere":
+			case "Taxe foncière":
 				this.dispose();
 				new NouvelleTaxeFonciere().setVisible(true);
 				break;
@@ -308,7 +300,7 @@ public class LocationEnCours extends JFrame implements ActionListener {
 				new TravauxEnCours().setVisible(true);
 				break;
 				
-			case "Inserer" :
+			case "Insérer" :
 				this.dispose();
 				new NouvelleLocation().setVisible(true);
 				break;
