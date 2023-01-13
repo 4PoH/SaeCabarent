@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -59,8 +60,7 @@ public class AncienneChargeLocation extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 960, 480);
 		
-		MenuPerso menuBarTop = new MenuPerso(this);
-		menuBarTop.setup(this);
+		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
 		setJMenuBar(menuBarTop);
 		
