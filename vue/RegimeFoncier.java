@@ -21,10 +21,10 @@ import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.AncienneLocation;
-import vue.consultation.AnciensTravaux;
+import vue.consultation.LocationsAnciennes;
+import vue.consultation.TravauxAnciens;
 import vue.consultation.Impositions;
-import vue.consultation.LocationEnCours;
+import vue.consultation.LocationsEnCours;
 import vue.consultation.TravauxEnCours;
 import vue.insertion.NouveauContrat;
 import vue.insertion.NouveauLocataire;
@@ -32,9 +32,9 @@ import vue.insertion.NouveauLogement;
 import vue.insertion.NouvelleChargeSupp;
 import vue.insertion.NouvelleFactureEau;
 import vue.insertion.NouvelleFactureElectricite;
-import vue.insertion.NouvelleFactureEntretien;
+import vue.insertion.NouveauEntretien;
 import vue.insertion.NouvelleTaxeFonciere;
-import vue.insertion.ProtectionJuridique;
+import vue.insertion.NouvelleProtectionJuridique;
 
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
@@ -168,7 +168,7 @@ public class RegimeFoncier extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblLabelContrat = new JLabel("Annee courante");
+		JLabel lblLabelContrat = new JLabel("Année courante");
 		lblLabelContrat.setBounds(24, 138, 132, 14);
 		contentPane.add(lblLabelContrat);
 		
@@ -186,10 +186,10 @@ public class RegimeFoncier extends JFrame implements ActionListener {
 		btnAnnuler.addActionListener(this);
 		contentPane.add(btnAnnuler);
 		
-		JLabel lblNouvelleLocation = new JLabel("Regime foncier");
-		lblNouvelleLocation.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblNouvelleLocation.setBounds(24, 10, 307, 41);
-		contentPane.add(lblNouvelleLocation);
+		JLabel LabelNouvelleLocation = new JLabel("Régime foncier");
+		LabelNouvelleLocation.setFont(new Font("Tahoma", Font.BOLD, 20));
+		LabelNouvelleLocation.setBounds(24, 10, 307, 41);
+		contentPane.add(LabelNouvelleLocation);
 		
 		JComboBox comboBox_1_1 = new JComboBox();
 		comboBox_1_1.setBounds(166, 134, 132, 22);
@@ -229,12 +229,12 @@ public class RegimeFoncier extends JFrame implements ActionListener {
 				
 			case "Anciennes location":
 				this.dispose();
-				new AncienneLocation().setVisible(true);
+				new LocationsAnciennes().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
 				this.dispose();
-				new AnciensTravaux().setVisible(true);
+				new TravauxAnciens().setVisible(true);
 				break;
 				
 			case "Electricite":
@@ -244,7 +244,7 @@ public class RegimeFoncier extends JFrame implements ActionListener {
 				
 			case "Entretien":
 				this.dispose();
-				new NouvelleFactureEntretien().setVisible(true);
+				new NouveauEntretien().setVisible(true);
 				break;
 				
 			case "Facture d'eau":
@@ -269,7 +269,7 @@ public class RegimeFoncier extends JFrame implements ActionListener {
 				
 			case "Locations en cours":
 				this.dispose();
-				new LocationEnCours().setVisible(true);
+				new LocationsEnCours().setVisible(true);
 				break;
 			
 			case "Nouveaux travaux":
@@ -284,7 +284,7 @@ public class RegimeFoncier extends JFrame implements ActionListener {
 				
 			case "Protection juridique":
 				this.dispose();
-				new ProtectionJuridique().setVisible(true);
+				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 				
 			case "Quittances":

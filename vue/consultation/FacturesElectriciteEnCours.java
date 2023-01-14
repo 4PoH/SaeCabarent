@@ -1,46 +1,39 @@
 package vue.consultation;
 
+
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.insertion.NouvelleFactureElectricite;
-import vue.insertion.NouvelleFactureEntretien;
-import vue.insertion.NouvelleFactureEau;
+import vue.insertion.NouveauEntretien;
 import vue.insertion.NouveauTravaux;
 import vue.insertion.NouvelleChargeSupp;
+import vue.insertion.NouvelleFactureEau;
+import vue.insertion.NouvelleFactureElectricite;
 import vue.insertion.NouvelleLocation;
-import vue.insertion.ProtectionJuridique;
+import vue.insertion.NouvelleProtectionJuridique;
 import vue.insertion.NouvelleTaxeFonciere;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.awt.GridLayout;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JMenu;
-import javax.swing.SwingConstants;
-import java.awt.Insets;
-import javax.swing.JButton;
-import javax.swing.BoxLayout;
-import javax.swing.JTable;
-import java.awt.FlowLayout;
-import javax.swing.table.DefaultTableModel;
-
-import javax.swing.JScrollPane;
-import java.awt.BorderLayout;
-import javax.swing.JLabel;
-import javax.swing.border.LineBorder;
-import java.awt.Color;
-import javax.swing.JToolBar;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.Font;
-
-public class AnciensTravaux extends JFrame implements ActionListener {
+public class FacturesElectriciteEnCours extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JTable table;
@@ -52,7 +45,7 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AnciensTravaux frame = new AnciensTravaux();
+					FacturesElectriciteEnCours frame = new FacturesElectriciteEnCours();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -64,10 +57,11 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public AnciensTravaux() {
-		setTitle("Anciens Travaux");
+	public FacturesElectriciteEnCours() {
+		setBackground(new Color(240, 240, 240));
+		setTitle("Facture d'électricité en cours");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 980, 480);
+		setBounds(100, 100, 960, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
@@ -84,9 +78,9 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 		MenuItemNouvelleLocation.addActionListener(this);
 		MenuLocations.add(MenuItemNouvelleLocation);
 		
-		JMenuItem MenuItemLocationEnCour = new JMenuItem("Locations en cours");
-		MenuItemLocationEnCour.addActionListener(this);
-		MenuLocations.add(MenuItemLocationEnCour);
+		JMenuItem MenuItemLocationEnCours = new JMenuItem("Locations en cours");
+		MenuItemLocationEnCours.addActionListener(this);
+		MenuLocations.add(MenuItemLocationEnCours);
 		
 		JMenuItem MenuItemAncienneLocation = new JMenuItem("Anciennes location");
 		MenuItemAncienneLocation.addActionListener(this);
@@ -158,12 +152,11 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(16, 53, 940, 269);
+		scrollPane.setBounds(22, 49, 914, 278);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
@@ -186,37 +179,44 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 				{null, null, null, null, null, null, null, null, null},
 			},
 			new String[] {
-				"Date de facturation", "Libelle entreprise", "Numéro SIREN", "Montant payer", "Numéro facture", "Date de début", "Date de fin", "Détail", "PDF"
+				"Location", "Numero facture", "Date facture", "Prix unitaire m3", "Mode de paiment", "Montant payer", "Partie fixe", "Total", "Pdf"
 			}
 		));
 		scrollPane.setViewportView(table);
 		
-		JLabel TitreAncienTr = new JLabel("Anciens travaux");
-		TitreAncienTr.setFont(new Font("Tahoma", Font.BOLD, 20));
-		TitreAncienTr.setBounds(16, 10, 179, 33);
-		contentPane.add(TitreAncienTr);
+		JLabel TitreFactureEauEnCours = new JLabel("Facture d'électricité en cours");
+		TitreFactureEauEnCours.setFont(new Font("Tahoma", Font.BOLD, 20));
+		TitreFactureEauEnCours.setBounds(10, 10, 349, 29);
+		contentPane.add(TitreFactureEauEnCours);
 		
-		JButton btnCharger = new JButton("Charger");
-		btnCharger.addActionListener(this);
-		btnCharger.setBounds(152, 362, 85, 21);
-		contentPane.add(btnCharger);
+		JButton ButtonCharger = new JButton("Charger");
+		ButtonCharger.addActionListener(this);
+		ButtonCharger.setBounds(35, 376, 85, 21);
+		contentPane.add(ButtonCharger);
 		
-		JButton btnAnnuler = new JButton("Annuler");
-		btnAnnuler.addActionListener(this);
-		btnAnnuler.setBounds(730, 362, 85, 21);
-		contentPane.add(btnAnnuler);
+		JButton ButtonInserer = new JButton("Insérer");
+		ButtonInserer.addActionListener(this);
+		ButtonInserer.setBounds(230, 376, 85, 21);
+		contentPane.add(ButtonInserer);
+		
+		JButton ButtonMiseJour = new JButton("Mise à jour");
+		ButtonMiseJour.addActionListener(this);
+		ButtonMiseJour.setBounds(414, 376, 85, 21);
+		contentPane.add(ButtonMiseJour);
+		
+		JButton ButtonSupprimer = new JButton("Supprimer");
+		ButtonSupprimer.addActionListener(this);
+		ButtonSupprimer.setBounds(611, 376, 85, 21);
+		contentPane.add(ButtonSupprimer);
+		
+		JButton ButtonAnnuler = new JButton("Annuler");
+		ButtonAnnuler.addActionListener(this);
+		ButtonAnnuler.setBounds(816, 376, 85, 21);
+		contentPane.add(ButtonAnnuler);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
-			
-			case "Charger" :
-				break;
-			
-			case "Annuler":
-				this.dispose();
-				break;
-		
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -224,12 +224,12 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 				
 			case "Anciennes location":
 				this.dispose();
-				new AncienneLocation().setVisible(true);
+				new LocationsAnciennes().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
 				this.dispose();
-				new AnciensTravaux().setVisible(true);
+				new TravauxAnciens().setVisible(true);
 				break;
 				
 			case "Electricite":
@@ -239,7 +239,7 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 				
 			case "Entretien":
 				this.dispose();
-				new NouvelleFactureEntretien().setVisible(true);
+				new NouveauEntretien().setVisible(true);
 				break;
 				
 			case "Facture d'eau":
@@ -264,7 +264,7 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 				
 			case "Locations en cours":
 				this.dispose();
-				new LocationEnCours().setVisible(true);
+				new FacturesElectriciteEnCours().setVisible(true);
 				break;
 			
 			case "Nouveaux travaux":
@@ -279,7 +279,7 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 				
 			case "Protection juridique":
 				this.dispose();
-				new ProtectionJuridique().setVisible(true);
+				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 				
 			case "Quittances":
@@ -295,10 +295,18 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 				this.dispose();
 				new NouvelleChargeSupp().setVisible(true);
 				break;
-				
 			case "Travaux en cours":
 				this.dispose();
 				new TravauxEnCours().setVisible(true);
+				break;
+				
+			case "Inserer" :
+				this.dispose();
+				new NouvelleLocation().setVisible(true);
+				break;
+			
+			case "Annuler" :
+				this.dispose();
 				break;
        
 			default:
@@ -306,5 +314,4 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 				break;
 		}
 	}
-	
 }

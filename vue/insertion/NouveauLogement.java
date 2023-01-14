@@ -21,10 +21,10 @@ import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.AncienneLocation;
-import vue.consultation.AnciensTravaux;
+import vue.consultation.LocationsAnciennes;
+import vue.consultation.TravauxAnciens;
 import vue.consultation.Impositions;
-import vue.consultation.LocationEnCours;
+import vue.consultation.LocationsEnCours;
 import vue.consultation.TravauxEnCours;
 
 import javax.swing.JScrollPane;
@@ -168,67 +168,67 @@ public class NouveauLogement extends JFrame implements ActionListener {
 		textFieldDateFac.setBounds(165, 179, 23, 20);
 		contentPane.add(textFieldDateFac);
 		
-		JLabel lblLabelContrat = new JLabel("Surface :");
-		lblLabelContrat.setBounds(23, 151, 132, 14);
-		contentPane.add(lblLabelContrat);
+		JLabel LabelContrat = new JLabel("Surface :");
+		LabelContrat.setBounds(23, 151, 132, 14);
+		contentPane.add(LabelContrat);
 		
-		JLabel lblLabelDateFac = new JLabel("Nombre de pièces :");
-		lblLabelDateFac.setBounds(23, 182, 132, 14);
-		contentPane.add(lblLabelDateFac);
+		JLabel LabelDateFac = new JLabel("Nombre de pièces :");
+		LabelDateFac.setBounds(23, 182, 132, 14);
+		contentPane.add(LabelDateFac);
 		
-		JLabel lblLabelLibelle = new JLabel("* Bâtiment  :");
-		lblLabelLibelle.setBounds(23, 92, 132, 14);
-		contentPane.add(lblLabelLibelle);
+		JLabel LabelLibelle = new JLabel("* Bâtiment  :");
+		LabelLibelle.setBounds(23, 92, 132, 14);
+		contentPane.add(LabelLibelle);
 		
-		JLabel lblLabelMontant = new JLabel("Type d'accés réseau :");
-		lblLabelMontant.setBounds(23, 214, 132, 14);
-		contentPane.add(lblLabelMontant);
+		JLabel LabelMontant = new JLabel("Type d'accés réseau :");
+		LabelMontant.setBounds(23, 214, 132, 14);
+		contentPane.add(LabelMontant);
 		
-		JLabel lblLabelMontantNonDeductible = new JLabel("Ancien compteur d'eau :");
-		lblLabelMontantNonDeductible.setBounds(23, 245, 132, 14);
-		contentPane.add(lblLabelMontantNonDeductible);
+		JLabel LabelMontantNonDeductible = new JLabel("Ancien compteur d'eau :");
+		LabelMontantNonDeductible.setBounds(23, 245, 132, 14);
+		contentPane.add(LabelMontantNonDeductible);
 		
 		textField = new JTextField();
 		textField.setColumns(10);
 		textField.setBounds(165, 242, 132, 20);
 		contentPane.add(textField);
 		
-		JLabel lblLabelReduction = new JLabel("Libellé :");
-		lblLabelReduction.setBounds(23, 125, 132, 14);
-		contentPane.add(lblLabelReduction);
+		JLabel LabelReduction = new JLabel("Libellé :");
+		LabelReduction.setBounds(23, 125, 132, 14);
+		contentPane.add(LabelReduction);
 		
 		textField_1 = new JTextField();
 		textField_1.setColumns(10);
 		textField_1.setBounds(165, 122, 132, 20);
 		contentPane.add(textField_1);
 		
-		JButton btnAjouter = new JButton("Ajouter");
-		btnAjouter.setBounds(307, 384, 132, 23);
-		btnAjouter.addActionListener(this);
-		contentPane.add(btnAjouter);
+		JButton ButtonAjouter = new JButton("Ajouter");
+		ButtonAjouter.setBounds(307, 384, 132, 23);
+		ButtonAjouter.addActionListener(this);
+		contentPane.add(ButtonAjouter);
 		
-		JButton btnAnnuler = new JButton("Annuler");
-		btnAnnuler.setBounds(49, 384, 132, 23);
-		btnAnnuler.addActionListener(this);
-		contentPane.add(btnAnnuler);
+		JButton ButtonAnnuler = new JButton("Annuler");
+		ButtonAnnuler.setBounds(49, 384, 132, 23);
+		ButtonAnnuler.addActionListener(this);
+		contentPane.add(ButtonAnnuler);
 		
-		JLabel lblNouvelleLocation = new JLabel("Nouveau Logement");
-		lblNouvelleLocation.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblNouvelleLocation.setBounds(24, 0, 307, 41);
-		contentPane.add(lblNouvelleLocation);
+		JLabel LabelNouvelleLocation = new JLabel("Nouveau logement");
+		LabelNouvelleLocation.setFont(new Font("Tahoma", Font.BOLD, 20));
+		LabelNouvelleLocation.setBounds(24, 0, 307, 41);
+		contentPane.add(LabelNouvelleLocation);
 		
 		JComboBox comboBox_1 = new JComboBox();
 		comboBox_1.setBounds(165, 89, 132, 22);
 		contentPane.add(comboBox_1);
 		
-		JButton btnNouveauLocataire = new JButton("Nouveau Bâtiment");
-		btnNouveauLocataire.setBounds(307, 88, 132, 23);
-		btnNouveauLocataire.addActionListener(this);
-		contentPane.add(btnNouveauLocataire);
+		JButton ButtonNouveauatiment = new JButton("Nouveau Bâtiment");
+		ButtonNouveauatiment.setBounds(307, 88, 132, 23);
+		ButtonNouveauatiment.addActionListener(this);
+		contentPane.add(ButtonNouveauatiment);
 		
-		JLabel lblParticipationlctricitCommune = new JLabel("Modalité de chauffage :");
-		lblParticipationlctricitCommune.setBounds(24, 273, 132, 14);
-		contentPane.add(lblParticipationlctricitCommune);
+		JLabel LabelModaliteChauffage = new JLabel("Modalité de chauffage :");
+		LabelModaliteChauffage.setBounds(24, 273, 132, 14);
+		contentPane.add(LabelModaliteChauffage);
 		
 		textField_3 = new JTextField();
 		textField_3.setColumns(10);
@@ -243,9 +243,9 @@ public class NouveauLogement extends JFrame implements ActionListener {
 		comboBox_1_1_1.setBounds(166, 273, 132, 22);
 		contentPane.add(comboBox_1_1_1);
 		
-		JLabel lblModalitDeLeau = new JLabel("Modalité de l'eau chaude :");
-		lblModalitDeLeau.setBounds(24, 307, 132, 14);
-		contentPane.add(lblModalitDeLeau);
+		JLabel LaelModalitDeLeau = new JLabel("Modalité de l'eau chaude :");
+		LaelModalitDeLeau.setBounds(24, 307, 132, 14);
+		contentPane.add(LaelModalitDeLeau);
 		
 		JComboBox comboBox_1_1_1_1 = new JComboBox();
 		comboBox_1_1_1_1.setBounds(166, 307, 132, 22);
@@ -285,12 +285,12 @@ public class NouveauLogement extends JFrame implements ActionListener {
 				
 			case "Anciennes location":
 				this.dispose();
-				new AncienneLocation().setVisible(true);
+				new LocationsAnciennes().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
 				this.dispose();
-				new AnciensTravaux().setVisible(true);
+				new TravauxAnciens().setVisible(true);
 				break;
 				
 			case "Electricite":
@@ -300,7 +300,7 @@ public class NouveauLogement extends JFrame implements ActionListener {
 				
 			case "Entretien":
 				this.dispose();
-				new NouvelleFactureEntretien().setVisible(true);
+				new NouveauEntretien().setVisible(true);
 				break;
 				
 			case "Facture d'eau":
@@ -325,7 +325,7 @@ public class NouveauLogement extends JFrame implements ActionListener {
 				
 			case "Locations en cours":
 				this.dispose();
-				new LocationEnCours().setVisible(true);
+				new LocationsEnCours().setVisible(true);
 				break;
 			
 			case "Nouveaux travaux":
@@ -340,7 +340,7 @@ public class NouveauLogement extends JFrame implements ActionListener {
 				
 			case "Protection juridique":
 				this.dispose();
-				new ProtectionJuridique().setVisible(true);
+				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 				
 			case "Quittances":

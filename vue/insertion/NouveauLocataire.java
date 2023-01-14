@@ -21,10 +21,10 @@ import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.AncienneLocation;
-import vue.consultation.AnciensTravaux;
+import vue.consultation.LocationsAnciennes;
+import vue.consultation.TravauxAnciens;
 import vue.consultation.Impositions;
-import vue.consultation.LocationEnCours;
+import vue.consultation.LocationsEnCours;
 import vue.consultation.TravauxEnCours;
 
 import javax.swing.JScrollPane;
@@ -171,78 +171,78 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 		contentPane.add(textFieldNom);
 		textFieldNom.setColumns(10);
 		
-		JLabel lblLabelNom = new JLabel("Nom :");
-		lblLabelNom.setBounds(24, 63, 132, 14);
-		contentPane.add(lblLabelNom);
+		JLabel LabelNom = new JLabel("Nom :");
+		LabelNom.setBounds(24, 63, 132, 14);
+		contentPane.add(LabelNom);
 		
 		textFieldPrenom = new JTextField();
 		textFieldPrenom.setColumns(10);
 		textFieldPrenom.setBounds(166, 91, 132, 20);
 		contentPane.add(textFieldPrenom);
 		
-		JLabel lblLabelPrenom = new JLabel("Prénom :");
-		lblLabelPrenom.setBounds(24, 94, 132, 14);
-		contentPane.add(lblLabelPrenom);
+		JLabel LabelPrenom = new JLabel("Prénom :");
+		LabelPrenom.setBounds(24, 94, 132, 14);
+		contentPane.add(LabelPrenom);
 		
-		JButton btnAjouter = new JButton("Ajouter");
-		btnAjouter.setBounds(307, 384, 132, 23);
-		btnAjouter.addActionListener(this);
-		contentPane.add(btnAjouter);
+		JButton ButtonAjouter = new JButton("Ajouter");
+		ButtonAjouter.setBounds(307, 384, 132, 23);
+		ButtonAjouter.addActionListener(this);
+		contentPane.add(ButtonAjouter);
 		
-		JButton btnAnnuler = new JButton("Annuler");
-		btnAnnuler.setBounds(49, 384, 132, 23);
-		btnAnnuler.addActionListener(this);
-		contentPane.add(btnAnnuler);
+		JButton ButtonAnnuler = new JButton("Annuler");
+		ButtonAnnuler.setBounds(49, 384, 132, 23);
+		ButtonAnnuler.addActionListener(this);
+		contentPane.add(ButtonAnnuler);
 		
-		JLabel lblLocataire = new JLabel("Nouveau Locataire");
-		lblLocataire.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblLocataire.setBounds(24, 0, 307, 41);
-		contentPane.add(lblLocataire);
+		JLabel LabelLocataire = new JLabel("Nouveau locataire");
+		LabelLocataire.setFont(new Font("Tahoma", Font.BOLD, 20));
+		LabelLocataire.setBounds(24, 0, 307, 41);
+		contentPane.add(LabelLocataire);
 		
 		textFieldAdresse = new JTextField();
 		textFieldAdresse.setColumns(10);
 		textFieldAdresse.setBounds(166, 122, 228, 20);
 		contentPane.add(textFieldAdresse);
 		
-		JLabel lblLabelAdresse = new JLabel("Adresse :");
-		lblLabelAdresse.setBounds(24, 125, 132, 14);
-		contentPane.add(lblLabelAdresse);
+		JLabel LabelAdresse = new JLabel("Adresse :");
+		LabelAdresse.setBounds(24, 125, 132, 14);
+		contentPane.add(LabelAdresse);
 		
 		textFieldCodePostal = new JTextField();
 		textFieldCodePostal.setColumns(10);
 		textFieldCodePostal.setBounds(166, 153, 61, 20);
 		contentPane.add(textFieldCodePostal);
 		
-		JLabel lblLabelCodePostal = new JLabel("Code postal :");
-		lblLabelCodePostal.setBounds(24, 156, 132, 14);
-		contentPane.add(lblLabelCodePostal);
+		JLabel LabelCodePostal = new JLabel("Code postal :");
+		LabelCodePostal.setBounds(24, 156, 132, 14);
+		contentPane.add(LabelCodePostal);
 		
 		textFieldVille = new JTextField();
 		textFieldVille.setColumns(10);
 		textFieldVille.setBounds(166, 184, 132, 20);
 		contentPane.add(textFieldVille);
 		
-		JLabel lblLabelVille = new JLabel("Ville :");
-		lblLabelVille.setBounds(24, 187, 132, 14);
-		contentPane.add(lblLabelVille);
+		JLabel LabelVille = new JLabel("Ville :");
+		LabelVille.setBounds(24, 187, 132, 14);
+		contentPane.add(LabelVille);
 		
 		textFieldMail = new JTextField();
 		textFieldMail.setColumns(10);
 		textFieldMail.setBounds(166, 215, 228, 20);
 		contentPane.add(textFieldMail);
 		
-		JLabel lblLabelMail = new JLabel("Adresse mail :");
-		lblLabelMail.setBounds(24, 218, 132, 14);
-		contentPane.add(lblLabelMail);
+		JLabel LabelMail = new JLabel("Adresse mail :");
+		LabelMail.setBounds(24, 218, 132, 14);
+		contentPane.add(LabelMail);
 		
 		textFieldTelephone = new JTextField();
 		textFieldTelephone.setColumns(10);
 		textFieldTelephone.setBounds(166, 246, 132, 20);
 		contentPane.add(textFieldTelephone);
 		
-		JLabel lblLabelTelephone = new JLabel("Numéro de téléphone :");
-		lblLabelTelephone.setBounds(24, 249, 132, 14);
-		contentPane.add(lblLabelTelephone);
+		JLabel LabelTelephone = new JLabel("Numéro de téléphone :");
+		LabelTelephone.setBounds(24, 249, 132, 14);
+		contentPane.add(LabelTelephone);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -262,12 +262,12 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 				
 			case "Anciennes location":
 				this.dispose();
-				new AncienneLocation().setVisible(true);
+				new LocationsAnciennes().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
 				this.dispose();
-				new AnciensTravaux().setVisible(true);
+				new TravauxAnciens().setVisible(true);
 				break;
 				
 			case "Electricite":
@@ -277,7 +277,7 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 				
 			case "Entretien":
 				this.dispose();
-				new NouvelleFactureEntretien().setVisible(true);
+				new NouveauEntretien().setVisible(true);
 				break;
 				
 			case "Facture d'eau":
@@ -302,7 +302,7 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 				
 			case "Locations en cours":
 				this.dispose();
-				new LocationEnCours().setVisible(true);
+				new LocationsEnCours().setVisible(true);
 				break;
 			
 			case "Nouveaux travaux":
@@ -317,7 +317,7 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 				
 			case "Protection juridique":
 				this.dispose();
-				new ProtectionJuridique().setVisible(true);
+				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 				
 			case "Quittances":

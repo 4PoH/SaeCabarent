@@ -1,19 +1,6 @@
-package vue.consultation;
+package vue.insertion;
 
 import java.awt.EventQueue;
-
-import vue.Accueil;
-import vue.IRL;
-import vue.InformationsBailleur;
-import vue.Quittances;
-import vue.insertion.NouvelleFactureElectricite;
-import vue.insertion.NouvelleFactureEntretien;
-import vue.insertion.NouvelleFactureEau;
-import vue.insertion.NouveauTravaux;
-import vue.insertion.NouvelleChargeSupp;
-import vue.insertion.NouvelleLocation;
-import vue.insertion.ProtectionJuridique;
-import vue.insertion.NouvelleTaxeFonciere;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -30,6 +17,16 @@ import javax.swing.JTable;
 import java.awt.FlowLayout;
 import javax.swing.table.DefaultTableModel;
 
+import vue.Accueil;
+import vue.IRL;
+import vue.InformationsBailleur;
+import vue.Quittances;
+import vue.consultation.LocationsAnciennes;
+import vue.consultation.TravauxAnciens;
+import vue.consultation.Impositions;
+import vue.consultation.LocationsEnCours;
+import vue.consultation.TravauxEnCours;
+
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
@@ -38,13 +35,19 @@ import java.awt.Color;
 import javax.swing.JToolBar;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JScrollBar;
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
 import java.awt.Font;
+import javax.swing.JTextPane;
 
-public class ChargeLocationEnCours extends JFrame implements ActionListener {
+public class NouvelleProtectionJuridique extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTable table;
+	private JTextField textFieldNumFac;
+	private JTextField textFieldPrime;
+	private JTextField textFieldPrimeJurisprudence;
+	private JTextField textFieldLienPDF;
+	private JTextField textFieldDate;
 
 	/**
 	 * Launch the application.
@@ -53,7 +56,7 @@ public class ChargeLocationEnCours extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ChargeLocationEnCours frame = new ChargeLocationEnCours();
+					NouvelleProtectionJuridique frame = new NouvelleProtectionJuridique();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -65,11 +68,10 @@ public class ChargeLocationEnCours extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public ChargeLocationEnCours() {
-		setBackground(new Color(240, 240, 240));
-		setTitle("Charges des locations en cours");
+	public NouvelleProtectionJuridique() {
+		setTitle("Nouveaux travaux");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 960, 480);
+		setBounds(100, 100, 480, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
@@ -86,9 +88,9 @@ public class ChargeLocationEnCours extends JFrame implements ActionListener {
 		MenuItemNouvelleLocation.addActionListener(this);
 		MenuLocations.add(MenuItemNouvelleLocation);
 		
-		JMenuItem MenuItemLocationEnCours = new JMenuItem("Locations en cours");
-		MenuItemLocationEnCours.addActionListener(this);
-		MenuLocations.add(MenuItemLocationEnCours);
+		JMenuItem MenuItemLocationEnCour = new JMenuItem("Locations en cours");
+		MenuItemLocationEnCour.addActionListener(this);
+		MenuLocations.add(MenuItemLocationEnCour);
 		
 		JMenuItem MenuItemAncienneLocation = new JMenuItem("Anciennes location");
 		MenuItemAncienneLocation.addActionListener(this);
@@ -163,53 +165,94 @@ public class ChargeLocationEnCours extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(22, 49, 914, 278);
-		contentPane.add(scrollPane);
+		textFieldNumFac = new JTextField();
+		textFieldNumFac.setBounds(165, 126, 132, 20);
+		contentPane.add(textFieldNumFac);
+		textFieldNumFac.setColumns(10);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-			},
-			new String[] {
-				"Libelle", "Ordure menagere", "Taxe fonciere", "Partie commune", "Facture Electrique", "Prime", "Prime Jurisprudence", "Annee"
-			}
-		));
-		scrollPane.setViewportView(table);
+		textFieldPrime = new JTextField();
+		textFieldPrime.setColumns(10);
+		textFieldPrime.setBounds(165, 157, 68, 20);
+		contentPane.add(textFieldPrime);
 		
-		JLabel TitreLocaCours = new JLabel("Anciennes Charges Bati");
-		TitreLocaCours.setFont(new Font("Tahoma", Font.BOLD, 20));
-		TitreLocaCours.setBounds(10, 10, 269, 29);
-		contentPane.add(TitreLocaCours);
+		JLabel lblLabelNumeroContrat = new JLabel("* Numéro de contrat :");
+		lblLabelNumeroContrat.setBounds(37, 126, 132, 14);
+		contentPane.add(lblLabelNumeroContrat);
 		
-		JButton btnCharger = new JButton("Charger");
-		btnCharger.addActionListener(this);
-		btnCharger.setBounds(110, 376, 85, 21);
-		contentPane.add(btnCharger);
+		JLabel lblLabelPrime = new JLabel("Prime :");
+		lblLabelPrime.setBounds(37, 157, 132, 14);
+		contentPane.add(lblLabelPrime);
+		
+		textFieldPrimeJurisprudence = new JTextField();
+		textFieldPrimeJurisprudence.setColumns(10);
+		textFieldPrimeJurisprudence.setBounds(165, 184, 68, 20);
+		contentPane.add(textFieldPrimeJurisprudence);
+		
+		JLabel lblLabelPrimeJurisprudence = new JLabel("Prime de jurisprudence :");
+		lblLabelPrimeJurisprudence.setBounds(37, 184, 132, 14);
+		contentPane.add(lblLabelPrimeJurisprudence);
+		
+		JButton btnAjouter = new JButton("Ajouter");
+		btnAjouter.setBounds(307, 384, 132, 23);
+		btnAjouter.addActionListener(this);
+		contentPane.add(btnAjouter);
 		
 		JButton btnAnnuler = new JButton("Annuler");
+		btnAnnuler.setBounds(49, 384, 132, 23);
 		btnAnnuler.addActionListener(this);
-		btnAnnuler.setBounds(742, 376, 85, 21);
 		contentPane.add(btnAnnuler);
+		
+		JLabel lblProtectionJuridique = new JLabel("Nouvelle protection juridique");
+		lblProtectionJuridique.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblProtectionJuridique.setBounds(37, 0, 363, 41);
+		contentPane.add(lblProtectionJuridique);
+		
+		textFieldLienPDF = new JTextField();
+		textFieldLienPDF.setColumns(10);
+		textFieldLienPDF.setBounds(165, 245, 235, 20);
+		contentPane.add(textFieldLienPDF);
+		
+		JLabel lblLabelLienPDF = new JLabel("Lien pdf  :");
+		lblLabelLienPDF.setBounds(37, 245, 132, 14);
+		contentPane.add(lblLabelLienPDF);
+		
+		JLabel lblLabelEntreprise = new JLabel("* Entreprise :");
+		lblLabelEntreprise.setBounds(37, 96, 132, 14);
+		contentPane.add(lblLabelEntreprise);
+		
+		JComboBox comboBoxEntreprise = new JComboBox();
+		comboBoxEntreprise.setBounds(165, 92, 132, 22);
+		contentPane.add(comboBoxEntreprise);
+		
+		JButton btnNouvelleEntreprise = new JButton("Nouvelle entreprise");
+		btnNouvelleEntreprise.setBounds(307, 92, 132, 23);
+		btnNouvelleEntreprise.addActionListener(this);
+		contentPane.add(btnNouvelleEntreprise);
+		
+		JLabel lblLabelDateObtention = new JLabel("Date d'obtention :");
+		lblLabelDateObtention.setBounds(37, 215, 132, 14);
+		contentPane.add(lblLabelDateObtention);
+		
+		textFieldDate = new JTextField();
+		textFieldDate.setColumns(10);
+		textFieldDate.setBounds(165, 215, 68, 20);
+		contentPane.add(textFieldDate);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Nouvelle entreprise":
+				this.dispose();
+				new NouvelleEntreprise().setVisible(true);
+				break;
+			case "Annuler":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
+			case "Ajouter":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -217,12 +260,12 @@ public class ChargeLocationEnCours extends JFrame implements ActionListener {
 				
 			case "Anciennes location":
 				this.dispose();
-				new AncienneLocation().setVisible(true);
+				new LocationsAnciennes().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
 				this.dispose();
-				new AnciensTravaux().setVisible(true);
+				new TravauxAnciens().setVisible(true);
 				break;
 				
 			case "Electricite":
@@ -232,12 +275,12 @@ public class ChargeLocationEnCours extends JFrame implements ActionListener {
 				
 			case "Entretien":
 				this.dispose();
-				new NouvelleFactureEntretien().setVisible(true);
+				new NouveauEntretien().setVisible(true);
 				break;
 				
 			case "Facture d'eau":
 				this.dispose();
-				new NouvelleFactureEau().setVisible(true);
+				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 			
 			case "Impositions":
@@ -257,12 +300,12 @@ public class ChargeLocationEnCours extends JFrame implements ActionListener {
 				
 			case "Locations en cours":
 				this.dispose();
-				new ChargeLocationEnCours().setVisible(true);
+				new LocationsEnCours().setVisible(true);
 				break;
 			
 			case "Nouveaux travaux":
 				this.dispose();
-				new NouveauTravaux().setVisible(true);
+				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 				
 			case "Nouvelle location":
@@ -272,7 +315,7 @@ public class ChargeLocationEnCours extends JFrame implements ActionListener {
 				
 			case "Protection juridique":
 				this.dispose();
-				new ProtectionJuridique().setVisible(true);
+				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 				
 			case "Quittances":
@@ -291,15 +334,6 @@ public class ChargeLocationEnCours extends JFrame implements ActionListener {
 			case "Travaux en cours":
 				this.dispose();
 				new TravauxEnCours().setVisible(true);
-				break;
-				
-			case "Inserer" :
-				this.dispose();
-				new NouvelleLocation().setVisible(true);
-				break;
-			
-			case "Annuler" :
-				this.dispose();
 				break;
        
 			default:

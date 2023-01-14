@@ -17,18 +17,18 @@ import javax.swing.JTable;
 import java.awt.FlowLayout;
 import javax.swing.table.DefaultTableModel;
 
-import vue.consultation.AncienneLocation;
-import vue.consultation.AnciensTravaux;
+import vue.consultation.LocationsAnciennes;
+import vue.consultation.TravauxAnciens;
 import vue.consultation.Impositions;
-import vue.consultation.LocationEnCours;
+import vue.consultation.LocationsEnCours;
 import vue.consultation.TravauxEnCours;
 import vue.insertion.NouvelleFactureElectricite;
-import vue.insertion.NouvelleFactureEntretien;
+import vue.insertion.NouveauEntretien;
 import vue.insertion.NouvelleFactureEau;
 import vue.insertion.NouveauTravaux;
 import vue.insertion.NouvelleChargeSupp;
 import vue.insertion.NouvelleLocation;
-import vue.insertion.ProtectionJuridique;
+import vue.insertion.NouvelleProtectionJuridique;
 import vue.insertion.NouvelleTaxeFonciere;
 
 import javax.swing.JScrollPane;
@@ -179,27 +179,27 @@ public class IRL extends JFrame implements ActionListener {
 		));
 		scrollPane.setViewportView(table);
 		
-		JButton btnNewButton = new JButton("Annuler");
-		btnNewButton.setBounds(355, 389, 85, 21);
-		contentPane.add(btnNewButton);
+		JButton ButtonAnnuler = new JButton("Annuler");
+		ButtonAnnuler.setBounds(355, 389, 85, 21);
+		contentPane.add(ButtonAnnuler);
 		
-		JButton btnConfirmer = new JButton("Supprimer");
-		btnConfirmer.setBounds(244, 389, 85, 21);
-		contentPane.add(btnConfirmer);
+		JButton ButtonConfirmer = new JButton("Supprimer");
+		ButtonConfirmer.setBounds(244, 389, 85, 21);
+		contentPane.add(ButtonConfirmer);
 		
-		JButton btnInserer = new JButton("Inserer");
-		btnInserer.setBounds(21, 389, 85, 21);
-		contentPane.add(btnInserer);
+		JButton ButtonInserer = new JButton("Insérer");
+		ButtonInserer.setBounds(21, 389, 85, 21);
+		contentPane.add(ButtonInserer);
 		
-		JLabel lblNewLabel = new JLabel("IRL");
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblNewLabel.setBounds(10, 32, 45, 13);
-		contentPane.add(lblNewLabel);
+		JLabel LabelIRL = new JLabel("IRL");
+		LabelIRL.setFont(new Font("Tahoma", Font.BOLD, 20));
+		LabelIRL.setBounds(10, 32, 45, 13);
+		contentPane.add(LabelIRL);
 		
-		JButton btnModifier = new JButton("Modifier");
-		btnModifier.addActionListener(this);
-		btnModifier.setBounds(135, 389, 85, 21);
-		contentPane.add(btnModifier);
+		JButton ButtonModifier = new JButton("Modifier");
+		ButtonModifier.addActionListener(this);
+		ButtonModifier.setBounds(135, 389, 85, 21);
+		contentPane.add(ButtonModifier);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -211,12 +211,12 @@ public class IRL extends JFrame implements ActionListener {
 				
 			case "Anciennes location":
 				this.dispose();
-				new AncienneLocation().setVisible(true);
+				new LocationsAnciennes().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
 				this.dispose();
-				new AnciensTravaux().setVisible(true);
+				new TravauxAnciens().setVisible(true);
 				break;
 				
 			case "Electricite":
@@ -226,7 +226,7 @@ public class IRL extends JFrame implements ActionListener {
 				
 			case "Entretien":
 				this.dispose();
-				new NouvelleFactureEntretien().setVisible(true);
+				new NouveauEntretien().setVisible(true);
 				break;
 				
 			case "Facture d'eau":
@@ -251,7 +251,7 @@ public class IRL extends JFrame implements ActionListener {
 				
 			case "Locations en cours":
 				this.dispose();
-				new LocationEnCours().setVisible(true);
+				new LocationsEnCours().setVisible(true);
 				break;
 			
 			case "Nouveaux travaux":
@@ -266,7 +266,7 @@ public class IRL extends JFrame implements ActionListener {
 				
 			case "Protection juridique":
 				this.dispose();
-				new ProtectionJuridique().setVisible(true);
+				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 				
 			case "Quittances":

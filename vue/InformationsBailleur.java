@@ -17,19 +17,19 @@ import javax.swing.JTable;
 import java.awt.FlowLayout;
 import javax.swing.table.DefaultTableModel;
 
-import vue.consultation.AncienneLocation;
-import vue.consultation.AnciensTravaux;
+import vue.consultation.LocationsAnciennes;
+import vue.consultation.TravauxAnciens;
 import vue.consultation.Impositions;
-import vue.consultation.ListeFactureEauEnCours;
-import vue.consultation.LocationEnCours;
+import vue.consultation.FacturesEauEnCours;
+import vue.consultation.LocationsEnCours;
 import vue.consultation.TravauxEnCours;
 import vue.insertion.NouvelleFactureElectricite;
-import vue.insertion.NouvelleFactureEntretien;
+import vue.insertion.NouveauEntretien;
 import vue.insertion.NouveauTravaux;
 import vue.insertion.NouvelleChargeSupp;
 import vue.insertion.NouvelleEntreprise;
 import vue.insertion.NouvelleLocation;
-import vue.insertion.ProtectionJuridique;
+import vue.insertion.NouvelleProtectionJuridique;
 import vue.insertion.NouvelleTaxeFonciere;
 
 import javax.swing.JScrollPane;
@@ -181,44 +181,44 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 		textFieldPrenom.setBounds(165, 100, 132, 20);
 		contentPane.add(textFieldPrenom);
 		
-		JLabel lblLabelNom = new JLabel("* Nom");
-		lblLabelNom.setBounds(37, 71, 132, 14);
-		contentPane.add(lblLabelNom);
+		JLabel LabelNom = new JLabel("* Nom");
+		LabelNom.setBounds(37, 71, 132, 14);
+		contentPane.add(LabelNom);
 		
-		JLabel lblLabelPrenom = new JLabel("*Prénom");
-		lblLabelPrenom.setBounds(37, 102, 132, 14);
-		contentPane.add(lblLabelPrenom);
+		JLabel LabelPrenom = new JLabel("*Prénom");
+		LabelPrenom.setBounds(37, 102, 132, 14);
+		contentPane.add(LabelPrenom);
 		
 		textFieldAdresse = new JTextField();
 		textFieldAdresse.setColumns(10);
 		textFieldAdresse.setBounds(165, 144, 132, 20);
 		contentPane.add(textFieldAdresse);
 		
-		JLabel lblLabelLibelle = new JLabel("*Adresse");
-		lblLabelLibelle.setBounds(37, 146, 132, 14);
-		contentPane.add(lblLabelLibelle);
+		JLabel LabelLibelle = new JLabel("*Adresse");
+		LabelLibelle.setBounds(37, 146, 132, 14);
+		contentPane.add(LabelLibelle);
 		
-		JLabel lblLabelCp = new JLabel("*Code Postal");
-		lblLabelCp.setBounds(37, 185, 132, 14);
-		contentPane.add(lblLabelCp);
+		JLabel LabelCp = new JLabel("*Code Postal");
+		LabelCp.setBounds(37, 185, 132, 14);
+		contentPane.add(LabelCp);
 		
 		textFieldCodeP = new JTextField();
 		textFieldCodeP.setColumns(10);
 		textFieldCodeP.setBounds(165, 183, 132, 20);
 		contentPane.add(textFieldCodeP);
 		
-		JLabel lblLabelMail = new JLabel("*Mail");
-		lblLabelMail.setBounds(37, 227, 132, 14);
-		contentPane.add(lblLabelMail);
+		JLabel LabelMail = new JLabel("*Mail");
+		LabelMail.setBounds(37, 227, 132, 14);
+		contentPane.add(LabelMail);
 		
 		textFieldMail = new JTextField();
 		textFieldMail.setColumns(10);
 		textFieldMail.setBounds(165, 225, 132, 20);
 		contentPane.add(textFieldMail);
 		
-		JLabel lblLabelTel = new JLabel("*Telephone");
-		lblLabelTel.setBounds(37, 274, 132, 14);
-		contentPane.add(lblLabelTel);
+		JLabel LabelTel = new JLabel("*Telephone");
+		LabelTel.setBounds(37, 274, 132, 14);
+		contentPane.add(LabelTel);
 		
 		textFieldTel = new JTextField();
 		textFieldTel.setColumns(10);
@@ -235,10 +235,10 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 		btnAnnuler.addActionListener(this);
 		contentPane.add(btnAnnuler);
 		
-		JLabel lblFactureDEau = new JLabel("Informations du bailleur");
-		lblFactureDEau.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblFactureDEau.setBounds(37, 0, 260, 41);
-		contentPane.add(lblFactureDEau);
+		JLabel LabelFactureDEau = new JLabel("Informations du bailleur");
+		LabelFactureDEau.setFont(new Font("Tahoma", Font.BOLD, 20));
+		LabelFactureDEau.setBounds(37, 0, 260, 41);
+		contentPane.add(LabelFactureDEau);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -262,12 +262,12 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 				
 			case "Anciennes location":
 				this.dispose();
-				new AncienneLocation().setVisible(true);
+				new LocationsAnciennes().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
 				this.dispose();
-				new AnciensTravaux().setVisible(true);
+				new TravauxAnciens().setVisible(true);
 				break;
 				
 			case "Electricite":
@@ -277,12 +277,12 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 				
 			case "Entretien":
 				this.dispose();
-				new NouvelleFactureEntretien().setVisible(true);
+				new NouveauEntretien().setVisible(true);
 				break;
 				
 			case "Facture d'eau":
 				this.dispose();
-				new ListeFactureEauEnCours().setVisible(true);
+				new FacturesEauEnCours().setVisible(true);
 				break;
 			
 			case "Impositions":
@@ -302,7 +302,7 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 				
 			case "Locations en cours":
 				this.dispose();
-				new LocationEnCours().setVisible(true);
+				new LocationsEnCours().setVisible(true);
 				break;
 			
 			case "Nouveaux travaux":
@@ -317,7 +317,7 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 				
 			case "Protection juridique":
 				this.dispose();
-				new ProtectionJuridique().setVisible(true);
+				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 				
 			case "Quittances":
