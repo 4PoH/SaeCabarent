@@ -1,18 +1,23 @@
 package vue.consultation;
 
-import java.awt.BorderLayout;
+
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import vue.Accueil;
 import vue.IRL;
@@ -27,9 +32,10 @@ import vue.insertion.NouvelleLocation;
 import vue.insertion.NouvelleProtectionJuridique;
 import vue.insertion.NouvelleTaxeFonciere;
 
-public class Impositions extends JFrame implements ActionListener {
+public class TaxeFonciere extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -38,7 +44,7 @@ public class Impositions extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Impositions frame = new Impositions();
+					TaxeFonciere frame = new TaxeFonciere();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -50,10 +56,10 @@ public class Impositions extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public Impositions() {
-		setTitle("Impositions");
+	public TaxeFonciere() {
+		setTitle("Consultation taxe foncière");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 480, 300);
+		setBounds(100, 100, 980, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
@@ -145,11 +151,88 @@ public class Impositions extends JFrame implements ActionListener {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(new BorderLayout(0, 0));
+		contentPane.setLayout(null);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 64, 946, 269);
+		contentPane.add(scrollPane);
+		
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+			},
+			new String[] {
+				"Numero SIREN", "numero Facture", "numero Devis", "libelle", "date debut", "date fin", "detail", "montant payer", "montant non deductible", "reduction", "pdf"
+			}
+		));
+		scrollPane.setViewportView(table);
+		
+		JLabel TitreTaxeFonciere = new JLabel("Consultation taxe foncière");
+		TitreTaxeFonciere.setFont(new Font("Tahoma", Font.BOLD, 20));
+		TitreTaxeFonciere.setBounds(10, 10, 474, 32);
+		contentPane.add(TitreTaxeFonciere);
+		
+		JButton ButtonCharger = new JButton("Charger");
+		ButtonCharger.addActionListener(this);
+		ButtonCharger.setBounds(87, 372, 85, 21);
+		contentPane.add(ButtonCharger);
+		
+		JButton ButtonInserer = new JButton("Insérer");
+		ButtonInserer.addActionListener(this);
+		ButtonInserer.setBounds(271, 372, 85, 21);
+		contentPane.add(ButtonInserer);
+		
+		JButton ButtonMiseJour = new JButton("Mise à jour");
+		ButtonMiseJour.addActionListener(this);
+		ButtonMiseJour.setBounds(459, 372, 85, 21);
+		contentPane.add(ButtonMiseJour);
+		
+		JButton ButtonSupprimer = new JButton("Supprimer");
+		ButtonSupprimer.addActionListener(this);
+		ButtonSupprimer.setBounds(640, 372, 85, 21);
+		contentPane.add(ButtonSupprimer);
+		
+		JButton ButtonAnnuler = new JButton("Annuler");
+		ButtonAnnuler.addActionListener(this);
+		ButtonAnnuler.setBounds(813, 372, 85, 21);
+		contentPane.add(ButtonAnnuler);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Charger" :
+			break;
+			
+			case "Inserer" :
+				this.dispose();
+				new NouveauTravaux().setVisible(true);
+				break;
+			
+			case "Mise à Jour":
+				break;
+			
+			case "Supprimer":
+				break;
+			
+			case "Annuler":
+				this.dispose();
+				break;
+		
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -228,10 +311,9 @@ public class Impositions extends JFrame implements ActionListener {
 				this.dispose();
 				new NouvelleChargeSupp().setVisible(true);
 				break;
-				
 			case "Travaux en cours":
 				this.dispose();
-				new TravauxEnCours().setVisible(true);
+				new TaxeFonciere().setVisible(true);
 				break;
        
 			default:
@@ -239,5 +321,4 @@ public class Impositions extends JFrame implements ActionListener {
 				break;
 		}
 	}
-	
 }

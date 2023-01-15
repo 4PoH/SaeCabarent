@@ -1,18 +1,23 @@
 package vue.consultation;
 
-import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import vue.Accueil;
 import vue.IRL;
@@ -27,9 +32,10 @@ import vue.insertion.NouvelleLocation;
 import vue.insertion.NouvelleProtectionJuridique;
 import vue.insertion.NouvelleTaxeFonciere;
 
-public class Impositions extends JFrame implements ActionListener {
+public class EntretiensAnciens extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -38,7 +44,7 @@ public class Impositions extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Impositions frame = new Impositions();
+					EntretiensAnciens frame = new EntretiensAnciens();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -50,10 +56,11 @@ public class Impositions extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public Impositions() {
-		setTitle("Impositions");
+	public EntretiensAnciens() {
+		setBackground(new Color(240, 240, 240));
+		setTitle("Anciens entretiens");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 480, 300);
+		setBounds(100, 100, 960, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
@@ -70,9 +77,9 @@ public class Impositions extends JFrame implements ActionListener {
 		MenuItemNouvelleLocation.addActionListener(this);
 		MenuLocations.add(MenuItemNouvelleLocation);
 		
-		JMenuItem MenuItemLocationEnCour = new JMenuItem("Locations en cours");
-		MenuItemLocationEnCour.addActionListener(this);
-		MenuLocations.add(MenuItemLocationEnCour);
+		JMenuItem MenuItemLocationEnCours = new JMenuItem("Locations en cours");
+		MenuItemLocationEnCours.addActionListener(this);
+		MenuLocations.add(MenuItemLocationEnCours);
 		
 		JMenuItem MenuItemAncienneLocation = new JMenuItem("Anciennes location");
 		MenuItemAncienneLocation.addActionListener(this);
@@ -145,7 +152,51 @@ public class Impositions extends JFrame implements ActionListener {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(new BorderLayout(0, 0));
+		contentPane.setLayout(null);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(22, 49, 914, 278);
+		contentPane.add(scrollPane);
+		
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+			},
+			new String[] {
+				"Bâti", "Numéro facture", "Date de paiement", "Total", "PDF"
+			}
+		));
+		scrollPane.setViewportView(table);
+		
+		JLabel TitreAnciensEntretiens = new JLabel("Anciens entretiens des parties communes");
+		TitreAnciensEntretiens.setFont(new Font("Tahoma", Font.BOLD, 20));
+		TitreAnciensEntretiens.setBounds(10, 10, 500, 29);
+		contentPane.add(TitreAnciensEntretiens);
+		
+		JButton ButtonCharger = new JButton("Charger");
+		ButtonCharger.addActionListener(this);
+		ButtonCharger.setBounds(114, 376, 85, 21);
+		contentPane.add(ButtonCharger);
+		
+		JButton ButtonAnnuler = new JButton("Annuler");
+		ButtonAnnuler.addActionListener(this);
+		ButtonAnnuler.setBounds(769, 376, 85, 21);
+		contentPane.add(ButtonAnnuler);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -197,7 +248,7 @@ public class Impositions extends JFrame implements ActionListener {
 				
 			case "Locations en cours":
 				this.dispose();
-				new LocationsEnCours().setVisible(true);
+				new EntretiensAnciens().setVisible(true);
 				break;
 			
 			case "Nouveaux travaux":
@@ -228,10 +279,18 @@ public class Impositions extends JFrame implements ActionListener {
 				this.dispose();
 				new NouvelleChargeSupp().setVisible(true);
 				break;
-				
 			case "Travaux en cours":
 				this.dispose();
 				new TravauxEnCours().setVisible(true);
+				break;
+				
+			case "Inserer" :
+				this.dispose();
+				new NouvelleLocation().setVisible(true);
+				break;
+			
+			case "Annuler" :
+				this.dispose();
 				break;
        
 			default:
@@ -239,5 +298,4 @@ public class Impositions extends JFrame implements ActionListener {
 				break;
 		}
 	}
-	
 }

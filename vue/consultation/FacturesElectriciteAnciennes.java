@@ -1,46 +1,39 @@
 package vue.consultation;
 
+
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.insertion.NouvelleFactureElectricite;
-import vue.insertion.NouvelleFactureEntretien;
-import vue.insertion.NouvelleFactureEau;
+import vue.insertion.NouveauEntretien;
 import vue.insertion.NouveauTravaux;
 import vue.insertion.NouvelleChargeSupp;
+import vue.insertion.NouvelleFactureEau;
+import vue.insertion.NouvelleFactureElectricite;
 import vue.insertion.NouvelleLocation;
-import vue.insertion.ProtectionJuridique;
+import vue.insertion.NouvelleProtectionJuridique;
 import vue.insertion.NouvelleTaxeFonciere;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.awt.GridLayout;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JMenu;
-import javax.swing.SwingConstants;
-import java.awt.Insets;
-import javax.swing.JButton;
-import javax.swing.BoxLayout;
-import javax.swing.JTable;
-import java.awt.FlowLayout;
-import javax.swing.table.DefaultTableModel;
-
-import javax.swing.JScrollPane;
-import java.awt.BorderLayout;
-import javax.swing.JLabel;
-import javax.swing.border.LineBorder;
-import java.awt.Color;
-import javax.swing.JToolBar;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JScrollBar;
-import java.awt.Font;
-
-public class ChargesBatiAncienne extends JFrame implements ActionListener {
+public class FacturesElectriciteAnciennes extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JTable table;
@@ -52,7 +45,7 @@ public class ChargesBatiAncienne extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ChargesBatiAncienne frame = new ChargesBatiAncienne();
+					FacturesElectriciteAnciennes frame = new FacturesElectriciteAnciennes();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -64,9 +57,9 @@ public class ChargesBatiAncienne extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public ChargesBatiAncienne() {
+	public FacturesElectriciteAnciennes() {
 		setBackground(new Color(240, 240, 240));
-		setTitle("Location en cours");
+		setTitle("Anciennes factures d'électricité");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 960, 480);
 		
@@ -183,28 +176,27 @@ public class ChargesBatiAncienne extends JFrame implements ActionListener {
 				{null, null, null, null, null, null, null, null},
 				{null, null, null, null, null, null, null, null},
 				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
 			},
 			new String[] {
-				"Libelle", "Locataire", "montant loyer", "montant charges", "montant payer", "facture d'eau", "num\u00E9ro quitance", "pdf contrat"
+				"Location", "Numero facture", "Date facture", "Prix unitaire m3", "Montant payer", "Partie fixe", "Total", "Pdf"
 			}
 		));
 		scrollPane.setViewportView(table);
 		
-		JLabel TitreLocaCours = new JLabel("Ancienne Location");
-		TitreLocaCours.setFont(new Font("Tahoma", Font.BOLD, 20));
-		TitreLocaCours.setBounds(10, 10, 189, 29);
-		contentPane.add(TitreLocaCours);
+		JLabel TitreFactureEauAncienne = new JLabel("Anciennes factures d'électricité");
+		TitreFactureEauAncienne.setFont(new Font("Tahoma", Font.BOLD, 20));
+		TitreFactureEauAncienne.setBounds(10, 10, 401, 29);
+		contentPane.add(TitreFactureEauAncienne);
 		
-		JButton btnCharger = new JButton("Charger");
-		btnCharger.addActionListener(this);
-		btnCharger.setBounds(98, 376, 85, 21);
-		contentPane.add(btnCharger);
+		JButton ButtonCharger = new JButton("Charger");
+		ButtonCharger.addActionListener(this);
+		ButtonCharger.setBounds(123, 376, 85, 21);
+		contentPane.add(ButtonCharger);
 		
-		JButton btnAnnuler = new JButton("Annuler");
-		btnAnnuler.addActionListener(this);
-		btnAnnuler.setBounds(774, 376, 85, 21);
-		contentPane.add(btnAnnuler);
+		JButton ButtonAnnuler = new JButton("Annuler");
+		ButtonAnnuler.addActionListener(this);
+		ButtonAnnuler.setBounds(771, 376, 85, 21);
+		contentPane.add(ButtonAnnuler);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -216,12 +208,12 @@ public class ChargesBatiAncienne extends JFrame implements ActionListener {
 				
 			case "Anciennes location":
 				this.dispose();
-				new AncienneLocation().setVisible(true);
+				new LocationsAnciennes().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
 				this.dispose();
-				new AnciensTravaux().setVisible(true);
+				new TravauxAnciens().setVisible(true);
 				break;
 				
 			case "Electricite":
@@ -231,7 +223,7 @@ public class ChargesBatiAncienne extends JFrame implements ActionListener {
 				
 			case "Entretien":
 				this.dispose();
-				new NouvelleFactureEntretien().setVisible(true);
+				new NouveauEntretien().setVisible(true);
 				break;
 				
 			case "Facture d'eau":
@@ -256,7 +248,7 @@ public class ChargesBatiAncienne extends JFrame implements ActionListener {
 				
 			case "Locations en cours":
 				this.dispose();
-				new ChargesBatiAncienne().setVisible(true);
+				new FacturesElectriciteAnciennes().setVisible(true);
 				break;
 			
 			case "Nouveaux travaux":
@@ -271,7 +263,7 @@ public class ChargesBatiAncienne extends JFrame implements ActionListener {
 				
 			case "Protection juridique":
 				this.dispose();
-				new ProtectionJuridique().setVisible(true);
+				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 				
 			case "Quittances":

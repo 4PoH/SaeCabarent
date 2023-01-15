@@ -21,10 +21,10 @@ import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.AncienneLocation;
-import vue.consultation.AnciensTravaux;
+import vue.consultation.LocationsAnciennes;
+import vue.consultation.TravauxAnciens;
 import vue.consultation.Impositions;
-import vue.consultation.LocationEnCours;
+import vue.consultation.LocationsEnCours;
 import vue.consultation.TravauxEnCours;
 
 import javax.swing.JScrollPane;
@@ -66,7 +66,7 @@ public class NouveauContrat extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public NouveauContrat() {
-		setTitle("Nouveaux travaux");
+		setTitle("Nouveau contrat");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 480, 480);
 		
@@ -167,76 +167,76 @@ public class NouveauContrat extends JFrame implements ActionListener {
 		contentPane.add(textFieldDate);
 		textFieldDate.setColumns(10);
 		
-		JLabel lblLabelDateMiseEnEffet = new JLabel("* Date de mise en effet :");
-		lblLabelDateMiseEnEffet.setBounds(24, 63, 132, 14);
-		contentPane.add(lblLabelDateMiseEnEffet);
+		JLabel LabelDateMiseEnEffet = new JLabel("* Date de mise en effet :");
+		LabelDateMiseEnEffet.setBounds(24, 63, 132, 14);
+		contentPane.add(LabelDateMiseEnEffet);
 		
 		textFieldCaution = new JTextField();
 		textFieldCaution.setColumns(10);
 		textFieldCaution.setBounds(166, 182, 132, 20);
 		contentPane.add(textFieldCaution);
 		
-		JLabel lblLabelCaution = new JLabel("Caution :");
-		lblLabelCaution.setBounds(24, 185, 132, 14);
-		contentPane.add(lblLabelCaution);
+		JLabel LabelCaution = new JLabel("Caution :");
+		LabelCaution.setBounds(24, 184, 132, 14);
+		contentPane.add(LabelCaution);
 		
-		JLabel lblLabelType = new JLabel("Type de location :");
-		lblLabelType.setBounds(24, 91, 132, 14);
-		contentPane.add(lblLabelType);
+		JLabel LabelType = new JLabel("Type de location :");
+		LabelType.setBounds(24, 91, 132, 14);
+		contentPane.add(LabelType);
 		
-		JButton btnAjouter = new JButton("Ajouter");
-		btnAjouter.setBounds(307, 384, 132, 23);
-		btnAjouter.addActionListener(this);
-		contentPane.add(btnAjouter);
+		JButton ButtonAjouter = new JButton("Ajouter");
+		ButtonAjouter.setBounds(307, 384, 132, 23);
+		ButtonAjouter.addActionListener(this);
+		contentPane.add(ButtonAjouter);
 		
-		JButton btnAnnuler = new JButton("Annuler");
-		btnAnnuler.setBounds(49, 384, 132, 23);
-		btnAnnuler.addActionListener(this);
-		contentPane.add(btnAnnuler);
+		JButton ButtonAnnuler = new JButton("Annuler");
+		ButtonAnnuler.setBounds(49, 384, 132, 23);
+		ButtonAnnuler.addActionListener(this);
+		contentPane.add(ButtonAnnuler);
 		
-		JLabel lblContrat = new JLabel("Nouveau Contrat WIP");
-		lblContrat.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblContrat.setBounds(24, 0, 307, 41);
-		contentPane.add(lblContrat);
+		JLabel LabelContrat = new JLabel("Nouveau contrat WIP");
+		LabelContrat.setFont(new Font("Tahoma", Font.BOLD, 20));
+		LabelContrat.setBounds(24, 0, 307, 41);
+		contentPane.add(LabelContrat);
 		
 		JComboBox comboBoxTypeLocation = new JComboBox();
 		comboBoxTypeLocation.setBounds(166, 87, 132, 22);
 		contentPane.add(comboBoxTypeLocation);
 		
-		JLabel lblLabelLibelle = new JLabel("* Locataire(s)  :");
-		lblLabelLibelle.setBounds(23, 152, 132, 14);
-		contentPane.add(lblLabelLibelle);
+		JLabel LabelLibelle = new JLabel("* Locataire(s)  :");
+		LabelLibelle.setBounds(23, 152, 132, 14);
+		contentPane.add(LabelLibelle);
 		
 		JComboBox comboBoxLocataires = new JComboBox();
 		comboBoxLocataires.setBounds(165, 149, 132, 22);
 		contentPane.add(comboBoxLocataires);
 		
-		JButton btnNouveauLocataire = new JButton("Nouveau Locataire");
-		btnNouveauLocataire.setBounds(307, 148, 132, 23);
-		btnNouveauLocataire.addActionListener(this);
-		contentPane.add(btnNouveauLocataire);
+		JButton ButtonNouveauLocataire = new JButton("Nouveau Locataire");
+		ButtonNouveauLocataire.setBounds(307, 148, 132, 23);
+		ButtonNouveauLocataire.addActionListener(this);
+		contentPane.add(ButtonNouveauLocataire);
 		
-		JLabel lblNombreDeLocataires = new JLabel("Nombre de locataire(s) :");
-		lblNombreDeLocataires.setBounds(24, 119, 132, 14);
-		contentPane.add(lblNombreDeLocataires);
+		JLabel LabelNombreDeLocataires = new JLabel("Nombre de locataire(s) :");
+		LabelNombreDeLocataires.setBounds(24, 119, 132, 14);
+		contentPane.add(LabelNombreDeLocataires);
 		
 		textFieldNbLocataire = new JTextField();
 		textFieldNbLocataire.setColumns(10);
 		textFieldNbLocataire.setBounds(166, 116, 19, 20);
 		contentPane.add(textFieldNbLocataire);
 		
-		JLabel lblDocumentss = new JLabel("* Documents(s)  :");
-		lblDocumentss.setBounds(23, 217, 132, 14);
-		contentPane.add(lblDocumentss);
+		JLabel LabelDocumentss = new JLabel("* Documents(s)  :");
+		LabelDocumentss.setBounds(23, 217, 132, 14);
+		contentPane.add(LabelDocumentss);
 		
 		JComboBox comboBoxDocuments = new JComboBox();
 		comboBoxDocuments.setBounds(165, 214, 132, 22);
 		contentPane.add(comboBoxDocuments);
 		
-		JButton btnNouveauDocument = new JButton("Nouveau Document");
-		btnNouveauDocument.setBounds(307, 213, 132, 23);
-		btnNouveauDocument.addActionListener(this);
-		contentPane.add(btnNouveauDocument);
+		JButton ButtonNouveauDocument = new JButton("Nouveau Document");
+		ButtonNouveauDocument.setBounds(307, 213, 132, 23);
+		ButtonNouveauDocument.addActionListener(this);
+		contentPane.add(ButtonNouveauDocument);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -264,12 +264,12 @@ public class NouveauContrat extends JFrame implements ActionListener {
 				
 			case "Anciennes location":
 				this.dispose();
-				new AncienneLocation().setVisible(true);
+				new LocationsAnciennes().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
 				this.dispose();
-				new AnciensTravaux().setVisible(true);
+				new TravauxAnciens().setVisible(true);
 				break;
 				
 			case "Electricite":
@@ -279,7 +279,7 @@ public class NouveauContrat extends JFrame implements ActionListener {
 				
 			case "Entretien":
 				this.dispose();
-				new NouvelleFactureEntretien().setVisible(true);
+				new NouveauEntretien().setVisible(true);
 				break;
 				
 			case "Facture d'eau":
@@ -304,7 +304,7 @@ public class NouveauContrat extends JFrame implements ActionListener {
 				
 			case "Locations en cours":
 				this.dispose();
-				new LocationEnCours().setVisible(true);
+				new LocationsEnCours().setVisible(true);
 				break;
 			
 			case "Nouveaux travaux":
@@ -319,7 +319,7 @@ public class NouveauContrat extends JFrame implements ActionListener {
 				
 			case "Protection juridique":
 				this.dispose();
-				new ProtectionJuridique().setVisible(true);
+				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 				
 			case "Quittances":

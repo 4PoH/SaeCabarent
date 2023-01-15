@@ -1,19 +1,6 @@
-package vue.consultation;
+package vue.insertion;
 
 import java.awt.EventQueue;
-
-import vue.Accueil;
-import vue.IRL;
-import vue.InformationsBailleur;
-import vue.Quittances;
-import vue.insertion.NouvelleFactureElectricite;
-import vue.insertion.NouvelleFactureEntretien;
-import vue.insertion.NouvelleFactureEau;
-import vue.insertion.NouveauTravaux;
-import vue.insertion.NouvelleChargeSupp;
-import vue.insertion.NouvelleLocation;
-import vue.insertion.ProtectionJuridique;
-import vue.insertion.NouvelleTaxeFonciere;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -30,6 +17,16 @@ import javax.swing.JTable;
 import java.awt.FlowLayout;
 import javax.swing.table.DefaultTableModel;
 
+import vue.Accueil;
+import vue.IRL;
+import vue.InformationsBailleur;
+import vue.Quittances;
+import vue.consultation.LocationsAnciennes;
+import vue.consultation.TravauxAnciens;
+import vue.consultation.Impositions;
+import vue.consultation.LocationsEnCours;
+import vue.consultation.TravauxEnCours;
+
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
@@ -38,12 +35,19 @@ import java.awt.Color;
 import javax.swing.JToolBar;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
 import java.awt.Font;
+import javax.swing.JTextPane;
 
-public class AnciensTravaux extends JFrame implements ActionListener {
+public class NouvelleProtectionJuridique extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTable table;
+	private JTextField textFieldNumFac;
+	private JTextField textFieldPrime;
+	private JTextField textFieldPrimeJurisprudence;
+	private JTextField textFieldLienPDF;
+	private JTextField textFieldDate;
 
 	/**
 	 * Launch the application.
@@ -52,7 +56,7 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AnciensTravaux frame = new AnciensTravaux();
+					NouvelleProtectionJuridique frame = new NouvelleProtectionJuridique();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -64,10 +68,10 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public AnciensTravaux() {
-		setTitle("Anciens Travaux");
+	public NouvelleProtectionJuridique() {
+		setTitle("Nouveaux travaux");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 980, 480);
+		setBounds(100, 100, 480, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
@@ -158,65 +162,97 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(16, 53, 940, 269);
-		contentPane.add(scrollPane);
+		textFieldNumFac = new JTextField();
+		textFieldNumFac.setBounds(165, 126, 132, 20);
+		contentPane.add(textFieldNumFac);
+		textFieldNumFac.setColumns(10);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-			},
-			new String[] {
-				"date facturation", "libelle entreprise", "numero SIREN", "montant payer", "numero facture", "date debut", "date fin", "detail", "pdf"
-			}
-		));
-		scrollPane.setViewportView(table);
+		textFieldPrime = new JTextField();
+		textFieldPrime.setColumns(10);
+		textFieldPrime.setBounds(165, 157, 68, 20);
+		contentPane.add(textFieldPrime);
 		
-		JLabel TitreAncienTr = new JLabel("Ancien Travaux");
-		TitreAncienTr.setFont(new Font("Tahoma", Font.BOLD, 20));
-		TitreAncienTr.setBounds(16, 10, 179, 33);
-		contentPane.add(TitreAncienTr);
+		JLabel LabelNumeroContrat = new JLabel("* Numéro de contrat :");
+		LabelNumeroContrat.setBounds(37, 126, 132, 14);
+		contentPane.add(LabelNumeroContrat);
 		
-		JButton btnCharger = new JButton("Charger");
-		btnCharger.addActionListener(this);
-		btnCharger.setBounds(152, 362, 85, 21);
-		contentPane.add(btnCharger);
+		JLabel LabelPrime = new JLabel("Prime :");
+		LabelPrime.setBounds(37, 157, 132, 14);
+		contentPane.add(LabelPrime);
 		
-		JButton btnAnnuler = new JButton("Annuler");
-		btnAnnuler.addActionListener(this);
-		btnAnnuler.setBounds(730, 362, 85, 21);
-		contentPane.add(btnAnnuler);
+		textFieldPrimeJurisprudence = new JTextField();
+		textFieldPrimeJurisprudence.setColumns(10);
+		textFieldPrimeJurisprudence.setBounds(165, 184, 68, 20);
+		contentPane.add(textFieldPrimeJurisprudence);
+		
+		JLabel LabelPrimeJurisprudence = new JLabel("Prime de jurisprudence :");
+		LabelPrimeJurisprudence.setBounds(37, 184, 132, 14);
+		contentPane.add(LabelPrimeJurisprudence);
+		
+		JButton ButtonAjouter = new JButton("Ajouter");
+		ButtonAjouter.setBounds(307, 384, 132, 23);
+		ButtonAjouter.addActionListener(this);
+		contentPane.add(ButtonAjouter);
+		
+		JButton ButtonAnnuler = new JButton("Annuler");
+		ButtonAnnuler.setBounds(49, 384, 132, 23);
+		ButtonAnnuler.addActionListener(this);
+		contentPane.add(ButtonAnnuler);
+		
+		JLabel LabelProtectionJuridique = new JLabel("Nouvelle protection juridique");
+		LabelProtectionJuridique.setFont(new Font("Tahoma", Font.BOLD, 20));
+		LabelProtectionJuridique.setBounds(37, 0, 363, 41);
+		contentPane.add(LabelProtectionJuridique);
+		
+		textFieldLienPDF = new JTextField();
+		textFieldLienPDF.setColumns(10);
+		textFieldLienPDF.setBounds(165, 245, 235, 20);
+		contentPane.add(textFieldLienPDF);
+		
+		JLabel LabelLienPDF = new JLabel("Lien pdf  :");
+		LabelLienPDF.setBounds(37, 245, 132, 14);
+		contentPane.add(LabelLienPDF);
+		
+		JLabel LabelEntreprise = new JLabel("* Entreprise :");
+		LabelEntreprise.setBounds(37, 96, 132, 14);
+		contentPane.add(LabelEntreprise);
+		
+		JComboBox comboBoxEntreprise = new JComboBox();
+		comboBoxEntreprise.setBounds(165, 92, 132, 22);
+		contentPane.add(comboBoxEntreprise);
+		
+		JButton ButtonNouvelleEntreprise = new JButton("Nouvelle entreprise");
+		ButtonNouvelleEntreprise.setBounds(307, 92, 132, 23);
+		ButtonNouvelleEntreprise.addActionListener(this);
+		contentPane.add(ButtonNouvelleEntreprise);
+		
+		JLabel LabelDateObtention = new JLabel("Date d'obtention :");
+		LabelDateObtention.setBounds(37, 215, 132, 14);
+		contentPane.add(LabelDateObtention);
+		
+		textFieldDate = new JTextField();
+		textFieldDate.setColumns(10);
+		textFieldDate.setBounds(165, 215, 68, 20);
+		contentPane.add(textFieldDate);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
-			
-			case "Charger" :
+			case "Nouvelle entreprise":
+				this.dispose();
+				new NouvelleEntreprise().setVisible(true);
 				break;
-			
 			case "Annuler":
 				this.dispose();
+				new Accueil().setVisible(true);
 				break;
-		
+			case "Ajouter":
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -224,12 +260,12 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 				
 			case "Anciennes location":
 				this.dispose();
-				new AncienneLocation().setVisible(true);
+				new LocationsAnciennes().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
 				this.dispose();
-				new AnciensTravaux().setVisible(true);
+				new TravauxAnciens().setVisible(true);
 				break;
 				
 			case "Electricite":
@@ -239,12 +275,12 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 				
 			case "Entretien":
 				this.dispose();
-				new NouvelleFactureEntretien().setVisible(true);
+				new NouveauEntretien().setVisible(true);
 				break;
 				
 			case "Facture d'eau":
 				this.dispose();
-				new NouvelleFactureEau().setVisible(true);
+				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 			
 			case "Impositions":
@@ -264,12 +300,12 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 				
 			case "Locations en cours":
 				this.dispose();
-				new LocationEnCours().setVisible(true);
+				new LocationsEnCours().setVisible(true);
 				break;
 			
 			case "Nouveaux travaux":
 				this.dispose();
-				new NouveauTravaux().setVisible(true);
+				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 				
 			case "Nouvelle location":
@@ -279,7 +315,7 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 				
 			case "Protection juridique":
 				this.dispose();
-				new ProtectionJuridique().setVisible(true);
+				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 				
 			case "Quittances":
@@ -295,7 +331,6 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 				this.dispose();
 				new NouvelleChargeSupp().setVisible(true);
 				break;
-				
 			case "Travaux en cours":
 				this.dispose();
 				new TravauxEnCours().setVisible(true);
@@ -306,5 +341,4 @@ public class AnciensTravaux extends JFrame implements ActionListener {
 				break;
 		}
 	}
-	
 }

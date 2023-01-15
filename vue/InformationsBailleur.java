@@ -17,16 +17,29 @@ import javax.swing.JTable;
 import java.awt.FlowLayout;
 import javax.swing.table.DefaultTableModel;
 
-import vue.consultation.AncienneLocation;
-import vue.consultation.AnciensTravaux;
+import vue.consultation.LocationsAnciennes;
+import vue.consultation.TravauxAnciens;
 import vue.consultation.Impositions;
-import vue.consultation.LocationEnCours;
+import vue.consultation.LocatairesAnciens;
+import vue.consultation.LocatairesEnCours;
+import vue.consultation.EntretiensAnciens;
+import vue.consultation.EntretiensEnCours;
+import vue.consultation.FacturesEauAnciennes;
+import vue.consultation.FacturesEauEnCours;
+import vue.consultation.FacturesElectriciteAnciennes;
+import vue.consultation.FacturesElectriciteEnCours;
+import vue.consultation.LocationsEnCours;
+import vue.consultation.ProtectionJuridique;
+import vue.consultation.TaxeFonciere;
 import vue.consultation.TravauxEnCours;
 import vue.insertion.NouvelleFactureElectricite;
-import vue.insertion.NouvelleFactureEntretien;
-import vue.insertion.NouvelleFactureEau;
+import vue.insertion.NouveauEntretien;
+import vue.insertion.NouveauTravaux;
 import vue.insertion.NouvelleChargeSupp;
-import vue.insertion.ProtectionJuridique;
+import vue.insertion.NouvelleEntreprise;
+import vue.insertion.NouvelleFactureEau;
+import vue.insertion.NouvelleLocation;
+import vue.insertion.NouvelleProtectionJuridique;
 import vue.insertion.NouvelleTaxeFonciere;
 
 import javax.swing.JScrollPane;
@@ -40,17 +53,17 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.Font;
+import javax.swing.JTextPane;
 
 public class InformationsBailleur extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField textFieldNumFac;
-	private JTextField textFieldDateFac;
-	private JTextField textFieldLibelle;
-	private JTextField textFieldLienPDF;
-	private JTextField textFieldMontant;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField textFieldNom;
+	private JTextField textFieldPrenom;
+	private JTextField textFieldAdresse;
+	private JTextField textFieldCodeP;
+	private JTextField textFieldMail;
+	private JTextField textFieldTel;
 
 	/**
 	 * Launch the application.
@@ -72,12 +85,12 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public InformationsBailleur() {
-		setTitle("Nouveaux travaux");
+		setTitle("Bailleur");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 480, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
-		menuBarTop.setMargin(new Insets(0, 5, 0, 5));
+		menuBarTop.setMargin(new Insets(5, 5, 5, 5));
 		setJMenuBar(menuBarTop);
 		
 		JButton ButtonAccueil = new JButton("Accueil");
@@ -85,63 +98,142 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 		menuBarTop.add(ButtonAccueil);
 		
 		JMenu MenuLocations = new JMenu("Locations");
+		MenuLocations.addActionListener(this);
 		menuBarTop.add(MenuLocations);
 		
-		JMenuItem MenuItemNouvelleLocation = new JMenuItem("Nouvelle location");
-		MenuItemNouvelleLocation.addActionListener(this);
-		MenuLocations.add(MenuItemNouvelleLocation);
+		JMenuItem MenuItemAncienneLocation = new JMenuItem("Anciennes locations");
+		MenuItemAncienneLocation.addActionListener(this);
+		MenuLocations.add(MenuItemAncienneLocation);
 		
 		JMenuItem MenuItemLocationEnCour = new JMenuItem("Locations en cours");
 		MenuItemLocationEnCour.addActionListener(this);
 		MenuLocations.add(MenuItemLocationEnCour);
 		
-		JMenuItem MenuItemAncienneLocation = new JMenuItem("Anciennes location");
-		MenuItemAncienneLocation.addActionListener(this);
-		MenuLocations.add(MenuItemAncienneLocation);
+		JMenuItem MenuItemNouvelleLocation = new JMenuItem("Nouvelles locations");
+		MenuItemNouvelleLocation.addActionListener(this);
+		MenuLocations.add(MenuItemNouvelleLocation);
+		
+		JMenuItem MenuItemAnciensLocataires = new JMenuItem("Anciens locataires");
+		MenuLocations.add(MenuItemAnciensLocataires);
+		
+		JMenuItem MenuItemLocatairesEnCours = new JMenuItem("Locataires en cours");
+		MenuLocations.add(MenuItemLocatairesEnCours);
 		
 		JMenu MenuCharges = new JMenu("Charges");
+		MenuCharges.addActionListener(this);
 		menuBarTop.add(MenuCharges);
 		
-		JMenuItem MenuItemFactureEau = new JMenuItem("Facture d'eau");
-		MenuItemFactureEau.addActionListener(this);
-		MenuCharges.add(MenuItemFactureEau);
+		JMenu MenuEntretiens = new JMenu("Entretiens");
+		MenuEntretiens.addActionListener(this);
+		MenuCharges.add(MenuEntretiens);
 		
-		JMenuItem MenuItemEntretien = new JMenuItem("Entretien");
-		MenuItemEntretien.addActionListener(this);
-		MenuCharges.add(MenuItemEntretien);
+		JMenuItem MenuItemAnciensEntretiens = new JMenuItem("Anciens entretiens");
+		MenuItemAnciensEntretiens.addActionListener(this);
+		MenuItemAnciensEntretiens.setSelected(true);
+		MenuEntretiens.add(MenuItemAnciensEntretiens);
 		
-		JMenuItem MenuItemTaxeFonciere = new JMenuItem("Taxe fonciere");
-		MenuItemTaxeFonciere.addActionListener(this);
-		MenuCharges.add(MenuItemTaxeFonciere);
+		JMenuItem mntmEntretiensEnCours = new JMenuItem("Entretiens en cours");
+		mntmEntretiensEnCours.addActionListener(this);
+		mntmEntretiensEnCours.setSelected(true);
+		MenuEntretiens.add(mntmEntretiensEnCours);
 		
-		JMenuItem MenuItemElectricite = new JMenuItem("Electricite");
-		MenuItemElectricite.addActionListener(this);
-		MenuCharges.add(MenuItemElectricite);
+		JMenuItem MenuItemNouveauxEntretiens = new JMenuItem("Nouveaux entretiens");
+		MenuItemNouveauxEntretiens.addActionListener(this);
 		
-		JMenuItem MenuItemProtectionJuridique = new JMenuItem("Protection juridique");
-		MenuItemProtectionJuridique.addActionListener(this);
-		MenuCharges.add(MenuItemProtectionJuridique);
+		JMenuItem MenuItemAnciensEntretiensPartiesCommunes = new JMenuItem("Anciens entretiens parties communes");
+		MenuItemAnciensEntretiensPartiesCommunes.setSelected(true);
+		MenuEntretiens.add(MenuItemAnciensEntretiensPartiesCommunes);
 		
-		JMenuItem MenuItemAutre = new JMenuItem("Autre");
-		MenuItemAutre.addActionListener(this);
-		MenuCharges.add(MenuItemAutre);
+		JMenuItem MenuItemEntretiensPartiesCommunes = new JMenuItem("Entretiens parties communes en cours");
+		MenuItemEntretiensPartiesCommunes.setSelected(true);
+		MenuEntretiens.add(MenuItemEntretiensPartiesCommunes);
+		MenuItemNouveauxEntretiens.setSelected(true);
+		MenuEntretiens.add(MenuItemNouveauxEntretiens);
+		
+		JMenu MenuFacturesEau = new JMenu("Factures d'eau");
+		MenuFacturesEau.addActionListener(this);
+		MenuCharges.add(MenuFacturesEau);
+		
+		JMenuItem MenuItemAnciennesFacturesEau = new JMenuItem("Anciennes factures d'eau");
+		MenuItemAnciennesFacturesEau.addActionListener(this);
+		MenuFacturesEau.add(MenuItemAnciennesFacturesEau);
+		
+		JMenuItem MenuItemFacturesEauEnCours = new JMenuItem("Factures d'eau en cours");
+		MenuItemFacturesEauEnCours.addActionListener(this);
+		MenuFacturesEau.add(MenuItemFacturesEauEnCours);
+		
+		JMenuItem MenuItemNouvellesFactureEau = new JMenuItem("Nouvelles factures d'eau");
+		MenuItemNouvellesFactureEau.addActionListener(this);
+		MenuFacturesEau.add(MenuItemNouvellesFactureEau);
+		
+		JMenu MenuElectricite = new JMenu("Electricité");
+		MenuElectricite.addActionListener(this);
+		MenuCharges.add(MenuElectricite);
+		
+		JMenuItem MenuItemAnciennesFacturesElectricite = new JMenuItem("Anciennes factures d'électricité");
+		MenuItemAnciennesFacturesElectricite.addActionListener(this);
+		MenuElectricite.add(MenuItemAnciennesFacturesElectricite);
+		
+		JMenuItem mntmFacturesDlectricitEn = new JMenuItem("Factures d'électricité en cours");
+		mntmFacturesDlectricitEn.addActionListener(this);
+		MenuElectricite.add(mntmFacturesDlectricitEn);
+		
+		JMenuItem MenuItemNouvellesFacturesElectricite = new JMenuItem("Nouvelles factures d'électricité");
+		MenuElectricite.add(MenuItemNouvellesFacturesElectricite);
+		MenuItemNouvellesFacturesElectricite.addActionListener(this);
+		
+		JMenu MenuTaxesFoncieres = new JMenu("Taxes foncières");
+		MenuTaxesFoncieres.addActionListener(this);
+		MenuCharges.add(MenuTaxesFoncieres);
+		
+		JMenuItem MenuItemConsultationTaxesFonciere = new JMenuItem("Consultation taxes foncières");
+		MenuItemConsultationTaxesFonciere.addActionListener(this);
+		MenuTaxesFoncieres.add(MenuItemConsultationTaxesFonciere);
+		
+		JMenuItem MenuItemNouvellesTaxesFonciere = new JMenuItem("Nouvelles taxes foncières");
+		MenuItemNouvellesTaxesFonciere.addActionListener(this);
+		MenuTaxesFoncieres.add(MenuItemNouvellesTaxesFonciere);
+		
+		JMenu MenuProtectionJuridique = new JMenu("Protection juridique");
+		MenuProtectionJuridique.addActionListener(this);
+		MenuCharges.add(MenuProtectionJuridique);
+		
+		JMenuItem MenuItemConsultationProtectionsJuridiques = new JMenuItem("Consultation protection juridique");
+		MenuProtectionJuridique.add(MenuItemConsultationProtectionsJuridiques);
+		MenuItemConsultationProtectionsJuridiques.addActionListener(this);
+		
+		JMenuItem MenuItemNouvelleProtectionJuridique = new JMenuItem("Nouvelle protection juridique");
+		MenuItemNouvelleProtectionJuridique.addActionListener(this);
+		MenuProtectionJuridique.add(MenuItemNouvelleProtectionJuridique);
+		
+		JMenu MenuChargesSupplementaires = new JMenu("Charges supplémentaires");
+		MenuChargesSupplementaires.addActionListener(this);
+		MenuCharges.add(MenuChargesSupplementaires);
+		
+		JMenuItem MenuItemConsultationChargesSupplmentaires = new JMenuItem("Consultation charges supplémentaires");
+		MenuItemConsultationChargesSupplmentaires.addActionListener(this);
+		MenuChargesSupplementaires.add(MenuItemConsultationChargesSupplmentaires);
+		
+		JMenuItem MenuItemNouvelleChargesSupplmentaires = new JMenuItem("Nouvelle charges supplémentaires");
+		MenuItemNouvelleChargesSupplmentaires.addActionListener(this);
+		MenuChargesSupplementaires.add(MenuItemNouvelleChargesSupplmentaires);
 		
 		JMenu MenuTravaux = new JMenu("Travaux");
 		menuBarTop.add(MenuTravaux);
-		
-		JMenuItem MenuItemNouveauTravaux = new JMenuItem("Nouveaux travaux");
-		MenuItemNouveauTravaux.addActionListener(this);
-		MenuTravaux.add(MenuItemNouveauTravaux);
-		
-		JMenuItem mntmNewMenuItem = new JMenuItem("Travaux en cours");
-		mntmNewMenuItem.addActionListener(this);
-		MenuTravaux.add(mntmNewMenuItem);
 		
 		JMenuItem MenuItemAncienTravaux = new JMenuItem("Anciens travaux");
 		MenuItemAncienTravaux.addActionListener(this);
 		MenuTravaux.add(MenuItemAncienTravaux);
 		
-		JMenu MenuParametres = new JMenu("Parametres");
+		JMenuItem MenuItemTravauxEnCours = new JMenuItem("Travaux en cours");
+		MenuItemTravauxEnCours.addActionListener(this);
+		MenuTravaux.add(MenuItemTravauxEnCours);
+		
+		JMenuItem MenuItemNouveauTravaux = new JMenuItem("Nouveaux travaux");
+		MenuItemNouveauTravaux.addActionListener(this);
+		MenuTravaux.add(MenuItemNouveauTravaux);
+		
+		JMenu MenuParametres = new JMenu("Paramètres");
 		menuBarTop.add(MenuParametres);
 		
 		JMenuItem MenuItemInfosBailleur = new JMenuItem("Informations bailleur");
@@ -152,7 +244,7 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 		MenuItemIRL.addActionListener(this);
 		MenuParametres.add(MenuItemIRL);
 		
-		JMenu MenuGenerer = new JMenu("Generer documents");
+		JMenu MenuGenerer = new JMenu("Générer les documents");
 		menuBarTop.add(MenuGenerer);
 		
 		JMenuItem MenuItemQuittance = new JMenuItem("Quittances");
@@ -168,70 +260,70 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textFieldNumFac = new JTextField();
-		textFieldNumFac.setBounds(166, 60, 132, 20);
-		contentPane.add(textFieldNumFac);
-		textFieldNumFac.setColumns(10);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 10, 680, 300);
+		contentPane.add(scrollPane);
 		
-		textFieldDateFac = new JTextField();
-		textFieldDateFac.setColumns(10);
-		textFieldDateFac.setBounds(166, 91, 132, 20);
-		contentPane.add(textFieldDateFac);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
 		
-		JLabel lblLabelNom = new JLabel("* Nom :");
-		lblLabelNom.setBounds(24, 63, 132, 14);
-		contentPane.add(lblLabelNom);
+		textFieldNom = new JTextField();
+		textFieldNom.setBounds(165, 65, 132, 20);
+		contentPane.add(textFieldNom);
+		textFieldNom.setColumns(10);
 		
-		JLabel lblLabelPrenom = new JLabel("* Prenom :");
-		lblLabelPrenom.setBounds(24, 94, 132, 14);
-		contentPane.add(lblLabelPrenom);
+		textFieldPrenom = new JTextField();
+		textFieldPrenom.setColumns(10);
+		textFieldPrenom.setBounds(165, 100, 132, 20);
+		contentPane.add(textFieldPrenom);
 		
-		textFieldLibelle = new JTextField();
-		textFieldLibelle.setColumns(10);
-		textFieldLibelle.setBounds(166, 122, 207, 20);
-		contentPane.add(textFieldLibelle);
+		JLabel LabelNom = new JLabel("* Nom");
+		LabelNom.setBounds(37, 71, 132, 14);
+		contentPane.add(LabelNom);
 		
-		JLabel lblLabelAdresse = new JLabel("Adresse :");
-		lblLabelAdresse.setBounds(24, 125, 132, 14);
-		contentPane.add(lblLabelAdresse);
+		JLabel LabelPrenom = new JLabel("*Prénom");
+		LabelPrenom.setBounds(37, 102, 132, 14);
+		contentPane.add(LabelPrenom);
 		
-		textFieldLienPDF = new JTextField();
-		textFieldLienPDF.setColumns(10);
-		textFieldLienPDF.setBounds(166, 153, 62, 20);
-		contentPane.add(textFieldLienPDF);
+		textFieldAdresse = new JTextField();
+		textFieldAdresse.setColumns(10);
+		textFieldAdresse.setBounds(165, 144, 132, 20);
+		contentPane.add(textFieldAdresse);
 		
-		JLabel lblLabelCodePostal = new JLabel("Code postal :");
-		lblLabelCodePostal.setBounds(24, 156, 132, 14);
-		contentPane.add(lblLabelCodePostal);
+		JLabel LabelLibelle = new JLabel("*Adresse");
+		LabelLibelle.setBounds(37, 146, 132, 14);
+		contentPane.add(LabelLibelle);
 		
-		JLabel lblLabelVille = new JLabel("Ville :");
-		lblLabelVille.setBounds(24, 184, 132, 14);
-		contentPane.add(lblLabelVille);
+		JLabel LabelCp = new JLabel("*Code Postal");
+		LabelCp.setBounds(37, 185, 132, 14);
+		contentPane.add(LabelCp);
 		
-		textFieldMontant = new JTextField();
-		textFieldMontant.setColumns(10);
-		textFieldMontant.setBounds(166, 181, 132, 20);
-		contentPane.add(textFieldMontant);
+		textFieldCodeP = new JTextField();
+		textFieldCodeP.setColumns(10);
+		textFieldCodeP.setBounds(165, 183, 132, 20);
+		contentPane.add(textFieldCodeP);
 		
-		JLabel lblLabelMail = new JLabel("Adresse mail :");
-		lblLabelMail.setBounds(24, 209, 132, 14);
-		contentPane.add(lblLabelMail);
+		JLabel LabelMail = new JLabel("*Mail");
+		LabelMail.setBounds(37, 227, 132, 14);
+		contentPane.add(LabelMail);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(166, 212, 207, 20);
-		contentPane.add(textField);
+		textFieldMail = new JTextField();
+		textFieldMail.setColumns(10);
+		textFieldMail.setBounds(165, 225, 132, 20);
+		contentPane.add(textFieldMail);
 		
-		JLabel lblLabelTelephone = new JLabel("Numéro téléphone :");
-		lblLabelTelephone.setBounds(24, 245, 132, 14);
-		contentPane.add(lblLabelTelephone);
+		JLabel LabelTel = new JLabel("*Telephone");
+		LabelTel.setBounds(37, 274, 132, 14);
+		contentPane.add(LabelTel);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(166, 242, 132, 20);
-		contentPane.add(textField_1);
+		textFieldTel = new JTextField();
+		textFieldTel.setColumns(10);
+		textFieldTel.setBounds(165, 272, 132, 20);
+		contentPane.add(textFieldTel);
 		
-		JButton btnAjouter = new JButton("Ajouter");
+		JButton btnAjouter = new JButton("Confimer");
 		btnAjouter.setBounds(307, 384, 132, 23);
 		btnAjouter.addActionListener(this);
 		contentPane.add(btnAjouter);
@@ -241,55 +333,132 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 		btnAnnuler.addActionListener(this);
 		contentPane.add(btnAnnuler);
 		
-		JLabel lblBailleur = new JLabel("Bailleur");
-		lblBailleur.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblBailleur.setBounds(24, 0, 307, 41);
-		contentPane.add(lblBailleur);
+		JLabel LabelFactureDEau = new JLabel("Informations du bailleur");
+		LabelFactureDEau.setFont(new Font("Tahoma", Font.BOLD, 20));
+		LabelFactureDEau.setBounds(37, 0, 260, 41);
+		contentPane.add(LabelFactureDEau);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
-			case "Annuler":
-				this.dispose();
-				new Accueil().setVisible(true);
-				break;
-			case "Ajouter":
-				this.dispose();
-				new Accueil().setVisible(true);
-				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
 				break;
 				
-			case "Anciennes location":
+			case "Anciennes locations":
 				this.dispose();
-				new AncienneLocation().setVisible(true);
-				break;
-			
-			case "Anciens travaux":
-				this.dispose();
-				new AnciensTravaux().setVisible(true);
+				new LocationsAnciennes().setVisible(true);
 				break;
 				
-			case "Electricite":
+			case "Locations en cours":
+				this.dispose();
+				new LocationsEnCours().setVisible(true);
+				break;
+				
+			case "Nouvelles locations":
+				this.dispose();
+				new NouvelleLocation().setVisible(true);
+				break;
+			
+			case "Anciens locataires":
+				this.dispose();
+				new LocatairesAnciens().setVisible(true);
+				break;
+				
+			case "Locataires en cours":
+				this.dispose();
+				new LocatairesEnCours().setVisible(true);
+				break;
+			
+			case "Anciens entretiens":
+				this.dispose();
+				new EntretiensAnciens().setVisible(true);
+				break;
+				
+			case "Entretiens en cours":
+				this.dispose();
+				new EntretiensEnCours().setVisible(true);
+				break;
+				
+			case "Nouveaux entretiens":
+				this.dispose();
+				new NouveauEntretien().setVisible(true);
+				break;
+				
+			case "Anciennes factures d'eau":
+				this.dispose();
+				new FacturesEauAnciennes().setVisible(true);
+				break;
+				
+			case "Factures d'eau en cours":
+				this.dispose();
+				new FacturesEauEnCours().setVisible(true);
+				break;
+				
+			case "Nouvelles factures d'eau":
+				this.dispose();
+				new NouvelleFactureEau().setVisible(true);
+				break;
+				
+			case "Anciennes factures d'électricité":
+				this.dispose();
+				new FacturesElectriciteAnciennes().setVisible(true);
+				break;
+				
+			case "Factures d'électricité en cours":
+				this.dispose();
+				new FacturesElectriciteEnCours().setVisible(true);
+				break;
+				
+			case "Nouvelles factures d'électricité":
 				this.dispose();
 				new NouvelleFactureElectricite().setVisible(true);
 				break;
 				
-			case "Entretien":
+			case "Consultation taxes foncières":
 				this.dispose();
-				new NouvelleFactureEntretien().setVisible(true);
-				break;
-				
-			case "Facture d'eau":
-				this.dispose();
-				new NouvelleFactureEau().setVisible(true);
+				new TaxeFonciere().setVisible(true);
 				break;
 			
-			case "Impositions":
+			case "Nouvelles taxes foncières":
 				this.dispose();
-				new Impositions().setVisible(true);
+				new NouvelleTaxeFonciere().setVisible(true);
+				break;
+				
+			case "Consultation protection juridique":
+				this.dispose();
+				new ProtectionJuridique().setVisible(true);
+				break;
+			
+			case "Nouvelles protection juridique":
+				this.dispose();
+				new NouvelleProtectionJuridique().setVisible(true);
+				break;
+				
+			case "Consultation charges supplémentaires":
+				this.dispose();
+				new TaxeFonciere().setVisible(true);
+				break;
+			
+			case "Nouvelle charges supplémentaires":
+				this.dispose();
+				new NouvelleTaxeFonciere().setVisible(true);
+				break;
+			
+			case "Anciens travaux":
+				this.dispose();
+				new TravauxAnciens().setVisible(true);
+				break;
+				
+			case "Travaux en cours":
+				this.dispose();
+				new TravauxEnCours().setVisible(true);
+				break;
+			
+			case "Nouveaux travaux":
+				this.dispose();
+				new NouveauTravaux().setVisible(true);
 				break;
 				
 			case "Informations bailleur":
@@ -302,42 +471,14 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 				new IRL().setVisible(true);
 				break;
 				
-			case "Locations en cours":
-				this.dispose();
-				new LocationEnCours().setVisible(true);
-				break;
-			
-			case "Nouveaux travaux":
-				this.dispose();
-				new InformationsBailleur().setVisible(true);
-				break;
-				
-			case "Nouvelle location":
-				this.dispose();
-				new InformationsBailleur().setVisible(true);
-				break;
-				
-			case "Protection juridique":
-				this.dispose();
-				new ProtectionJuridique().setVisible(true);
-				break;
-				
 			case "Quittances":
 				this.dispose();
 				new Quittances().setVisible(true);
 				break;
-			
-			case "Taxe fonciere":
+				
+			case "Impositions":
 				this.dispose();
-				new NouvelleTaxeFonciere().setVisible(true);
-				break;
-			case "Autre":
-				this.dispose();
-				new NouvelleChargeSupp().setVisible(true);
-				break;
-			case "Travaux en cours":
-				this.dispose();
-				new TravauxEnCours().setVisible(true);
+				new Impositions().setVisible(true);
 				break;
        
 			default:

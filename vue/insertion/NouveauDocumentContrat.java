@@ -21,10 +21,10 @@ import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.AncienneLocation;
-import vue.consultation.AnciensTravaux;
+import vue.consultation.LocationsAnciennes;
+import vue.consultation.TravauxAnciens;
 import vue.consultation.Impositions;
-import vue.consultation.LocationEnCours;
+import vue.consultation.LocationsEnCours;
 import vue.consultation.TravauxEnCours;
 
 import javax.swing.JScrollPane;
@@ -66,7 +66,7 @@ public class NouveauDocumentContrat extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public NouveauDocumentContrat() {
-		setTitle("Nouveaux travaux");
+		setTitle("Nouveaux documents");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 480, 480);
 		
@@ -172,37 +172,37 @@ public class NouveauDocumentContrat extends JFrame implements ActionListener {
 		textFieldDate.setBounds(166, 91, 67, 20);
 		contentPane.add(textFieldDate);
 		
-		JLabel lblLabelLibelle = new JLabel("* Libellé :");
-		lblLabelLibelle.setBounds(24, 63, 132, 14);
-		contentPane.add(lblLabelLibelle);
+		JLabel LabelLibelle = new JLabel("* Libellé :");
+		LabelLibelle.setBounds(24, 63, 132, 14);
+		contentPane.add(LabelLibelle);
 		
-		JLabel lblLabelDate = new JLabel("Date d'ajout :");
-		lblLabelDate.setBounds(24, 94, 132, 14);
-		contentPane.add(lblLabelDate);
+		JLabel LabelDate = new JLabel("Date d'ajout :");
+		LabelDate.setBounds(24, 94, 132, 14);
+		contentPane.add(LabelDate);
 		
 		textFieldLienPDF = new JTextField();
 		textFieldLienPDF.setColumns(10);
 		textFieldLienPDF.setBounds(166, 122, 207, 20);
 		contentPane.add(textFieldLienPDF);
 		
-		JLabel lblLabelLienPDF = new JLabel("Lien pdf :");
-		lblLabelLienPDF.setBounds(24, 125, 132, 14);
-		contentPane.add(lblLabelLienPDF);
+		JLabel LabelLienPDF = new JLabel("Lien pdf :");
+		LabelLienPDF.setBounds(24, 125, 132, 14);
+		contentPane.add(LabelLienPDF);
 		
-		JButton btnAjouter = new JButton("Ajouter");
-		btnAjouter.setBounds(307, 384, 132, 23);
-		btnAjouter.addActionListener(this);
-		contentPane.add(btnAjouter);
+		JButton ButtonAjouter = new JButton("Ajouter");
+		ButtonAjouter.setBounds(307, 384, 132, 23);
+		ButtonAjouter.addActionListener(this);
+		contentPane.add(ButtonAjouter);
 		
-		JButton btnAnnuler = new JButton("Annuler");
-		btnAnnuler.setBounds(49, 384, 132, 23);
-		btnAnnuler.addActionListener(this);
-		contentPane.add(btnAnnuler);
+		JButton ButtonAnnuler = new JButton("Annuler");
+		ButtonAnnuler.setBounds(49, 384, 132, 23);
+		ButtonAnnuler.addActionListener(this);
+		contentPane.add(ButtonAnnuler);
 		
-		JLabel lblBailleur = new JLabel("Nouveau Document");
-		lblBailleur.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblBailleur.setBounds(24, 0, 307, 41);
-		contentPane.add(lblBailleur);
+		JLabel Bailleur = new JLabel("Nouveau document");
+		Bailleur.setFont(new Font("Tahoma", Font.BOLD, 20));
+		Bailleur.setBounds(24, 0, 307, 41);
+		contentPane.add(Bailleur);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -222,12 +222,12 @@ public class NouveauDocumentContrat extends JFrame implements ActionListener {
 				
 			case "Anciennes location":
 				this.dispose();
-				new AncienneLocation().setVisible(true);
+				new LocationsAnciennes().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
 				this.dispose();
-				new AnciensTravaux().setVisible(true);
+				new TravauxAnciens().setVisible(true);
 				break;
 				
 			case "Electricite":
@@ -237,7 +237,7 @@ public class NouveauDocumentContrat extends JFrame implements ActionListener {
 				
 			case "Entretien":
 				this.dispose();
-				new NouvelleFactureEntretien().setVisible(true);
+				new NouveauEntretien().setVisible(true);
 				break;
 				
 			case "Facture d'eau":
@@ -262,7 +262,7 @@ public class NouveauDocumentContrat extends JFrame implements ActionListener {
 				
 			case "Locations en cours":
 				this.dispose();
-				new LocationEnCours().setVisible(true);
+				new LocationsEnCours().setVisible(true);
 				break;
 			
 			case "Nouveaux travaux":
@@ -277,7 +277,7 @@ public class NouveauDocumentContrat extends JFrame implements ActionListener {
 				
 			case "Protection juridique":
 				this.dispose();
-				new ProtectionJuridique().setVisible(true);
+				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 				
 			case "Quittances":

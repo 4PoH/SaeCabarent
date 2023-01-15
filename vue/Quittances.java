@@ -17,18 +17,18 @@ import javax.swing.JTable;
 import java.awt.FlowLayout;
 import javax.swing.table.DefaultTableModel;
 
-import vue.consultation.AncienneLocation;
-import vue.consultation.AnciensTravaux;
+import vue.consultation.LocationsAnciennes;
+import vue.consultation.TravauxAnciens;
 import vue.consultation.Impositions;
-import vue.consultation.LocationEnCours;
+import vue.consultation.LocationsEnCours;
 import vue.consultation.TravauxEnCours;
 import vue.insertion.NouvelleFactureElectricite;
-import vue.insertion.NouvelleFactureEntretien;
+import vue.insertion.NouveauEntretien;
 import vue.insertion.NouvelleFactureEau;
 import vue.insertion.NouveauTravaux;
 import vue.insertion.NouvelleChargeSupp;
 import vue.insertion.NouvelleLocation;
-import vue.insertion.ProtectionJuridique;
+import vue.insertion.NouvelleProtectionJuridique;
 import vue.insertion.NouvelleTaxeFonciere;
 
 import javax.swing.JScrollPane;
@@ -165,19 +165,19 @@ public class Quittances extends JFrame implements ActionListener {
 		contentPane.add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("Générer Quitances");
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblNewLabel.setForeground(new Color(0, 0, 0));
-		lblNewLabel.setBounds(10, 10, 235, 30);
-		panel.add(lblNewLabel);
+		JLabel LabelQuittances = new JLabel("Générer Quitances");
+		LabelQuittances.setFont(new Font("Tahoma", Font.BOLD, 20));
+		LabelQuittances.setForeground(new Color(0, 0, 0));
+		LabelQuittances.setBounds(10, 10, 235, 30);
+		panel.add(LabelQuittances);
 		
-		JButton btnNewButton = new JButton("Annuler");
-		btnNewButton.setBounds(20, 368, 85, 21);
-		panel.add(btnNewButton);
+		JButton ButtonAnnuler = new JButton("Annuler");
+		ButtonAnnuler.setBounds(20, 368, 85, 21);
+		panel.add(ButtonAnnuler);
 		
-		JButton btnGnrer = new JButton("Générer");
-		btnGnrer.setBounds(326, 368, 85, 21);
-		panel.add(btnGnrer);
+		JButton ButtonGenerer = new JButton("Générer");
+		ButtonGenerer.setBounds(326, 368, 85, 21);
+		panel.add(ButtonGenerer);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -189,12 +189,12 @@ public class Quittances extends JFrame implements ActionListener {
 				
 			case "Anciennes location":
 				this.dispose();
-				new AncienneLocation().setVisible(true);
+				new LocationsAnciennes().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
 				this.dispose();
-				new AnciensTravaux().setVisible(true);
+				new TravauxAnciens().setVisible(true);
 				break;
 				
 			case "Electricite":
@@ -204,7 +204,7 @@ public class Quittances extends JFrame implements ActionListener {
 				
 			case "Entretien":
 				this.dispose();
-				new NouvelleFactureEntretien().setVisible(true);
+				new NouveauEntretien().setVisible(true);
 				break;
 				
 			case "Facture d'eau":
@@ -229,7 +229,7 @@ public class Quittances extends JFrame implements ActionListener {
 				
 			case "Locations en cours":
 				this.dispose();
-				new LocationEnCours().setVisible(true);
+				new LocationsEnCours().setVisible(true);
 				break;
 			
 			case "Nouveaux travaux":
@@ -244,7 +244,7 @@ public class Quittances extends JFrame implements ActionListener {
 				
 			case "Protection juridique":
 				this.dispose();
-				new ProtectionJuridique().setVisible(true);
+				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 				
 			case "Quittances":
