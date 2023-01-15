@@ -452,6 +452,10 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
+				
+			case "Annuler":
+				this.dispose();
+				break;
        
 			default:
 				System.out.println("Choix incorrect");

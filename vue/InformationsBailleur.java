@@ -1,59 +1,44 @@
 package vue;
 
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.awt.GridLayout;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JMenu;
-import javax.swing.SwingConstants;
-import java.awt.Insets;
-import javax.swing.JButton;
-import javax.swing.BoxLayout;
-import javax.swing.JTable;
-import java.awt.FlowLayout;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
-import vue.consultation.LocationsAnciennes;
-import vue.consultation.TravauxAnciens;
-import vue.consultation.Impositions;
-import vue.consultation.LocatairesAnciens;
-import vue.consultation.LocatairesEnCours;
 import vue.consultation.EntretiensAnciens;
 import vue.consultation.EntretiensEnCours;
 import vue.consultation.FacturesEauAnciennes;
 import vue.consultation.FacturesEauEnCours;
 import vue.consultation.FacturesElectriciteAnciennes;
 import vue.consultation.FacturesElectriciteEnCours;
+import vue.consultation.Impositions;
+import vue.consultation.LocatairesAnciens;
+import vue.consultation.LocatairesEnCours;
+import vue.consultation.LocationsAnciennes;
 import vue.consultation.LocationsEnCours;
 import vue.consultation.ProtectionJuridique;
 import vue.consultation.TaxeFonciere;
+import vue.consultation.TravauxAnciens;
 import vue.consultation.TravauxEnCours;
-import vue.insertion.NouvelleFactureElectricite;
 import vue.insertion.NouveauEntretien;
 import vue.insertion.NouveauTravaux;
-import vue.insertion.NouvelleChargeSupp;
-import vue.insertion.NouvelleEntreprise;
 import vue.insertion.NouvelleFactureEau;
+import vue.insertion.NouvelleFactureElectricite;
 import vue.insertion.NouvelleLocation;
 import vue.insertion.NouvelleProtectionJuridique;
 import vue.insertion.NouvelleTaxeFonciere;
-
-import javax.swing.JScrollPane;
-import java.awt.BorderLayout;
-import javax.swing.JLabel;
-import javax.swing.border.LineBorder;
-import java.awt.Color;
-import javax.swing.JToolBar;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
-import java.awt.Font;
-import javax.swing.JTextPane;
 
 public class InformationsBailleur extends JFrame implements ActionListener {
 
@@ -479,6 +464,10 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 			case "Impositions":
 				this.dispose();
 				new Impositions().setVisible(true);
+				break;
+				
+			case "Annuler":
+				this.dispose();
 				break;
        
 			default:
