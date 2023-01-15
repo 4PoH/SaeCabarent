@@ -170,55 +170,55 @@ public class NouvelleTaxeFonciere extends JFrame implements ActionListener {
 		textFieldAnneeFacture.setBounds(179, 127, 68, 20);
 		contentPane.add(textFieldAnneeFacture);
 		
-		JLabel lblLabelAnneeFacture = new JLabel("Année de la facture  :");
-		lblLabelAnneeFacture.setBounds(37, 126, 132, 14);
-		contentPane.add(lblLabelAnneeFacture);
+		JLabel LabelAnneeFacture = new JLabel("Année de la facture  :");
+		LabelAnneeFacture.setBounds(37, 126, 132, 14);
+		contentPane.add(LabelAnneeFacture);
 		
-		JLabel lblLabelMontantPartieFixe = new JLabel("Montant ordure ménagère :");
-		lblLabelMontantPartieFixe.setBounds(35, 158, 144, 14);
-		contentPane.add(lblLabelMontantPartieFixe);
+		JLabel LabelMontantPartieFixe = new JLabel("Montant ordure ménagère :");
+		LabelMontantPartieFixe.setBounds(35, 158, 144, 14);
+		contentPane.add(LabelMontantPartieFixe);
 		
 		textFieldMontantPartieFixe = new JTextField();
 		textFieldMontantPartieFixe.setColumns(10);
 		textFieldMontantPartieFixe.setBounds(177, 159, 132, 20);
 		contentPane.add(textFieldMontantPartieFixe);
 		
-		JLabel lblLabelMontantTotal = new JLabel("Montant  total :");
-		lblLabelMontantTotal.setBounds(35, 189, 132, 14);
-		contentPane.add(lblLabelMontantTotal);
+		JLabel LabelMontantTotal = new JLabel("Montant  total :");
+		LabelMontantTotal.setBounds(35, 189, 132, 14);
+		contentPane.add(LabelMontantTotal);
 		
 		textFieldMontantTotal = new JTextField();
 		textFieldMontantTotal.setColumns(10);
 		textFieldMontantTotal.setBounds(177, 190, 132, 20);
 		contentPane.add(textFieldMontantTotal);
 		
-		JButton btnAjouter = new JButton("Ajouter");
-		btnAjouter.setBounds(307, 384, 132, 23);
-		btnAjouter.addActionListener(this);
-		contentPane.add(btnAjouter);
+		JButton ButtonAjouter = new JButton("Ajouter");
+		ButtonAjouter.setBounds(307, 384, 132, 23);
+		ButtonAjouter.addActionListener(this);
+		contentPane.add(ButtonAjouter);
 		
-		JButton btnAnnuler = new JButton("Annuler");
-		btnAnnuler.setBounds(49, 384, 132, 23);
-		btnAnnuler.addActionListener(this);
-		contentPane.add(btnAnnuler);
+		JButton ButtonAnnuler = new JButton("Annuler");
+		ButtonAnnuler.setBounds(49, 384, 132, 23);
+		ButtonAnnuler.addActionListener(this);
+		contentPane.add(ButtonAnnuler);
 		
-		JLabel lblTaxeFonciere = new JLabel("Nouvelle taxe foncière");
-		lblTaxeFonciere.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblTaxeFonciere.setBounds(37, 0, 260, 41);
-		contentPane.add(lblTaxeFonciere);
+		JLabel LabelTaxeFonciere = new JLabel("Nouvelle taxe foncière");
+		LabelTaxeFonciere.setFont(new Font("Tahoma", Font.BOLD, 20));
+		LabelTaxeFonciere.setBounds(37, 0, 260, 41);
+		contentPane.add(LabelTaxeFonciere);
 		
 		textFieldLienPDF = new JTextField();
 		textFieldLienPDF.setColumns(10);
 		textFieldLienPDF.setBounds(177, 222, 235, 20);
 		contentPane.add(textFieldLienPDF);
 		
-		JLabel lblLabelLienPDF = new JLabel("Lien pdf  :");
-		lblLabelLienPDF.setBounds(35, 221, 132, 14);
-		contentPane.add(lblLabelLienPDF);
+		JLabel LabelLienPDF = new JLabel("Lien pdf  :");
+		LabelLienPDF.setBounds(35, 221, 132, 14);
+		contentPane.add(LabelLienPDF);
 		
-		JLabel lblLabelReferenceAvis = new JLabel("*Référence avis :");
-		lblLabelReferenceAvis.setBounds(37, 96, 132, 14);
-		contentPane.add(lblLabelReferenceAvis);
+		JLabel LabelReferenceAvis = new JLabel("*Référence avis :");
+		LabelReferenceAvis.setBounds(37, 96, 132, 14);
+		contentPane.add(LabelReferenceAvis);
 		
 		textFieldReferenceAvis = new JTextField();
 		textFieldReferenceAvis.setColumns(10);

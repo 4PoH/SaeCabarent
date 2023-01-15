@@ -413,7 +413,7 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 				new TaxeFonciere().setVisible(true);
 				break;
 			
-			case "Nouvelles charges supplémentaires":
+			case "Nouvelle charges supplémentaires":
 				this.dispose();
 				new NouvelleTaxeFonciere().setVisible(true);
 				break;

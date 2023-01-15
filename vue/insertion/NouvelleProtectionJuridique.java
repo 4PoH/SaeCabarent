@@ -175,63 +175,63 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 		textFieldPrime.setBounds(165, 157, 68, 20);
 		contentPane.add(textFieldPrime);
 		
-		JLabel lblLabelNumeroContrat = new JLabel("* Numéro de contrat :");
-		lblLabelNumeroContrat.setBounds(37, 126, 132, 14);
-		contentPane.add(lblLabelNumeroContrat);
+		JLabel LabelNumeroContrat = new JLabel("* Numéro de contrat :");
+		LabelNumeroContrat.setBounds(37, 126, 132, 14);
+		contentPane.add(LabelNumeroContrat);
 		
-		JLabel lblLabelPrime = new JLabel("Prime :");
-		lblLabelPrime.setBounds(37, 157, 132, 14);
-		contentPane.add(lblLabelPrime);
+		JLabel LabelPrime = new JLabel("Prime :");
+		LabelPrime.setBounds(37, 157, 132, 14);
+		contentPane.add(LabelPrime);
 		
 		textFieldPrimeJurisprudence = new JTextField();
 		textFieldPrimeJurisprudence.setColumns(10);
 		textFieldPrimeJurisprudence.setBounds(165, 184, 68, 20);
 		contentPane.add(textFieldPrimeJurisprudence);
 		
-		JLabel lblLabelPrimeJurisprudence = new JLabel("Prime de jurisprudence :");
-		lblLabelPrimeJurisprudence.setBounds(37, 184, 132, 14);
-		contentPane.add(lblLabelPrimeJurisprudence);
+		JLabel LabelPrimeJurisprudence = new JLabel("Prime de jurisprudence :");
+		LabelPrimeJurisprudence.setBounds(37, 184, 132, 14);
+		contentPane.add(LabelPrimeJurisprudence);
 		
-		JButton btnAjouter = new JButton("Ajouter");
-		btnAjouter.setBounds(307, 384, 132, 23);
-		btnAjouter.addActionListener(this);
-		contentPane.add(btnAjouter);
+		JButton ButtonAjouter = new JButton("Ajouter");
+		ButtonAjouter.setBounds(307, 384, 132, 23);
+		ButtonAjouter.addActionListener(this);
+		contentPane.add(ButtonAjouter);
 		
-		JButton btnAnnuler = new JButton("Annuler");
-		btnAnnuler.setBounds(49, 384, 132, 23);
-		btnAnnuler.addActionListener(this);
-		contentPane.add(btnAnnuler);
+		JButton ButtonAnnuler = new JButton("Annuler");
+		ButtonAnnuler.setBounds(49, 384, 132, 23);
+		ButtonAnnuler.addActionListener(this);
+		contentPane.add(ButtonAnnuler);
 		
-		JLabel lblProtectionJuridique = new JLabel("Nouvelle protection juridique");
-		lblProtectionJuridique.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblProtectionJuridique.setBounds(37, 0, 363, 41);
-		contentPane.add(lblProtectionJuridique);
+		JLabel LabelProtectionJuridique = new JLabel("Nouvelle protection juridique");
+		LabelProtectionJuridique.setFont(new Font("Tahoma", Font.BOLD, 20));
+		LabelProtectionJuridique.setBounds(37, 0, 363, 41);
+		contentPane.add(LabelProtectionJuridique);
 		
 		textFieldLienPDF = new JTextField();
 		textFieldLienPDF.setColumns(10);
 		textFieldLienPDF.setBounds(165, 245, 235, 20);
 		contentPane.add(textFieldLienPDF);
 		
-		JLabel lblLabelLienPDF = new JLabel("Lien pdf  :");
-		lblLabelLienPDF.setBounds(37, 245, 132, 14);
-		contentPane.add(lblLabelLienPDF);
+		JLabel LabelLienPDF = new JLabel("Lien pdf  :");
+		LabelLienPDF.setBounds(37, 245, 132, 14);
+		contentPane.add(LabelLienPDF);
 		
-		JLabel lblLabelEntreprise = new JLabel("* Entreprise :");
-		lblLabelEntreprise.setBounds(37, 96, 132, 14);
-		contentPane.add(lblLabelEntreprise);
+		JLabel LabelEntreprise = new JLabel("* Entreprise :");
+		LabelEntreprise.setBounds(37, 96, 132, 14);
+		contentPane.add(LabelEntreprise);
 		
 		JComboBox comboBoxEntreprise = new JComboBox();
 		comboBoxEntreprise.setBounds(165, 92, 132, 22);
 		contentPane.add(comboBoxEntreprise);
 		
-		JButton btnNouvelleEntreprise = new JButton("Nouvelle entreprise");
-		btnNouvelleEntreprise.setBounds(307, 92, 132, 23);
-		btnNouvelleEntreprise.addActionListener(this);
-		contentPane.add(btnNouvelleEntreprise);
+		JButton ButtonNouvelleEntreprise = new JButton("Nouvelle entreprise");
+		ButtonNouvelleEntreprise.setBounds(307, 92, 132, 23);
+		ButtonNouvelleEntreprise.addActionListener(this);
+		contentPane.add(ButtonNouvelleEntreprise);
 		
-		JLabel lblLabelDateObtention = new JLabel("Date d'obtention :");
-		lblLabelDateObtention.setBounds(37, 215, 132, 14);
-		contentPane.add(lblLabelDateObtention);
+		JLabel LabelDateObtention = new JLabel("Date d'obtention :");
+		LabelDateObtention.setBounds(37, 215, 132, 14);
+		contentPane.add(LabelDateObtention);
 		
 		textFieldDate = new JTextField();
 		textFieldDate.setColumns(10);
