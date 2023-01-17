@@ -7,7 +7,6 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -20,7 +19,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -31,17 +29,16 @@ import vue.InformationsBailleur;
 import vue.Quittances;
 import vue.insertion.NouveauEntretien;
 import vue.insertion.NouveauTravaux;
-import vue.insertion.NouvelleChargeSupp;
 import vue.insertion.NouvelleFactureEau;
 import vue.insertion.NouvelleFactureElectricite;
 import vue.insertion.NouvelleLocation;
 import vue.insertion.NouvelleProtectionJuridique;
 import vue.insertion.NouvelleTaxeFonciere;
 
-public class FacturesElectriciteAnciennes extends JFrame implements ActionListener {
+public class ChargesSupplementaires extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTable tableAncienneFactElec;
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -50,7 +47,7 @@ public class FacturesElectriciteAnciennes extends JFrame implements ActionListen
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FacturesElectriciteAnciennes frame = new FacturesElectriciteAnciennes();
+					ChargesSupplementaires frame = new ChargesSupplementaires();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -63,24 +60,17 @@ public class FacturesElectriciteAnciennes extends JFrame implements ActionListen
 	 * Create the frame.
 	 */
 	
-	private ResultSet RequeteTableauAncienneFactElec() throws SQLException {
+	private ResultSet RequeteDiag() throws SQLException {
 		ResultSet retourRequete = null;
 		Requete requete = new Requetes.Requete();
-		String texteSQL = "select bati.adresse, bati.codepostal, factureelectrique.numfact, concerneelectrique.datefact as datefacturation, factureelectrique.total, factureelectrique.pdf\r\n"
-				+ "from factureelectrique, concerneelectrique, bati\r\n"
-				+ "where bati.adresse = concerneelectrique.adresse\r\n"
-				+ "and bati.codepostal = concerneelectrique.codepostal\r\n"
-				+ "and concerneelectrique.siren = factureelectrique.siren\r\n"
-				+ "and concerneelectrique.numfact = factureelectrique.numfact\r\n"
-				+ "and concerneelectrique.datefact is not null\r\n"
-				+ "order by concerneelectrique.datefact desc";
+		String texteSQL = "select * from diagnostic, lieuxdelocations where lieuxdelocations.idlogement = diagnostic.idlogement";
 		retourRequete = requete.requeteSelection(texteSQL);
 		return retourRequete;
 	}
 	
-	public FacturesElectriciteAnciennes() {
+	public ChargesSupplementaires() {
 		setBackground(new Color(240, 240, 240));
-		setTitle("Anciennes factures d'électricité");
+		setTitle("Consultation diagnostic");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 960, 480);
 		
@@ -259,50 +249,57 @@ public class FacturesElectriciteAnciennes extends JFrame implements ActionListen
 		scrollPane.setBounds(22, 49, 914, 278);
 		contentPane.add(scrollPane);
 		
-		final String[] columns = {"Bati", "num fact", "date de facturation", "total", "pdf"};
-		scrollPane.setViewportView(tableAncienneFactElec);
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+			},
+			new String[] {"Location", "Reference", "Nom", "Date d'obtention", "Date fin de validite", "Numero rapport", "Pdf"}
+		));
+		scrollPane.setViewportView(table);
 		
-		final DefaultTableModel model = new DefaultTableModel(columns, 0);
-		tableAncienneFactElec = new JTable(model);
-		tableAncienneFactElec.setRowSelectionAllowed(false);
-		tableAncienneFactElec.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableAncienneFactElec.setSurrendersFocusOnKeystroke(true);
-		
-		try {
-			ResultSet rsEnsFactElecPaye = RequeteTableauAncienneFactElec();
-			while ( rsEnsFactElecPaye.next()) {
-				String libellebati = rsEnsFactElecPaye.getString(1);
-				libellebati += " ";
-				libellebati += rsEnsFactElecPaye.getString(2);
-				String numfact = rsEnsFactElecPaye.getString(3);
-				Date resDateFactElec = rsEnsFactElecPaye.getDate(4);
-				String dateT = String.valueOf(resDateFactElec);
-				int restotal = rsEnsFactElecPaye.getInt(5);
-				String total = String.valueOf(restotal);
-				//a modifier pour faire en sorte que ce soit un bouton qui renvoie vers le pdf du fichier
-				String pdf = rsEnsFactElecPaye.getString(6);
-				model.addRow(new String[]{libellebati, numfact, dateT,total, pdf});
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-
-		scrollPane.setViewportView(tableAncienneFactElec);
-		
-		JLabel TitreFactureEauAncienne = new JLabel("Anciennes factures d'électricité");
-		TitreFactureEauAncienne.setFont(new Font("Tahoma", Font.BOLD, 20));
-		TitreFactureEauAncienne.setBounds(10, 10, 401, 29);
-		contentPane.add(TitreFactureEauAncienne);
+		JLabel TitreDiagnostic = new JLabel("Diagnostics");
+		TitreDiagnostic.setFont(new Font("Tahoma", Font.BOLD, 20));
+		TitreDiagnostic.setBounds(10, 10, 189, 29);
+		contentPane.add(TitreDiagnostic);
 		
 		JButton ButtonCharger = new JButton("Charger");
 		ButtonCharger.addActionListener(this);
-		ButtonCharger.setBounds(123, 376, 85, 21);
+		ButtonCharger.setBounds(35, 376, 85, 21);
 		contentPane.add(ButtonCharger);
+		
+		JButton ButtonInserer = new JButton("Inserer");
+		ButtonInserer.addActionListener(this);
+		ButtonInserer.setBounds(230, 376, 85, 21);
+		contentPane.add(ButtonInserer);
+		
+		JButton ButtonMiseJour = new JButton("Mise à jour");
+		ButtonMiseJour.addActionListener(this);
+		ButtonMiseJour.setBounds(414, 376, 85, 21);
+		contentPane.add(ButtonMiseJour);
+		
+		JButton ButtonSupprimer = new JButton("Supprimer");
+		ButtonSupprimer.addActionListener(this);
+		ButtonSupprimer.setBounds(611, 376, 85, 21);
+		contentPane.add(ButtonSupprimer);
 		
 		JButton ButtonAnnuler = new JButton("Annuler");
 		ButtonAnnuler.addActionListener(this);
-		ButtonAnnuler.setBounds(771, 376, 85, 21);
+		ButtonAnnuler.setBounds(816, 376, 85, 21);
 		contentPane.add(ButtonAnnuler);
 	}
 	
@@ -337,16 +334,6 @@ public class FacturesElectriciteAnciennes extends JFrame implements ActionListen
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
-			
-			case "Anciens entretiens":
-				this.dispose();
-				new EntretiensAnciens().setVisible(true);
-				break;
-				
-			case "Entretiens en cours":
-				this.dispose();
-				new EntretiensEnCours().setVisible(true);
-				break;
 				
 			case "Nouveaux entretiens":
 				this.dispose();
@@ -355,12 +342,12 @@ public class FacturesElectriciteAnciennes extends JFrame implements ActionListen
 				
 			case "Anciennes factures d'eau":
 				this.dispose();
-				new FacturesEauAnciennes().setVisible(true);
+				new FacturesEauPayees().setVisible(true);
 				break;
 				
 			case "Factures d'eau en cours":
 				this.dispose();
-				new FacturesEauEnCours().setVisible(true);
+				new FacturesEauAPayees().setVisible(true);
 				break;
 				
 			case "Nouvelles factures d'eau":
@@ -370,12 +357,12 @@ public class FacturesElectriciteAnciennes extends JFrame implements ActionListen
 				
 			case "Anciennes factures d'électricité":
 				this.dispose();
-				new FacturesElectriciteAnciennes().setVisible(true);
+				new FacturesElectricitePayees().setVisible(true);
 				break;
 				
 			case "Factures d'électricité en cours":
 				this.dispose();
-				new FacturesElectriciteEnCours().setVisible(true);
+				new FacturesElectriciteAPayees().setVisible(true);
 				break;
 				
 			case "Nouvelles factures d'électricité":
@@ -447,11 +434,11 @@ public class FacturesElectriciteAnciennes extends JFrame implements ActionListen
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
-
+       
 			case "Annuler":
 				this.dispose();
 				break;
-       
+				
 			default:
 				System.out.println("Choix incorrect");
 				break;

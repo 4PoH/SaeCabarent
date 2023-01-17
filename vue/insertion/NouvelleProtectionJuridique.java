@@ -5,28 +5,37 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import JDBC.CictOracleDataSource;
+import Requetes.Requete;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.EntretiensAnciens;
-import vue.consultation.EntretiensEnCours;
-import vue.consultation.FacturesEauAnciennes;
-import vue.consultation.FacturesEauEnCours;
-import vue.consultation.FacturesElectriciteAnciennes;
-import vue.consultation.FacturesElectriciteEnCours;
+import vue.consultation.FacturesEauPayees;
+import vue.consultation.FacturesEauAPayees;
+import vue.consultation.FacturesElectricitePayees;
+import vue.consultation.FacturesElectriciteAPayees;
 import vue.consultation.Impositions;
 import vue.consultation.LocatairesAnciens;
 import vue.consultation.LocatairesEnCours;
@@ -43,9 +52,13 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 	private JTextField textFieldNumFac;
 	private JTextField textFieldPrime;
 	private JTextField textFieldPrimeJurisprudence;
-	private JTextField textFieldLienPDF;
-	private JTextField textFieldDate;
-
+	private JTextField textFieldRepPDF;
+	private JTextField textFieldNomPDF;
+	private JComboBox<String> comboBoxEntreprise;
+	private String comboEntNom;
+	private NouvelleProtectionJuridique frame;
+	private JTextField textFieldDateFac;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -61,12 +74,55 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 			}
 		});
 	}
+	// SHOW COMBO * ENTERPRISE.NOM
+		private ResultSet RequeteAfficheComboEntreprise() throws SQLException {
+			ResultSet retourRequete = null;
+			Requete requete = new Requetes.Requete();
+			String texteSQL = "select SIREN, NOM from ENTREPRISE";
+			retourRequete = requete.requeteSelection(texteSQL);
+			return retourRequete;
+		}
+		
+		// GET INT SIREN FROM ENTREPRISE.NOM
+		public int RequeteGetSirenEntrepriseCombo(String nomEnt) throws SQLException  {
+			ResultSet retourRequete = null;
+			Requete requete = new Requetes.Requete();
+			try {
+				String texteSQL = ("select SIREN from ENTREPRISE where NOM = '" + nomEnt + "'");
+				retourRequete = requete.requeteSelection(texteSQL);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			retourRequete.next();
+			return retourRequete.getInt("SIREN");
+		}
+		
+		// DB INSERT x6 : INT INT FLOAT FLOAT STRING+STRING
+		private void RequeteInsertFacElec(int siren, int numeroContr, float primeProtec, float primeJuriProtec, String chemin, String pdf, String date ) throws SQLException {
+			CictOracleDataSource cict = new CictOracleDataSource();
+			String requete = "{ call insertProtectionJuridique(?,?,?,?,?,?,?) } ";
+			
+					try {
+						Connection connection = cict.getConnection();
+						CallableStatement cs = connection.prepareCall(requete);
+						cs.setInt(1, siren);
+						cs.setInt(2, numeroContr);
+						cs.setFloat(3, primeProtec);
+				        cs.setFloat(4, primeJuriProtec);
+						cs.setString(5, chemin);
+						cs.setString(6, pdf);
+						cs.setString(7, date);
+						cs.execute();
+					} catch(SQLException e) {
+						e.printStackTrace();
+					}
+		}
 
 	/**
 	 * Create the frame.
 	 */
 	public NouvelleProtectionJuridique() {
-		setTitle("Nouveaux travaux");
+		setTitle("Nouvelle protection juridique");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 480, 480);
 		
@@ -248,7 +304,7 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 		
 		textFieldPrime = new JTextField();
 		textFieldPrime.setColumns(10);
-		textFieldPrime.setBounds(165, 157, 68, 20);
+		textFieldPrime.setBounds(165, 184, 68, 20);
 		contentPane.add(textFieldPrime);
 		
 		JLabel LabelNumeroContrat = new JLabel("* Numéro de contrat :");
@@ -256,16 +312,16 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 		contentPane.add(LabelNumeroContrat);
 		
 		JLabel LabelPrime = new JLabel("Prime :");
-		LabelPrime.setBounds(37, 157, 132, 14);
+		LabelPrime.setBounds(37, 184, 132, 14);
 		contentPane.add(LabelPrime);
 		
 		textFieldPrimeJurisprudence = new JTextField();
 		textFieldPrimeJurisprudence.setColumns(10);
-		textFieldPrimeJurisprudence.setBounds(165, 184, 68, 20);
+		textFieldPrimeJurisprudence.setBounds(165, 211, 68, 20);
 		contentPane.add(textFieldPrimeJurisprudence);
 		
 		JLabel LabelPrimeJurisprudence = new JLabel("Prime de jurisprudence :");
-		LabelPrimeJurisprudence.setBounds(37, 184, 132, 14);
+		LabelPrimeJurisprudence.setBounds(37, 211, 132, 14);
 		contentPane.add(LabelPrimeJurisprudence);
 		
 		JButton ButtonAjouter = new JButton("Ajouter");
@@ -283,15 +339,6 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 		LabelProtectionJuridique.setBounds(37, 0, 363, 41);
 		contentPane.add(LabelProtectionJuridique);
 		
-		textFieldLienPDF = new JTextField();
-		textFieldLienPDF.setColumns(10);
-		textFieldLienPDF.setBounds(165, 245, 235, 20);
-		contentPane.add(textFieldLienPDF);
-		
-		JLabel LabelLienPDF = new JLabel("Lien pdf  :");
-		LabelLienPDF.setBounds(37, 245, 132, 14);
-		contentPane.add(LabelLienPDF);
-		
 		JLabel LabelEntreprise = new JLabel("* Entreprise :");
 		LabelEntreprise.setBounds(37, 96, 132, 14);
 		contentPane.add(LabelEntreprise);
@@ -304,19 +351,110 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 		ButtonNouvelleEntreprise.setBounds(307, 92, 132, 23);
 		ButtonNouvelleEntreprise.addActionListener(this);
 		contentPane.add(ButtonNouvelleEntreprise);
+		try {
+			ResultSet rsEntNom = RequeteAfficheComboEntreprise();
+			int i = 0;
+			rsEntNom.next();
+			while ( i < rsEntNom.getRow()) {
+				comboBoxEntreprise.addItem(rsEntNom.getString("NOM"));
+				rsEntNom.next();
+				}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		// GET COMBO SELECTED VALUE
+		comboBoxEntreprise.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        comboEntNom = (String) jcmbType.getSelectedItem();
+		      }
+		    });
 		
-		JLabel LabelDateObtention = new JLabel("Date d'obtention :");
-		LabelDateObtention.setBounds(37, 215, 132, 14);
-		contentPane.add(LabelDateObtention);
+		JLabel LabelPDF = new JLabel("* Fichier :");
+		LabelPDF.setBounds(37, 243, 132, 14);
+		contentPane.add(LabelPDF);
 		
-		textFieldDate = new JTextField();
-		textFieldDate.setColumns(10);
-		textFieldDate.setBounds(165, 215, 68, 20);
-		contentPane.add(textFieldDate);
+		JButton ButtonPDF = new JButton("Choix fichier...");
+		ButtonPDF.setBounds(165, 239, 132, 23);
+		ButtonPDF.addActionListener(this);
+		contentPane.add(ButtonPDF);
+		
+		textFieldRepPDF = new JTextField();
+		textFieldRepPDF.setEditable(false);
+		textFieldRepPDF.setColumns(10);
+		textFieldRepPDF.setBounds(165, 269, 274, 20);
+		contentPane.add(textFieldRepPDF);
+		
+		JLabel LabelCheminPDF = new JLabel("Chemin d'accès  :");
+		LabelCheminPDF.setBounds(49, 273, 119, 14);
+		contentPane.add(LabelCheminPDF);
+		
+		JLabel LabelNomPDF = new JLabel("Nom fichier :");
+		LabelNomPDF.setBounds(49, 305, 119, 14);
+		contentPane.add(LabelNomPDF);
+		
+		textFieldNomPDF = new JTextField();
+		textFieldNomPDF.setEditable(false);
+		textFieldNomPDF.setColumns(10);
+		textFieldNomPDF.setBounds(165, 302, 132, 20);
+		contentPane.add(textFieldNomPDF);
+		
+		JLabel LabelDateFacture = new JLabel("* Date de la facture  :");
+		LabelDateFacture.setBounds(37, 159, 132, 14);
+		contentPane.add(LabelDateFacture);
+		
+		textFieldDateFac = new JTextField();
+		textFieldDateFac.setColumns(10);
+		textFieldDateFac.setBounds(165, 159, 68, 20);
+		contentPane.add(textFieldDateFac);
+		
+		JButton btnDateDeMaintenant = new JButton("Date");
+		btnDateDeMaintenant.setBounds(235, 157, 66, 23);
+		btnDateDeMaintenant.addActionListener(this);
+		contentPane.add(btnDateDeMaintenant);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Date":
+				DateTimeFormatter dtfJ = DateTimeFormatter.ofPattern("DD");
+				LocalDate nowDate = LocalDate.now();
+				String jours = nowDate.toString().substring(8);
+				String mois = nowDate.toString().substring(5,7);
+				String annee = nowDate.toString().substring(0,4);
+				String dateCourrante = ( jours + "/" + mois + "/" + annee );
+				this.textFieldDateFac.setText(""+dateCourrante);
+				break;
+			case "Ajouter":						
+				int numeroContr =Integer.parseInt(textFieldNumFac.getText());
+				float primeProtec = Float.parseFloat(textFieldPrime.getText());
+				float primeJuriProtec = Float.parseFloat(textFieldPrimeJurisprudence.getText());						
+				String chemin = textFieldRepPDF.getText() ;
+				String pdf = textFieldNomPDF.getText() ;
+				String date =textFieldDateFac.getText();
+				try {
+					int siren = RequeteGetSirenEntrepriseCombo(comboEntNom);					
+					RequeteInsertFacElec(siren, numeroContr, primeProtec, primeJuriProtec, chemin, pdf, date );
+					JOptionPane.showMessageDialog(frame, "Protection juridique " + numeroContr + " insérée.");
+				} catch (SQLException e3) {
+					e3.printStackTrace();
+				}				
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
+			case "Choix fichier...":
+				JFileChooser pdfChooser = new JFileChooser();
+				int reponse = pdfChooser.showOpenDialog(null);
+				if (reponse == JFileChooser.APPROVE_OPTION) {
+					File file = new File(pdfChooser.getSelectedFile().getAbsolutePath());
+					textFieldNomPDF.setText(file.getName());
+					textFieldRepPDF.setText(file.getAbsolutePath().substring(0, file.getAbsolutePath().length() - textFieldNomPDF.getText().length() - 1));
+				}
+				break;    
+			case "Nouvelle entreprise":
+				new NouvelleEntreprise().setVisible(true);
+				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -346,16 +484,6 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
-			
-			case "Anciens entretiens":
-				this.dispose();
-				new EntretiensAnciens().setVisible(true);
-				break;
-				
-			case "Entretiens en cours":
-				this.dispose();
-				new EntretiensEnCours().setVisible(true);
-				break;
 				
 			case "Nouveaux entretiens":
 				this.dispose();
@@ -364,12 +492,12 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 				
 			case "Anciennes factures d'eau":
 				this.dispose();
-				new FacturesEauAnciennes().setVisible(true);
+				new FacturesEauPayees().setVisible(true);
 				break;
 				
 			case "Factures d'eau en cours":
 				this.dispose();
-				new FacturesEauEnCours().setVisible(true);
+				new FacturesEauAPayees().setVisible(true);
 				break;
 				
 			case "Nouvelles factures d'eau":
@@ -379,12 +507,12 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 				
 			case "Anciennes factures d'électricité":
 				this.dispose();
-				new FacturesElectriciteAnciennes().setVisible(true);
+				new FacturesElectricitePayees().setVisible(true);
 				break;
 				
 			case "Factures d'électricité en cours":
 				this.dispose();
-				new FacturesElectriciteEnCours().setVisible(true);
+				new FacturesElectriciteAPayees().setVisible(true);
 				break;
 				
 			case "Nouvelles factures d'électricité":

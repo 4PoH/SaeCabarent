@@ -35,9 +35,9 @@ public class CreerImpot2042 {
 
 			XWPFParagraph paragraphe = document.createParagraph();
 			XWPFRun text = paragraphe.createRun();
-			text.addTab();
-			text.addTab();
-			text.addTab();
+			text.setBold(true);
+			text.setFontFamily("Calibri");
+			text.setFontSize(22);
 			text.addTab();
 			text.addTab();
 			text.setText("Declaration des revenus CERFA 2042 : Regime Micro-foncier");
@@ -48,8 +48,8 @@ public class CreerImpot2042 {
 			text2.addCarriageReturn();
 			text2.setText("Nom : ");
 			text2.setText(rs.getString("NOM"));
-			text.addTab();
-			text.addTab();
+			text2.addTab();
+			text2.addTab();
 			text2.setText("Prenom : ");
 			text2.setText(rs.getString("PRENOM"));
 			
@@ -73,8 +73,8 @@ public class CreerImpot2042 {
 			
 			text2.addCarriageReturn();
 			text2.addCarriageReturn();
-			text.addTab();
-			text.addTab();
+			text2.addTab();
+			text2.addTab();
 			text2.setText("REVENU FONCIER Page 4 :");
 			CallableStatement cstm = connex.prepareCall("{? = CALL GainAnnee(?)}");
 			cstm.registerOutParameter(1,Types.FLOAT);
@@ -84,7 +84,7 @@ public class CreerImpot2042 {
 			text2.addCarriageReturn();
 			text2.addCarriageReturn();
 			text2.setText("Recette Brutes sans abattement : ");
-			text.addTab();
+			text2.addTab();
 			text2.setText(""+total);
 			
 			cstm.close();

@@ -29,14 +29,13 @@ import vue.InformationsBailleur;
 import vue.Quittances;
 import vue.insertion.NouveauEntretien;
 import vue.insertion.NouveauTravaux;
-import vue.insertion.NouvelleChargeSupp;
 import vue.insertion.NouvelleFactureEau;
 import vue.insertion.NouvelleFactureElectricite;
 import vue.insertion.NouvelleLocation;
 import vue.insertion.NouvelleProtectionJuridique;
 import vue.insertion.NouvelleTaxeFonciere;
 
-public class FacturesEauAnciennes extends JFrame implements ActionListener {
+public class FacturesEauAPayees extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JTable table;
@@ -48,7 +47,7 @@ public class FacturesEauAnciennes extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FacturesEauAnciennes frame = new FacturesEauAnciennes();
+					FacturesEauAPayees frame = new FacturesEauAPayees();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -61,10 +60,10 @@ public class FacturesEauAnciennes extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	
-	private ResultSet RequeteTableauEauAncienne() throws SQLException {
+	private ResultSet RequeteTableauEauCourante() throws SQLException {
 		ResultSet retourRequete = null;
 		Requete requete = new Requetes.Requete();
-		String texteSQL = "select bati.adresse, bati.codepostal, factureeau.siren, entreprise.nom ,factureeau.numfact, factureeau.prixm3, rattacher.datefact datefacturation,\r\n"
+		String texteSQL = "select bati.adresse, bati.codepostal, factureeau.siren, entreprise.nom ,factureeau.numfact, factureeau.prixm3, factureeau.datefact datefacture,\r\n"
 				+ "    factureeau.partiefixe, factureeau.total, factureeau.pdf\r\n"
 				+ "from factureeau, bati, rattacher, entreprise\r\n"
 				+ "where factureeau.siren = rattacher.siren\r\n"
@@ -72,14 +71,14 @@ public class FacturesEauAnciennes extends JFrame implements ActionListener {
 				+ "and rattacher.adresse = bati.adresse\r\n"
 				+ "and rattacher.codepostal = bati.codepostal\r\n"
 				+ "and entreprise.siren = factureeau.siren\r\n"
-				+ "and rattacher.datefact is not null order by datefacturation desc";
+				+ "and rattacher.datefact is null order by datefacture desc";
 		retourRequete = requete.requeteSelection(texteSQL);
 		return retourRequete;
 	}
 	
-	public FacturesEauAnciennes() {
+	public FacturesEauAPayees() {
 		setBackground(new Color(240, 240, 240));
-		setTitle("Factures d'eau payées");
+		setTitle("Factures d'eau à payer");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 960, 480);
 		
@@ -259,41 +258,56 @@ public class FacturesEauAnciennes extends JFrame implements ActionListener {
 		contentPane.add(scrollPane);
 		
 		// Header de JTable 
-	    final String[] columns = {"Bâti", "Entreprise", "Numéro de facture", "Prix au m3", "Date de paiement", "Partie fixe", "Total", "Lien PDF"};
+	    final String[] columns = {"Bâti", "Entreprise", "Numéro de facture", "Prix au m3", "Date de facture", "Partie fixe", "Total", "Lien PDF"};
 		// Créer le modèle de table
 	    final DefaultTableModel model = new DefaultTableModel(columns, 0);
-		JTable tableFactureEau = new JTable(model);
+		JTable tableFactureEauCourante = new JTable(model);
 		
 		try {
-			ResultSet rsEauAncienne = RequeteTableauEauAncienne();
-			while (rsEauAncienne.next()) {
-				String bati = rsEauAncienne.getString("ADRESSE") + ", " + rsEauAncienne.getString("CODEPOSTAL");
-				String entreprise = rsEauAncienne.getString("NOM");
-				String numfact = rsEauAncienne.getString("NUMFACT");
-				String datePaiement = String.valueOf(rsEauAncienne.getDate("DATEFACTURATION"));
-				String prixm3 =  String.valueOf(rsEauAncienne.getFloat("PRIXM3"));
-				String partieFixe = String.valueOf(rsEauAncienne.getFloat("PARTIEFIXE"));
-				String total = String.valueOf(rsEauAncienne.getFloat("TOTAL"));
-				String pdf = rsEauAncienne.getString("PDF");
-				model.addRow(new String[]{bati, entreprise, numfact, prixm3, datePaiement, partieFixe, total, pdf});
+			ResultSet rsEauCourante = RequeteTableauEauCourante();
+			while (rsEauCourante.next()) {
+				String bati = rsEauCourante.getString("ADRESSE") + ", " + rsEauCourante.getString("CODEPOSTAL");
+				String entreprise = rsEauCourante.getString("NOM");
+				String numfact = rsEauCourante.getString("NUMFACT");
+				String datefact = String.valueOf(rsEauCourante.getDate("DATEFACTURE"));
+				String prixm3 =  String.valueOf(rsEauCourante.getFloat("PRIXM3"));
+				String partieFixe = String.valueOf(rsEauCourante.getFloat("PARTIEFIXE"));
+				String total = String.valueOf(rsEauCourante.getFloat("TOTAL"));
+				String pdf = rsEauCourante.getString("PDF");
+				model.addRow(new String[]{bati, entreprise, numfact, prixm3, datefact, partieFixe, total, pdf});
 			}
 		} catch (SQLException e) { e.printStackTrace();}
 			
-		scrollPane.setViewportView(tableFactureEau);
+		scrollPane.setViewportView(tableFactureEauCourante);
 		
-		JLabel TitreFacturesEauAnciennes = new JLabel("Factures d'eau payées");
-		TitreFacturesEauAnciennes.setFont(new Font("Tahoma", Font.BOLD, 20));
-		TitreFacturesEauAnciennes.setBounds(10, 10, 515, 29);
-		contentPane.add(TitreFacturesEauAnciennes);
+		JLabel TitreFactureEauEnCours = new JLabel("Factures d'eau à payer");
+		TitreFactureEauEnCours.setFont(new Font("Tahoma", Font.BOLD, 20));
+		TitreFactureEauEnCours.setBounds(10, 10, 241, 29);
+		contentPane.add(TitreFactureEauEnCours);
 		
 		JButton ButtonCharger = new JButton("Charger");
 		ButtonCharger.addActionListener(this);
-		ButtonCharger.setBounds(123, 376, 85, 21);
+		ButtonCharger.setBounds(35, 376, 85, 21);
 		contentPane.add(ButtonCharger);
+		
+		JButton ButtonInserer = new JButton("Insérer");
+		ButtonInserer.addActionListener(this);
+		ButtonInserer.setBounds(230, 376, 85, 21);
+		contentPane.add(ButtonInserer);
+		
+		JButton ButtonMiseJour = new JButton("Mise à jour");
+		ButtonMiseJour.addActionListener(this);
+		ButtonMiseJour.setBounds(414, 376, 85, 21);
+		contentPane.add(ButtonMiseJour);
+		
+		JButton ButtonSupprimer = new JButton("Supprimer");
+		ButtonSupprimer.addActionListener(this);
+		ButtonSupprimer.setBounds(611, 376, 85, 21);
+		contentPane.add(ButtonSupprimer);
 		
 		JButton ButtonAnnuler = new JButton("Annuler");
 		ButtonAnnuler.addActionListener(this);
-		ButtonAnnuler.setBounds(771, 376, 85, 21);
+		ButtonAnnuler.setBounds(816, 376, 85, 21);
 		contentPane.add(ButtonAnnuler);
 	}
 	
@@ -328,7 +342,7 @@ public class FacturesEauAnciennes extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
-				 	
+				
 			case "Nouveaux entretiens":
 				this.dispose();
 				new NouveauEntretien().setVisible(true);
@@ -336,12 +350,12 @@ public class FacturesEauAnciennes extends JFrame implements ActionListener {
 				
 			case "Anciennes factures d'eau":
 				this.dispose();
-				new FacturesEauAnciennes().setVisible(true);
+				new FacturesEauPayees().setVisible(true);
 				break;
 				
 			case "Factures d'eau en cours":
 				this.dispose();
-				new FacturesEauEnCours().setVisible(true);
+				new FacturesEauAPayees().setVisible(true);
 				break;
 				
 			case "Nouvelles factures d'eau":
@@ -351,12 +365,12 @@ public class FacturesEauAnciennes extends JFrame implements ActionListener {
 				
 			case "Anciennes factures d'électricité":
 				this.dispose();
-				new FacturesElectriciteAnciennes().setVisible(true);
+				new FacturesElectricitePayees().setVisible(true);
 				break;
 				
 			case "Factures d'électricité en cours":
 				this.dispose();
-				new FacturesElectriciteEnCours().setVisible(true);
+				new FacturesElectriciteAPayees().setVisible(true);
 				break;
 				
 			case "Nouvelles factures d'électricité":
@@ -428,11 +442,11 @@ public class FacturesEauAnciennes extends JFrame implements ActionListener {
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
-			
+
 			case "Annuler":
 				this.dispose();
 				break;
-			
+       
 			default:
 				System.out.println("Choix incorrect");
 				break;

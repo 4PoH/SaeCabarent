@@ -29,10 +29,10 @@ import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.FacturesEauAnciennes;
-import vue.consultation.FacturesEauEnCours;
-import vue.consultation.FacturesElectriciteAnciennes;
-import vue.consultation.FacturesElectriciteEnCours;
+import vue.consultation.FacturesEauPayees;
+import vue.consultation.FacturesEauAPayees;
+import vue.consultation.FacturesElectricitePayees;
+import vue.consultation.FacturesElectriciteAPayees;
 import vue.consultation.Impositions;
 import vue.consultation.LocatairesAnciens;
 import vue.consultation.LocatairesEnCours;
@@ -524,12 +524,12 @@ public class NouveauLogement extends JFrame implements ActionListener {
 				
 			case "Anciennes factures d'eau":
 				this.dispose();
-				new FacturesEauAnciennes().setVisible(true);
+				new FacturesEauPayees().setVisible(true);
 				break;
 				
 			case "Factures d'eau en cours":
 				this.dispose();
-				new FacturesEauEnCours().setVisible(true);
+				new FacturesEauAPayees().setVisible(true);
 				break;
 				
 			case "Nouvelles factures d'eau":
@@ -539,12 +539,12 @@ public class NouveauLogement extends JFrame implements ActionListener {
 				
 			case "Anciennes factures d'électricité":
 				this.dispose();
-				new FacturesElectriciteAnciennes().setVisible(true);
+				new FacturesElectricitePayees().setVisible(true);
 				break;
 				
 			case "Factures d'électricité en cours":
 				this.dispose();
-				new FacturesElectriciteEnCours().setVisible(true);
+				new FacturesElectriciteAPayees().setVisible(true);
 				break;
 				
 			case "Nouvelles factures d'électricité":

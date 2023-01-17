@@ -1,32 +1,37 @@
-package vue;
+package vue.insertion;
 
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
 
+import JDBC.CictOracleDataSource;
 import Requetes.Requete;
-import vue.consultation.EntretiensAnciens;
-import vue.consultation.EntretiensEnCours;
-import vue.consultation.FacturesEauPayees;
-import vue.consultation.FacturesEauAPayees;
-import vue.consultation.FacturesElectricitePayees;
-import vue.consultation.FacturesElectriciteAPayees;
+import vue.Accueil;
+import vue.IRL;
+import vue.InformationsBailleur;
+import vue.Quittances;
 import vue.consultation.Impositions;
 import vue.consultation.LocatairesAnciens;
 import vue.consultation.LocatairesEnCours;
@@ -36,19 +41,23 @@ import vue.consultation.ProtectionJuridique;
 import vue.consultation.TaxeFonciere;
 import vue.consultation.TravauxAnciens;
 import vue.consultation.TravauxEnCours;
-import vue.insertion.NouveauEntretien;
-import vue.insertion.NouveauIRL;
-import vue.insertion.NouveauTravaux;
-import vue.insertion.NouvelleFactureEau;
-import vue.insertion.NouvelleFactureElectricite;
-import vue.insertion.NouvelleLocation;
-import vue.insertion.NouvelleProtectionJuridique;
-import vue.insertion.NouvelleTaxeFonciere;
 
-public class IRL extends JFrame implements ActionListener {
+public class NouveauDiagnostic extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTable table;
+	private JTextField textFieldNumRef;
+	private JTextField textNomDiagnostic;
+	private JTextField textFieldNumRapport;
+	private JComboBox<String> comboBoxLogements;
+	private String selectedComboIDLogement;
+	private String selectedComboLogement;
+	private JComboBox<String> comboBoxEntreprise;
+	private String comboEntNom;	
+	private JTextField textFieldDateObtention;
+	private JTextField textFieldDateFin;
+	private JTextField textFieldRepPDF;
+	private JTextField textFieldNomPDF;
+	private NouveauDiagnostic frame;
 
 	/**
 	 * Launch the application.
@@ -57,7 +66,7 @@ public class IRL extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					IRL frame = new IRL();
+					NouveauDiagnostic frame = new NouveauDiagnostic();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -66,20 +75,65 @@ public class IRL extends JFrame implements ActionListener {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
-	
-	private ResultSet RequeteAllIRL() throws SQLException {
+	// SHOW COMBO * ENTERPRISE.NOM
+		private ResultSet RequeteAfficheComboEntreprise() throws SQLException {
+			ResultSet retourRequete = null;
+			Requete requete = new Requetes.Requete();
+			String texteSQL = "select SIREN, NOM from ENTREPRISE";
+			retourRequete = requete.requeteSelection(texteSQL);
+			return retourRequete;
+		}
+		
+		// GET INT SIREN FROM ENTREPRISE.NOM
+		public int RequeteGetSirenEntrepriseCombo(String nomEnt) throws SQLException  {
+			ResultSet retourRequete = null;
+			Requete requete = new Requetes.Requete();
+			try {
+				String texteSQL = ("select SIREN from ENTREPRISE where NOM = '" + nomEnt + "'");
+				retourRequete = requete.requeteSelection(texteSQL);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			retourRequete.next();
+			return retourRequete.getInt("SIREN");
+		}
+		
+	// SHOW COMBO LOGEMENT.ADRESSE, CODEPOSTAL, FROM LOGEMENT
+	private ResultSet RequeteAfficheLogement() throws SQLException {
 		ResultSet retourRequete = null;
 		Requete requete = new Requetes.Requete();
-		String texteSQL = "select * from IRL order by annee desc";
+		String texteSQL = "select IDLOGEMENT, ADRESSE, CODEPOSTAL from LIEUXDELOCATIONS order by 2";
 		retourRequete = requete.requeteSelection(texteSQL);
 		return retourRequete;
 	}
 	
-	public IRL() {
-		setTitle("IRL");
+	// DB INSERT x8 : STRING INT STRING STRING STRING STRING BOOLEAN STRING
+	private void RequeteInsertBati(int numSiren, String numRef,String nomDiag, String dateObtention, String dateFinva, String numRapp, String direction, String nomPdf, int idLog) throws SQLException {
+		CictOracleDataSource cict = new CictOracleDataSource();
+		String requete = "{ call insertDiagnostic(?,?,?,?,?,?,?,?,?) } ";		
+				try {
+					Connection connection = cict.getConnection();
+					CallableStatement cs = connection.prepareCall(requete);
+					cs.setInt(1, numSiren);
+					cs.setString(2, numRef);
+					cs.setString(3, nomDiag);
+					cs.setString(4, dateObtention);
+			        cs.setString(5, dateFinva);
+					cs.setString(6, numRapp);					
+					cs.setString(7, direction);
+					cs.setString(8, nomPdf);
+					cs.setInt(9, idLog);
+					cs.execute();
+				} catch(SQLException e) {
+					e.printStackTrace();
+				}
+	}
+	
+	/**
+	 * Create the frame.
+	 */
+	public NouveauDiagnostic() {
+		setTitle("Nouveau diagnostic");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 480, 480);
 		
@@ -248,69 +302,213 @@ public class IRL extends JFrame implements ActionListener {
 		JMenuItem MenuItemImpositions = new JMenuItem("Impositions");
 		MenuItemImpositions.addActionListener(this);
 		MenuGenerer.add(MenuItemImpositions);
-
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(36, 66, 376, 170);
-		contentPane.add(scrollPane);
+		textFieldNumRef = new JTextField();
+		textFieldNumRef.setColumns(10);
+		textFieldNumRef.setBounds(159, 122, 68, 20);
+		contentPane.add(textFieldNumRef);
 		
-		// Header de JTable 
-	    final String[] columns = {"Année", "Semestre", "Montant"};
-		// Créer le modèle de table
-	    final DefaultTableModel model = new DefaultTableModel(columns, 0);
-		try {
-			ResultSet rsIRL = RequeteAllIRL();
-			int i = 0;
-			rsIRL.next();
-			while ( i < rsIRL.getRow()) {
-				String annee = String.valueOf(rsIRL.getInt(1));
-				String trimestre = String.valueOf(rsIRL.getInt(2));
-				String montant = String.valueOf(rsIRL.getFloat(3));		
-				model.addRow(new String[]{annee,trimestre,montant});
-				i++;
-				rsIRL.next();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		JLabel LabelNumReference = new JLabel("* Numéro de référence :");
+		LabelNumReference.setBounds(39, 125, 132, 14);
+		contentPane.add(LabelNumReference);
 		
+		JLabel LabelNomDiagnostic = new JLabel("Nom du diagnostic :");
+		LabelNomDiagnostic.setBounds(39, 153, 144, 14);
+		contentPane.add(LabelNomDiagnostic);
 		
-		table = new JTable();
-		table.setModel(model);
-		scrollPane.setViewportView(table);
+		textNomDiagnostic = new JTextField();
+		textNomDiagnostic.setColumns(10);
+		textNomDiagnostic.setBounds(159, 150, 132, 20);
+		contentPane.add(textNomDiagnostic);
+		
+		JButton ButtonAjouter = new JButton("Ajouter");
+		ButtonAjouter.setBounds(307, 384, 132, 23);
+		ButtonAjouter.addActionListener(this);
+		contentPane.add(ButtonAjouter);
 		
 		JButton ButtonAnnuler = new JButton("Annuler");
-		ButtonAnnuler.addActionListener(this);
-		ButtonAnnuler.setBounds(355, 389, 85, 21);
+		ButtonAnnuler.setBounds(49, 384, 132, 23);
 		contentPane.add(ButtonAnnuler);
 		
-		JButton ButtonConfirmer = new JButton("Supprimer");
-		ButtonConfirmer.addActionListener(this);
-		ButtonConfirmer.setBounds(244, 389, 85, 21);
-		contentPane.add(ButtonConfirmer);
+		JLabel LabelTaxeFonciere = new JLabel("Nouveau diagnostic");
+		LabelTaxeFonciere.setFont(new Font("Tahoma", Font.BOLD, 20));
+		LabelTaxeFonciere.setBounds(37, 0, 260, 41);
+		contentPane.add(LabelTaxeFonciere);
 		
-		JButton ButtonInserer = new JButton("Insérer");
-		ButtonInserer.addActionListener(this);
-		ButtonInserer.setBounds(21, 389, 85, 21);
-		contentPane.add(ButtonInserer);
+		textFieldNumRapport = new JTextField();
+		textFieldNumRapport.setColumns(10);
+		textFieldNumRapport.setBounds(159, 234, 68, 20);
+		contentPane.add(textFieldNumRapport);
 		
-		JLabel LabelIRL = new JLabel("IRL");
-		LabelIRL.setFont(new Font("Tahoma", Font.BOLD, 20));
-		LabelIRL.setBounds(10, 32, 45, 13);
-		contentPane.add(LabelIRL);
+		JLabel LabelNumeroRapport = new JLabel("Numéro de rapport :");
+		LabelNumeroRapport.setBounds(39, 237, 132, 14);
+		contentPane.add(LabelNumeroRapport);
 		
-		JButton ButtonModifier = new JButton("Modifier");
-		ButtonModifier.addActionListener(this);
-		ButtonModifier.setBounds(135, 389, 85, 21);
-		contentPane.add(ButtonModifier);
+		JLabel LabelEntreprise = new JLabel("* Entreprise :");
+		LabelEntreprise.setBounds(39, 68, 132, 14);
+		contentPane.add(LabelEntreprise);
+		
+		JComboBox comboBoxEntreprise = new JComboBox();
+		comboBoxEntreprise.setBounds(159, 64, 132, 22);
+		contentPane.add(comboBoxEntreprise);
+		try {
+			ResultSet rsEntNom = RequeteAfficheComboEntreprise();
+			int i = 0;
+			rsEntNom.next();
+			while ( i < rsEntNom.getRow()) {
+				comboBoxEntreprise.addItem(rsEntNom.getString("NOM"));
+				rsEntNom.next();
+				}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		// GET COMBO SELECTED VALUE
+		comboBoxEntreprise.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        comboEntNom = (String) jcmbType.getSelectedItem();
+		      }
+		    });
+		
+		JButton ButtonNouvelleEntreprise = new JButton("Nouvelle entreprise");
+		ButtonNouvelleEntreprise.setBounds(301, 64, 132, 23);
+		contentPane.add(ButtonNouvelleEntreprise);
+		
+		JLabel LabelLogements = new JLabel("* Logement  :");
+		LabelLogements.setBounds(41, 93, 132, 14);
+		contentPane.add(LabelLogements);
+		
+		JComboBox comboBoxLogements = new JComboBox();
+		comboBoxLogements.setFont(new Font("Tahoma", Font.PLAIN, 8));
+		comboBoxLogements.setBounds(159, 92, 132, 22);
+		contentPane.add(comboBoxLogements);
+		try {
+			ResultSet rsLogement = RequeteAfficheLogement();
+			int i = 0;
+			rsLogement.next();
+			while ( i < rsLogement.getRow()) {
+				String idLogement = rsLogement.getString("IDLOGEMENT");
+				String adresse = rsLogement.getString("ADRESSE");
+				String codePostal = rsLogement.getString("CODEPOSTAL");
+				comboBoxLogements.addItem( codePostal + " - " + adresse + " (" +idLogement+") ");
+				rsLogement.next();
+				}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 		
+		comboBoxLogements.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        selectedComboLogement = (String) jcmbType.getSelectedItem();
+		        selectedComboIDLogement = selectedComboLogement.substring(selectedComboLogement.lastIndexOf("(")+1,selectedComboLogement.lastIndexOf(")"));		        
+		      }
+		    });
+		
+		JButton ButtonNouveauLogement = new JButton("Nouveau Logement");
+		ButtonNouveauLogement.setBounds(301, 92, 132, 23);
+		contentPane.add(ButtonNouveauLogement);
+		
+		JLabel LabelDateObtention = new JLabel("* Date d'obtention :");
+		LabelDateObtention.setBounds(39, 182, 132, 14);
+		contentPane.add(LabelDateObtention);
+		
+		textFieldDateObtention = new JTextField();
+		textFieldDateObtention.setColumns(10);
+		textFieldDateObtention.setBounds(159, 179, 66, 20);
+		contentPane.add(textFieldDateObtention);
+		
+		JButton btnDateDeMaintenant = new JButton("Date");
+		btnDateDeMaintenant.setBounds(225, 178, 66, 23);
+		btnDateDeMaintenant.addActionListener(this);
+		contentPane.add(btnDateDeMaintenant);
+		
+		JLabel lblDateDeFin = new JLabel("Date de fin de validité :");
+		lblDateDeFin.setBounds(39, 207, 132, 14);
+		contentPane.add(lblDateDeFin);
+		
+		textFieldDateFin = new JTextField();
+		textFieldDateFin.setColumns(10);
+		textFieldDateFin.setBounds(159, 207, 66, 20);
+		contentPane.add(textFieldDateFin);
+		
+		JLabel LabelPDF = new JLabel("* Fichier :");
+		LabelPDF.setBounds(39, 269, 132, 14);
+		contentPane.add(LabelPDF);
+		
+		JButton ButtonPDF = new JButton("Choix fichier...");
+		ButtonPDF.setBounds(159, 265, 132, 23);
+		ButtonPDF.addActionListener(this);
+		contentPane.add(ButtonPDF);
+		
+		textFieldRepPDF = new JTextField();
+		textFieldRepPDF.setEditable(false);
+		textFieldRepPDF.setColumns(10);
+		textFieldRepPDF.setBounds(159, 295, 274, 20);
+		contentPane.add(textFieldRepPDF);
+		
+		JLabel LabelCheminPDF = new JLabel("Chemin d'accès  :");
+		LabelCheminPDF.setBounds(51, 299, 119, 14);
+		contentPane.add(LabelCheminPDF);
+		
+		JLabel LabelNomPDF = new JLabel("Nom fichier :");
+		LabelNomPDF.setBounds(51, 331, 119, 14);
+		contentPane.add(LabelNomPDF);
+		
+		textFieldNomPDF = new JTextField();
+		textFieldNomPDF.setEditable(false);
+		textFieldNomPDF.setColumns(10);
+		textFieldNomPDF.setBounds(159, 328, 132, 20);
+		contentPane.add(textFieldNomPDF);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Date":
+				DateTimeFormatter dtfJ = DateTimeFormatter.ofPattern("DD");
+				LocalDate nowDate = LocalDate.now();
+				String jours = nowDate.toString().substring(8);
+				String mois = nowDate.toString().substring(5,7);
+				String annee = nowDate.toString().substring(0,4);
+				String dateCourrante = ( jours + "/" + mois + "/" + annee );
+				this.textFieldDateObtention.setText(""+dateCourrante);
+				break;
+			case "Choix fichier...":
+				JFileChooser pdfChooser = new JFileChooser();
+				int reponse = pdfChooser.showOpenDialog(null);
+				if (reponse == JFileChooser.APPROVE_OPTION) {
+					File file = new File(pdfChooser.getSelectedFile().getAbsolutePath());
+					textFieldNomPDF.setText(file.getName());
+					textFieldRepPDF.setText(file.getAbsolutePath().substring(0, file.getAbsolutePath().length() - textFieldNomPDF.getText().length() - 1));
+				}
+				break;  
+			case "Ajouter":					
+				String numRef = textFieldNumRef.getText();
+				String nomDiag = textNomDiagnostic.getText() ;
+				String dateObtention = textFieldDateObtention.getText() ; 
+				String dateFinva = textFieldDateFin.getText();
+				String numRapp = textFieldNumRapport.getText() ;
+				String direction = textFieldRepPDF.getText() ; 
+				String nomPdf = textFieldNomPDF.getText();
+				int idLog = Integer.parseInt(selectedComboIDLogement);
+				try {	
+					int numSiren = RequeteGetSirenEntrepriseCombo(comboEntNom);
+					System.out.println(numSiren + " " + numRef + " " + nomDiag + " " + dateObtention + " " + dateFinva + " " + numRapp + " " + direction + " " + nomPdf + " " + idLog);
+					RequeteInsertBati(numSiren, numRef,nomDiag, dateObtention, dateFinva, numRapp, direction, nomPdf, idLog);
+					JOptionPane.showMessageDialog(frame, "Diagnostic " + numRef + " sur le logement " + selectedComboLogement + " a été inséré.");
+				} catch (SQLException e3) {
+					e3.printStackTrace();
+				}
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
+ 
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -340,30 +538,10 @@ public class IRL extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
-			
-			case "Anciens entretiens":
-				this.dispose();
-				new EntretiensAnciens().setVisible(true);
-				break;
-				
-			case "Entretiens en cours":
-				this.dispose();
-				new EntretiensEnCours().setVisible(true);
-				break;
 				
 			case "Nouveaux entretiens":
 				this.dispose();
 				new NouveauEntretien().setVisible(true);
-				break;
-				
-			case "Anciennes factures d'eau":
-				this.dispose();
-				new FacturesEauPayees().setVisible(true);
-				break;
-				
-			case "Factures d'eau en cours":
-				this.dispose();
-				new FacturesEauAPayees().setVisible(true);
 				break;
 				
 			case "Nouvelles factures d'eau":
@@ -371,27 +549,17 @@ public class IRL extends JFrame implements ActionListener {
 				new NouvelleFactureEau().setVisible(true);
 				break;
 				
-			case "Anciennes factures d'électricité":
-				this.dispose();
-				new FacturesElectricitePayees().setVisible(true);
-				break;
-				
-			case "Factures d'électricité en cours":
-				this.dispose();
-				new FacturesElectriciteAPayees().setVisible(true);
-				break;
-				
-			case "Nouvelles factures d'électricité":
+			case "Nouvelles factures d'Ã©lectricitÃ©":
 				this.dispose();
 				new NouvelleFactureElectricite().setVisible(true);
 				break;
 				
-			case "Consultation taxes foncières":
+			case "Consultation taxes fonciÃ¨res":
 				this.dispose();
 				new TaxeFonciere().setVisible(true);
 				break;
 			
-			case "Nouvelles taxes foncières":
+			case "Nouvelles taxes fonciÃ¨res":
 				this.dispose();
 				new NouvelleTaxeFonciere().setVisible(true);
 				break;
@@ -406,12 +574,12 @@ public class IRL extends JFrame implements ActionListener {
 				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 				
-			case "Consultation charges supplémentaires":
+			case "Consultation charges supplÃ©mentaires":
 				this.dispose();
 				new TaxeFonciere().setVisible(true);
 				break;
 			
-			case "Nouvelle charges supplémentaires":
+			case "Nouvelle charges supplÃ©mentaires":
 				this.dispose();
 				new NouvelleTaxeFonciere().setVisible(true);
 				break;
@@ -449,15 +617,6 @@ public class IRL extends JFrame implements ActionListener {
 			case "Impositions":
 				this.dispose();
 				new Impositions().setVisible(true);
-				break;
-				
-			case "Annuler":
-				this.dispose();
-				break;
-				
-			case "Insérer":
-				this.dispose();
-				new NouveauIRL().setVisible(true);
 				break;
        
 			default:

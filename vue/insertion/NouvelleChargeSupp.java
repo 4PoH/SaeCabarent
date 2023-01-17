@@ -5,29 +5,34 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import JDBC.CictOracleDataSource;
+import Requetes.Requete;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
 import vue.consultation.ChargesBatiEnCours;
-import vue.consultation.EntretiensAnciens;
-import vue.consultation.EntretiensEnCours;
-import vue.consultation.FacturesEauAnciennes;
-import vue.consultation.FacturesEauEnCours;
-import vue.consultation.FacturesElectriciteAnciennes;
-import vue.consultation.FacturesElectriciteEnCours;
 import vue.consultation.Impositions;
 import vue.consultation.LocatairesAnciens;
 import vue.consultation.LocatairesEnCours;
@@ -41,12 +46,17 @@ import vue.consultation.TravauxEnCours;
 public class NouvelleChargeSupp extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField textFieldNumeroFacture;
+	private JTextField textFieldNumFac;
 	private JTextField textFieldLibelle;
-	private JTextField textFieldDateFacture;
-	private JTextField textFieldMontant;
-	private JTextField textFieldLienPDF;
+	private JTextField textFieldDateFac;
+	private JTextField textFieldMontantTotal;
+
 	private JTextField textFieldParticipation;
+	private JTextField textFieldNomPDF;
+	private JTextField textFieldRepPDF;
+	private JComboBox<String> comboBoxEntreprise;
+	private String selectedComboEntNom;
+	private NouvelleChargeSupp frame;
 
 	/**
 	 * Launch the application.
@@ -64,13 +74,59 @@ public class NouvelleChargeSupp extends JFrame implements ActionListener {
 		});
 	}
 
+
+	// SHOW COMBO * ENTERPRISE.NOM
+	private ResultSet RequeteAfficheComboEntreprise() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "select SIREN, NOM from ENTREPRISE";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	
+	// GET INT SIREN FROM ENTREPRISE.NOM
+	public int RequeteGetSirenEntrepriseCombo(String nomEnt) throws SQLException  {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		try {
+			String texteSQL = ("select SIREN from ENTREPRISE where NOM = '" + nomEnt + "'");
+			retourRequete = requete.requeteSelection(texteSQL);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		retourRequete.next();
+		return retourRequete.getInt("SIREN");
+	}
+	
+
+
+	// DB INSERT x7 : INT INT STRING FLOAT STRING STRING+STRING
+	private void RequeteInsertChargeSupp(int siren, int numfact, String lib, String datefact, float total,  String chemin, String pdf ) throws SQLException {
+		CictOracleDataSource cict = new CictOracleDataSource();
+		String requete = "{ call insertChargeSup(?,?,?,?,?,?,?) } ";
+				try {
+					Connection connection = cict.getConnection();
+					CallableStatement cs = connection.prepareCall(requete);
+					cs.setInt(1, siren);
+					cs.setInt(2, numfact);
+					cs.setString(3, lib);					
+			        cs.setString(4, datefact);
+			        cs.setFloat(5, total);
+					cs.setString(6, chemin);
+					cs.setString(7, pdf);
+					cs.execute();
+				} catch(SQLException e) {
+					e.printStackTrace();
+				}
+	}
+	
 	/**
 	 * Create the frame.
 	 */
 	public NouvelleChargeSupp() {
 		setTitle("Nouvelle charge supplémentaire");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(105, 100, 480, 480);
+		setBounds(100, 100, 480, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(5, 5, 5, 5));
@@ -242,93 +298,167 @@ public class NouvelleChargeSupp extends JFrame implements ActionListener {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		textFieldNumeroFacture = new JTextField();
-		textFieldNumeroFacture.setBounds(165, 88, 132, 20);
-		contentPane.add(textFieldNumeroFacture);
-		textFieldNumeroFacture.setColumns(10);
-		
+				
 		JLabel LabelNumeroFacture = new JLabel("* Numéro de facture :");
-		LabelNumeroFacture.setBounds(37, 88, 132, 14);
+		LabelNumeroFacture.setBounds(24, 95, 132, 14);
 		contentPane.add(LabelNumeroFacture);
 		
-		textFieldLibelle = new JTextField();
-		textFieldLibelle.setColumns(10);
-		textFieldLibelle.setBounds(165, 119, 132, 20);
-		contentPane.add(textFieldLibelle);
+		JLabel LabelDateFacture = new JLabel("* Date de la facture  :");
+		LabelDateFacture.setBounds(24, 126, 132, 14);
+		contentPane.add(LabelDateFacture);
 		
-		JLabel LabelLibelle = new JLabel("Libellé  :");
-		LabelLibelle.setBounds(37, 119, 132, 14);
-		contentPane.add(LabelLibelle);
+		JLabel LabelMontantTotal = new JLabel("* Montant  total :");
+		LabelMontantTotal.setBounds(24, 188, 132, 14);
+		contentPane.add(LabelMontantTotal);
 		
-		textFieldDateFacture = new JTextField();
-		textFieldDateFacture.setColumns(10);
-		textFieldDateFacture.setBounds(165, 181, 68, 20);
-		contentPane.add(textFieldDateFacture);
+		JLabel LabelNomPDF = new JLabel("Nom fichier :");
+		LabelNomPDF.setBounds(36, 285, 119, 14);
+		contentPane.add(LabelNomPDF);
+
 		
-		JLabel LabelDateDebut = new JLabel("Date de facture :");
-		LabelDateDebut.setBounds(37, 181, 132, 14);
-		contentPane.add(LabelDateDebut);
+		JLabel LabelCheminPDF = new JLabel("Chemin d'accès  :");
+		LabelCheminPDF.setBounds(36, 253, 119, 14);
+		contentPane.add(LabelCheminPDF);
 		
-		JLabel LabelMontant = new JLabel("Montant total :");
-		LabelMontant.setBounds(37, 212, 132, 14);
-		contentPane.add(LabelMontant);
+		JLabel LabelPDF = new JLabel("* Fichier :");
+		LabelPDF.setBounds(24, 223, 132, 14);
+		contentPane.add(LabelPDF);
 		
-		textFieldMontant = new JTextField();
-		textFieldMontant.setColumns(10);
-		textFieldMontant.setBounds(165, 212, 132, 20);
-		contentPane.add(textFieldMontant);
+		JLabel LabelNouvelEntretien = new JLabel("Nouvelle charge supplémentaire");
+		LabelNouvelEntretien.setFont(new Font("Tahoma", Font.BOLD, 20));
+		LabelNouvelEntretien.setBounds(24, 11, 350, 41);
+		contentPane.add(LabelNouvelEntretien);
 		
 		JButton ButtonAjouter = new JButton("Ajouter");
-		ButtonAjouter.setBounds(307, 384, 132, 23);
+		ButtonAjouter.setBounds(294, 384, 132, 23);
 		ButtonAjouter.addActionListener(this);
 		contentPane.add(ButtonAjouter);
 		
 		JButton ButtonAnnuler = new JButton("Annuler");
-		ButtonAnnuler.setBounds(49, 384, 132, 23);
+		ButtonAnnuler.setBounds(36, 384, 132, 23);
 		ButtonAnnuler.addActionListener(this);
 		contentPane.add(ButtonAnnuler);
 		
+		textFieldMontantTotal = new JTextField();
+		textFieldMontantTotal.setColumns(10);
+		textFieldMontantTotal.setBounds(152, 188, 132, 20);
+		contentPane.add(textFieldMontantTotal);
 		
-		JLabel LabelNouveauTravaux = new JLabel("Nouvelle charge supplémentaire");
-		LabelNouveauTravaux.setFont(new Font("Tahoma", Font.BOLD, 20));
-		LabelNouveauTravaux.setBounds(37, 0, 347, 41);
-		contentPane.add(LabelNouveauTravaux);
+		textFieldNumFac = new JTextField();
+		textFieldNumFac.setColumns(10);
+		textFieldNumFac.setBounds(152, 95, 132, 20);
+		contentPane.add(textFieldNumFac);
 		
-		textFieldLienPDF = new JTextField();
-		textFieldLienPDF.setColumns(10);
-		textFieldLienPDF.setBounds(165, 237, 235, 20);
-		contentPane.add(textFieldLienPDF);
+		textFieldDateFac = new JTextField();
+		textFieldDateFac.setColumns(10);
+		textFieldDateFac.setBounds(152, 126, 68, 20);
+		contentPane.add(textFieldDateFac);
 		
-		JLabel LabelLienPDF = new JLabel("Lien pdf  :");
-		LabelLienPDF.setBounds(37, 237, 132, 14);
-		contentPane.add(LabelLienPDF);
+		textFieldNomPDF = new JTextField();
+		textFieldNomPDF.setEditable(false);
+		textFieldNomPDF.setColumns(10);
+		textFieldNomPDF.setBounds(152, 282, 132, 20);
+		contentPane.add(textFieldNomPDF);
+		
+		textFieldRepPDF = new JTextField();
+		textFieldRepPDF.setEditable(false);
+		textFieldRepPDF.setColumns(10);
+		textFieldRepPDF.setBounds(152, 249, 274, 20);
+		contentPane.add(textFieldRepPDF);
+		
+		textFieldLibelle = new JTextField();
+		textFieldLibelle.setColumns(10);
+		textFieldLibelle.setBounds(152, 157, 132, 22);
+		contentPane.add(textFieldLibelle);
 		
 		JLabel LabelEntreprise = new JLabel("* Entreprise :");
-		LabelEntreprise.setBounds(37, 63, 132, 14);
+		LabelEntreprise.setBounds(24, 66, 132, 14);
 		contentPane.add(LabelEntreprise);
 		
-		JComboBox comboBoxEntreprise = new JComboBox();
-		comboBoxEntreprise.setBounds(165, 59, 132, 22);
-		contentPane.add(comboBoxEntreprise);
-		
 		JButton ButtonNouvelleEntreprise = new JButton("Nouvelle entreprise");
-		ButtonNouvelleEntreprise.setBounds(307, 59, 132, 23);
+		ButtonNouvelleEntreprise.setBounds(294, 62, 132, 23);
 		ButtonNouvelleEntreprise.addActionListener(this);
 		contentPane.add(ButtonNouvelleEntreprise);
 		
-		JLabel LabelParticipation = new JLabel("Participation :");
-		LabelParticipation.setBounds(37, 150, 132, 14);
-		contentPane.add(LabelParticipation);
+		JComboBox<String> comboBoxEntreprise = new JComboBox<String>();
+		comboBoxEntreprise.setBounds(152, 62, 132, 22);
+		contentPane.add(comboBoxEntreprise);
+		try {
+			ResultSet rsEntNom = RequeteAfficheComboEntreprise();
+			int i = 0;
+			rsEntNom.next();
+			while ( i < rsEntNom.getRow()) {
+				comboBoxEntreprise.addItem(rsEntNom.getString("NOM"));
+				rsEntNom.next();
+				}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 		
+		comboBoxEntreprise.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        selectedComboEntNom = (String) jcmbType.getSelectedItem();
+		      }
+		    });
+	
+		JButton ButtonPDF = new JButton("Choix fichier...");
+		ButtonPDF.setBounds(152, 219, 132, 23);
+		ButtonPDF.addActionListener(this);
+		contentPane.add(ButtonPDF);
 		
-		textFieldParticipation = new JTextField();
-		textFieldParticipation.setColumns(10);
-		textFieldParticipation.setBounds(165, 150, 68, 20);
-		contentPane.add(textFieldParticipation);
+		JButton btnDateDeMaintenant = new JButton("Date");
+		btnDateDeMaintenant.setBounds(220, 124, 66, 23);
+		btnDateDeMaintenant.addActionListener(this);
+		contentPane.add(btnDateDeMaintenant);
+		
+		JLabel LabelLibelle = new JLabel("Libelle :");
+		LabelLibelle.setBounds(22, 163, 132, 14);
+		contentPane.add(LabelLibelle);
 	}
+
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Date":
+				DateTimeFormatter dtfJ = DateTimeFormatter.ofPattern("DD");
+				LocalDate nowDate = LocalDate.now();
+				String jours = nowDate.toString().substring(8);
+				String mois = nowDate.toString().substring(5,7);
+				String annee = nowDate.toString().substring(0,4);
+				String dateCourrante = ( jours + "/" + mois + "/" + annee );
+				this.textFieldDateFac.setText(dateCourrante);
+				break;
+			case "Choix fichier...":
+				JFileChooser pdfChooser = new JFileChooser();
+				int reponse = pdfChooser.showOpenDialog(null);
+				if (reponse == JFileChooser.APPROVE_OPTION) {
+					File file = new File(pdfChooser.getSelectedFile().getAbsolutePath());
+					textFieldNomPDF.setText(file.getName());
+					textFieldRepPDF.setText(file.getAbsolutePath().substring(0, file.getAbsolutePath().length() - textFieldNomPDF.getText().length() - 1));
+				}
+				break;       
+			case "Nouvelle entreprise":
+				new NouvelleEntreprise().setVisible(true);
+				break;	
+			case "Ajouter":	
+				String datefact = textFieldDateFac.getText();				
+				String chemin = textFieldRepPDF.getText() ;
+				String pdf = textFieldNomPDF.getText() ;					
+				int numfact = Integer.parseInt(textFieldNumFac.getText());		        
+		        float total = Float.parseFloat(textFieldMontantTotal.getText());		        
+		        String lib = textFieldLibelle.getText();		        
+				try {
+					int siren = RequeteGetSirenEntrepriseCombo(selectedComboEntNom);
+					System.out.println(siren + " " + numfact + " " +lib + " " +total + " " +datefact + " " +chemin + " " + pdf);
+					RequeteInsertChargeSupp(siren, numfact, lib, datefact, total, chemin, pdf);
+					JOptionPane.showMessageDialog(frame, "Charge supplémentaire " + numfact + " insérée.");
+				} catch (SQLException e3) {
+					e3.printStackTrace();
+				}			
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -358,30 +488,10 @@ public class NouvelleChargeSupp extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
-			
-			case "Anciens entretiens":
-				this.dispose();
-				new EntretiensAnciens().setVisible(true);
-				break;
-				
-			case "Entretiens en cours":
-				this.dispose();
-				new EntretiensEnCours().setVisible(true);
-				break;
 				
 			case "Nouveaux entretiens":
 				this.dispose();
 				new NouveauEntretien().setVisible(true);
-				break;
-				
-			case "Anciennes factures d'eau":
-				this.dispose();
-				new FacturesEauAnciennes().setVisible(true);
-				break;
-				
-			case "Factures d'eau en cours":
-				this.dispose();
-				new FacturesEauEnCours().setVisible(true);
 				break;
 				
 			case "Nouvelles factures d'eau":
@@ -389,27 +499,17 @@ public class NouvelleChargeSupp extends JFrame implements ActionListener {
 				new NouvelleFactureEau().setVisible(true);
 				break;
 				
-			case "Anciennes factures d'électricité":
-				this.dispose();
-				new FacturesElectriciteAnciennes().setVisible(true);
-				break;
-				
-			case "Factures d'électricité en cours":
-				this.dispose();
-				new FacturesElectriciteEnCours().setVisible(true);
-				break;
-				
-			case "Nouvelles factures d'électricité":
+			case "Nouvelles factures d'Ã©lectricitÃ©":
 				this.dispose();
 				new NouvelleFactureElectricite().setVisible(true);
 				break;
 				
-			case "Consultation taxes foncières":
+			case "Consultation taxes fonciÃ¨res":
 				this.dispose();
 				new TaxeFonciere().setVisible(true);
 				break;
 			
-			case "Nouvelles taxes foncières":
+			case "Nouvelles taxes fonciÃ¨res":
 				this.dispose();
 				new NouvelleTaxeFonciere().setVisible(true);
 				break;
@@ -424,12 +524,12 @@ public class NouvelleChargeSupp extends JFrame implements ActionListener {
 				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 				
-			case "Consultation charges supplémentaires":
+			case "Consultation charges supplÃ©mentaires":
 				this.dispose();
 				new TaxeFonciere().setVisible(true);
 				break;
 			
-			case "Nouvelle charges supplémentaires":
+			case "Nouvelle charges supplÃ©mentaires":
 				this.dispose();
 				new NouvelleTaxeFonciere().setVisible(true);
 				break;

@@ -39,9 +39,9 @@ public class CreerImpot2044 {
 
 			XWPFParagraph paragraphe = document.createParagraph();
 			XWPFRun text = paragraphe.createRun();
-			text.addTab();
-			text.addTab();
-			text.addTab();
+			text.setBold(true);
+			text.setFontFamily("Calibri");
+			text.setFontSize(22);
 			text.addTab();
 			text.addTab();
 			text.setText("Declaration des revenus CERFA 2044 : Regime Reel");

@@ -5,27 +5,32 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import JDBC.CictOracleDataSource;
+import Requetes.Requete;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.EntretiensAnciens;
-import vue.consultation.EntretiensEnCours;
-import vue.consultation.FacturesEauAnciennes;
-import vue.consultation.FacturesEauEnCours;
-import vue.consultation.FacturesElectriciteAnciennes;
-import vue.consultation.FacturesElectriciteEnCours;
 import vue.consultation.Impositions;
 import vue.consultation.LocatairesAnciens;
 import vue.consultation.LocatairesEnCours;
@@ -42,9 +47,11 @@ public class NouvelleTaxeFonciere extends JFrame implements ActionListener {
 	private JTextField textFieldAnneeFacture;
 	private JTextField textFieldMontantPartieFixe;
 	private JTextField textFieldMontantTotal;
-	private JTextField textFieldLienPDF;
 	private JTextField textFieldReferenceAvis;
-
+	private JTextField textFieldRepPDF;
+	private JTextField textFieldNomPDF;
+	private NouvelleTaxeFonciere frame;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -60,7 +67,47 @@ public class NouvelleTaxeFonciere extends JFrame implements ActionListener {
 			}
 		});
 	}
-
+	// SHOW COMBO * ENTERPRISE.NOM
+			private ResultSet RequeteAfficheComboEntreprise() throws SQLException {
+				ResultSet retourRequete = null;
+				Requete requete = new Requetes.Requete();
+				String texteSQL = "select SIREN, NOM from ENTREPRISE";
+				retourRequete = requete.requeteSelection(texteSQL);
+				return retourRequete;
+			}
+			
+			// GET INT SIREN FROM ENTREPRISE.NOM
+			public int RequeteGetSirenEntrepriseCombo(String nomEnt) throws SQLException  {
+				ResultSet retourRequete = null;
+				Requete requete = new Requetes.Requete();
+				try {
+					String texteSQL = ("select SIREN from ENTREPRISE where NOM = '" + nomEnt + "'");
+					retourRequete = requete.requeteSelection(texteSQL);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				retourRequete.next();
+				return retourRequete.getInt("SIREN");
+			}
+			
+			// DB INSERT x6 : STRING STRING FLOAT FLOAT STRING STRING			
+			private void RequeteInsertTaxFonc(String refAvisTaxeF, String anneeTaxeF, float totalOrdureTaxeF, float totalTaxeF, String direct, String nom) throws SQLException {
+				CictOracleDataSource cict = new CictOracleDataSource();
+				String requete = "{ call insertTaxeFonciere(?,?,?,?,?,?) } ";				
+						try {
+							Connection connection = cict.getConnection();
+							CallableStatement cs = connection.prepareCall(requete);
+							cs.setString(1, refAvisTaxeF);
+							cs.setString(2, anneeTaxeF);
+							cs.setFloat(3, totalOrdureTaxeF);
+					        cs.setFloat(4, totalTaxeF);
+							cs.setString(5, direct);
+							cs.setString(6, nom);
+							cs.execute();
+						} catch(SQLException e) {
+							e.printStackTrace();
+						}
+			}
 	/**
 	 * Create the frame.
 	 */
@@ -245,12 +292,12 @@ public class NouvelleTaxeFonciere extends JFrame implements ActionListener {
 		textFieldAnneeFacture.setBounds(179, 127, 68, 20);
 		contentPane.add(textFieldAnneeFacture);
 		
-		JLabel LabelAnneeFacture = new JLabel("Année de la facture  :");
-		LabelAnneeFacture.setBounds(37, 126, 132, 14);
+		JLabel LabelAnneeFacture = new JLabel("Année :");
+		LabelAnneeFacture.setBounds(36, 129, 132, 14);
 		contentPane.add(LabelAnneeFacture);
 		
 		JLabel LabelMontantPartieFixe = new JLabel("Montant ordure ménagère :");
-		LabelMontantPartieFixe.setBounds(35, 158, 144, 14);
+		LabelMontantPartieFixe.setBounds(37, 162, 144, 14);
 		contentPane.add(LabelMontantPartieFixe);
 		
 		textFieldMontantPartieFixe = new JTextField();
@@ -259,7 +306,7 @@ public class NouvelleTaxeFonciere extends JFrame implements ActionListener {
 		contentPane.add(textFieldMontantPartieFixe);
 		
 		JLabel LabelMontantTotal = new JLabel("Montant  total :");
-		LabelMontantTotal.setBounds(35, 189, 132, 14);
+		LabelMontantTotal.setBounds(37, 193, 132, 14);
 		contentPane.add(LabelMontantTotal);
 		
 		textFieldMontantTotal = new JTextField();
@@ -282,27 +329,84 @@ public class NouvelleTaxeFonciere extends JFrame implements ActionListener {
 		LabelTaxeFonciere.setBounds(37, 0, 260, 41);
 		contentPane.add(LabelTaxeFonciere);
 		
-		textFieldLienPDF = new JTextField();
-		textFieldLienPDF.setColumns(10);
-		textFieldLienPDF.setBounds(177, 222, 235, 20);
-		contentPane.add(textFieldLienPDF);
-		
-		JLabel LabelLienPDF = new JLabel("Lien pdf  :");
-		LabelLienPDF.setBounds(35, 221, 132, 14);
-		contentPane.add(LabelLienPDF);
-		
-		JLabel LabelReferenceAvis = new JLabel("*Référence avis :");
-		LabelReferenceAvis.setBounds(37, 96, 132, 14);
+		JLabel LabelReferenceAvis = new JLabel("* Référence avis :");
+		LabelReferenceAvis.setBounds(37, 99, 132, 14);
 		contentPane.add(LabelReferenceAvis);
 		
 		textFieldReferenceAvis = new JTextField();
 		textFieldReferenceAvis.setColumns(10);
 		textFieldReferenceAvis.setBounds(179, 96, 132, 20);
 		contentPane.add(textFieldReferenceAvis);
+		
+		JLabel LabelPDF = new JLabel("* Fichier :");
+		LabelPDF.setBounds(37, 223, 132, 14);
+		contentPane.add(LabelPDF);
+		
+		JButton ButtonPDF = new JButton("Choix fichier...");
+		ButtonPDF.setBounds(176, 219, 132, 23);
+		ButtonPDF.addActionListener(this);
+		contentPane.add(ButtonPDF);
+		
+		textFieldRepPDF = new JTextField();
+		textFieldRepPDF.setEditable(false);
+		textFieldRepPDF.setColumns(10);
+		textFieldRepPDF.setBounds(176, 249, 274, 20);
+		contentPane.add(textFieldRepPDF);
+		
+		JLabel LabelCheminPDF = new JLabel("Chemin d'accès  :");
+		LabelCheminPDF.setBounds(60, 253, 119, 14);
+		contentPane.add(LabelCheminPDF);
+		
+		JLabel LabelNomPDF = new JLabel("Nom fichier :");
+		LabelNomPDF.setBounds(60, 285, 119, 14);
+		contentPane.add(LabelNomPDF);
+		
+		textFieldNomPDF = new JTextField();
+		textFieldNomPDF.setEditable(false);
+		textFieldNomPDF.setColumns(10);
+		textFieldNomPDF.setBounds(176, 282, 132, 20);
+		contentPane.add(textFieldNomPDF);
+		
+		JButton btnDateDeMaintenant = new JButton("Date");
+		btnDateDeMaintenant.setBounds(247, 125, 66, 23);
+		btnDateDeMaintenant.addActionListener(this);
+		contentPane.add(btnDateDeMaintenant);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Date":
+				DateTimeFormatter dtfJ = DateTimeFormatter.ofPattern("DD");
+				LocalDate nowDate = LocalDate.now();
+				String annee = nowDate.toString().substring(0,4);
+				String dateCourrante = ( annee );
+				this.textFieldAnneeFacture.setText(dateCourrante);
+				break;
+			case "Ajouter":					
+				String refAvisTaxeF = textFieldReferenceAvis.getText(); 
+				String anneeTaxeF = textFieldAnneeFacture.getText();
+				float totalOrdureTaxeF = Float.parseFloat(textFieldMontantPartieFixe.getText());
+				float totalTaxeF = Float.parseFloat(textFieldMontantTotal.getText());
+				String direct = textFieldRepPDF.getText();
+				String nom = textFieldNomPDF.getText();	
+				try {					
+					RequeteInsertTaxFonc(refAvisTaxeF, anneeTaxeF, totalOrdureTaxeF, totalTaxeF, direct, nom);
+					JOptionPane.showMessageDialog(frame, "Taxe foncière " + refAvisTaxeF + " insérée.");
+				} catch (SQLException e3) {
+					e3.printStackTrace();
+				}				
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
+			case "Choix fichier...":
+				JFileChooser pdfChooser = new JFileChooser();
+				int reponse = pdfChooser.showOpenDialog(null);
+				if (reponse == JFileChooser.APPROVE_OPTION) {
+					File file = new File(pdfChooser.getSelectedFile().getAbsolutePath());
+					textFieldNomPDF.setText(file.getName());
+					textFieldRepPDF.setText(file.getAbsolutePath().substring(0, file.getAbsolutePath().length() - textFieldNomPDF.getText().length() - 1));
+				}
+				break;    
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -332,45 +436,10 @@ public class NouvelleTaxeFonciere extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
-			
-			case "Anciens entretiens":
-				this.dispose();
-				new EntretiensAnciens().setVisible(true);
-				break;
-				
-			case "Entretiens en cours":
-				this.dispose();
-				new EntretiensEnCours().setVisible(true);
-				break;
-				
-			case "Nouveaux entretiens":
-				this.dispose();
-				new NouveauEntretien().setVisible(true);
-				break;
-				
-			case "Anciennes factures d'eau":
-				this.dispose();
-				new FacturesEauAnciennes().setVisible(true);
-				break;
-				
-			case "Factures d'eau en cours":
-				this.dispose();
-				new FacturesEauEnCours().setVisible(true);
-				break;
 				
 			case "Nouvelles factures d'eau":
 				this.dispose();
 				new NouvelleFactureEau().setVisible(true);
-				break;
-				
-			case "Anciennes factures d'électricité":
-				this.dispose();
-				new FacturesElectriciteAnciennes().setVisible(true);
-				break;
-				
-			case "Factures d'électricité en cours":
-				this.dispose();
-				new FacturesElectriciteEnCours().setVisible(true);
 				break;
 				
 			case "Nouvelles factures d'électricité":
