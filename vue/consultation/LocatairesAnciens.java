@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,9 +18,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import Requetes.Requete;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
@@ -34,7 +38,7 @@ import vue.insertion.NouvelleTaxeFonciere;
 public class LocatairesAnciens extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTable table;
+	private JTable tableAncienLocataire;
 
 	/**
 	 * Launch the application.
@@ -55,6 +59,24 @@ public class LocatairesAnciens extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
+	
+	private ResultSet RequeteTableauAnciensLocataire() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "select Bati.adresse, locataire.nom , locataire.prenom, locataire.mail, locataire.tel, locataire.catesocioprof, contrat.datedepart, documentcontrat.pdf\r\n"
+						+ "from bati, locataire, relie, lieuxdelocations, loue, contrat, documentcontrat  \r\n"
+						+ "where locataire.idlocataire = relie.idlocataire \r\n"
+						+ "and relie.idcontrat = contrat.idcontrat \r\n"
+						+ "and contrat.idcontrat = documentcontrat.idcontrat \r\n"
+						+ "and contrat.idcontrat = loue.idcontrat \r\n"
+						+ "and lieuxdelocations.idlogement = loue.idlogement \r\n"
+						+ "and bati.codepostal = lieuxdelocations.codepostal \r\n"
+						+ "and bati.adresse = lieuxdelocations.adresse \r\n"
+						+ "and contrat.datedepart <> null";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	
 	public LocatairesAnciens() {
 		setBackground(new Color(240, 240, 240));
 		setTitle("Anciens locataires");
@@ -236,30 +258,39 @@ public class LocatairesAnciens extends JFrame implements ActionListener {
 		scrollPane.setBounds(22, 49, 914, 278);
 		contentPane.add(scrollPane);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-			},
-			new String[] {
-				"Bati", "Nom", "Prenom", "Mail", "Telephone", "Categorie socio prof", "Date fin contrat", "Contrat"
+		final String[] columns = {"Bati", "Nom", "Prenom", "Mail", "Telephone", "Categorie socio prof","DatedeDepart", "Contrat"};
+		scrollPane.setViewportView(tableAncienLocataire);
+		
+		final DefaultTableModel model = new DefaultTableModel(columns, 0);
+		tableAncienLocataire = new JTable(model);
+		tableAncienLocataire.setRowSelectionAllowed(false);
+		tableAncienLocataire.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableAncienLocataire.setSurrendersFocusOnKeystroke(true);
+		
+		try {
+			ResultSet rsEnsLocataire = RequeteTableauAnciensLocataire();
+			int i = 0;
+			while ( rsEnsLocataire.next()) {
+				String bati = rsEnsLocataire.getString(1);
+				String nom = rsEnsLocataire.getString(2);
+				String prenom = rsEnsLocataire.getString(3);
+				String mail = rsEnsLocataire.getString(4);
+				String tel = rsEnsLocataire.getString(5);
+				String categoriesocio = rsEnsLocataire.getString(6);
+				//a modifier pour faire en sorte que ce soit un bouton qui renvoie vers le pdf du fichier
+				String datedepart = rsEnsLocataire.getString(7);
+				String lienpdf = rsEnsLocataire.getString(8);
+				model.addRow(new String[]{bati, nom, prenom, mail, tel, categoriesocio, datedepart, });
+				i++;
+				rsEnsLocataire.next();
 			}
-		));
-		scrollPane.setViewportView(table);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		scrollPane.setViewportView(tableAncienLocataire);
+		scrollPane.setViewportView(tableAncienLocataire);
 		
 		JLabel TitreAnciensLocataires = new JLabel("Anciens Locataires");
 		TitreAnciensLocataires.setFont(new Font("Tahoma", Font.BOLD, 20));

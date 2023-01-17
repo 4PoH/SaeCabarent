@@ -5,6 +5,9 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,9 +18,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import Requetes.Requete;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
@@ -33,7 +38,7 @@ import vue.insertion.NouvelleTaxeFonciere;
 public class LocationsAnciennes extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTable table;
+	private JTable tableAncienneLocation;
 
 	/**
 	 * Launch the application.
@@ -54,6 +59,27 @@ public class LocationsAnciennes extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
+	private ResultSet RequeteTableauAncieneLocation() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "select lieuxdelocations.libelle, locataire.nom, locataire.prenom,contrat.datedepart, loue.montantreglerduloyer, loue.montantloyer, loue.modepaiement, factureeau.total, documentcontrat.pdf\r\n"
+				+ "from factureeau, locataire, relie, lieuxdelocations, loue, contrat, documentcontrat, rattacher, bati\r\n"
+				+ "where locataire.idlocataire = relie.idlocataire\r\n"
+				+ "and contrat.idcontrat = documentcontrat.idcontrat\r\n"
+				+ "and relie.idcontrat = contrat.idcontrat\r\n"
+				+ "and contrat.idcontrat = loue.idcontrat\r\n"
+				+ "and lieuxdelocations.idlogement = loue.idlogement\r\n"
+				+ "and bati.codepostal = lieuxdelocations.codepostal\r\n"
+				+ "and bati.adresse = lieuxdelocations.adresse\r\n"
+				+ "and bati.codepostal = rattacher.codepostal\r\n"
+				+ "and bati.adresse = rattacher.adresse\r\n"
+				+ "and rattacher.numfact = factureeau.numfact\r\n"
+				+ "and rattacher.siren = factureeau.siren\r\n"
+				+ "and contrat.datedepart is not null";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	
 	public LocationsAnciennes() {
 		setTitle("Anciennes locations");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -235,30 +261,43 @@ public class LocationsAnciennes extends JFrame implements ActionListener {
 		scrollPane.setBounds(23, 50, 916, 270);
 		contentPane.add(scrollPane);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-			},
-			new String[] {
-				"Libelle", "Locataire", "Date fin", "montant r\u00E9gler loyer", "Montant loyer", "moyen de paiement", "Facture d'eau", "pdf contrat"
+		final String[] columns = {"Libelle", "Locataire", "Date fin", "montant r\u00E9gler loyer", "Montant loyer", "moyen de paiement", "Facture d'eau", "pdf contrat"};
+		scrollPane.setViewportView(tableAncienneLocation);
+		
+		final DefaultTableModel model = new DefaultTableModel(columns, 0);
+		tableAncienneLocation = new JTable(model);
+		tableAncienneLocation.setRowSelectionAllowed(false);
+		tableAncienneLocation.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableAncienneLocation.setSurrendersFocusOnKeystroke(true);
+		
+		try {
+			ResultSet rsEnsLocation = RequeteTableauAncieneLocation();
+			int i = 0;
+			rsEnsLocation.next();
+			while (i < rsEnsLocation.getRow()) {
+				String libelle = rsEnsLocation.getString(1);
+				String locataire = rsEnsLocation.getString(2);
+				locataire += " ";
+				locataire += rsEnsLocation.getString(3);
+				Date resdatedepart = rsEnsLocation.getDate(4);
+				String datedepart = String.valueOf(resdatedepart);
+				int resmontantregler = rsEnsLocation.getInt(5);
+				String montantregler = String.valueOf(resmontantregler);
+				int resmontantotal = rsEnsLocation.getInt(6);
+				String montanttotal = String.valueOf(resmontantotal);
+				String moyenpaiement = rsEnsLocation.getString(7);
+				int resfacteau = rsEnsLocation.getInt(8);
+				String facteau = String.valueOf(resfacteau);
+				//a modifier pour faire en sorte que ce soit un bouton qui renvoie vers le pdf du fichier
+				String pdf = rsEnsLocation.getString(9);
+				model.addRow(new String[]{libelle, locataire,datedepart, montantregler, montanttotal, moyenpaiement, facteau, pdf});
+				i++;
+				rsEnsLocation.next();
 			}
-		));
-		scrollPane.setViewportView(table);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		scrollPane.setViewportView(tableAncienneLocation);
 		
 		JLabel TitreAnciennesLocations = new JLabel("Anciennes locations");
 		TitreAnciennesLocations.setFont(new Font("Tahoma", Font.BOLD, 20));

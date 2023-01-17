@@ -5,6 +5,9 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,9 +18,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import Requetes.Requete;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
@@ -34,7 +39,7 @@ import vue.insertion.NouvelleTaxeFonciere;
 public class TravauxAnciens extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTable table;
+	private JTable tableAnciensTravaux;
 
 	/**
 	 * Launch the application.
@@ -55,6 +60,19 @@ public class TravauxAnciens extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
+	
+	private ResultSet RequeteTableauAnciensTravaux() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "select lieuxdelocations.libelle, lieuxdelocations.adresse, travaux.libelle,travaux.montant, travaux.numfact, travaux.datefin, (to_date(travaux.datefin, 'YYYY/MM/DD') - to_date(travaux.datedeb, 'YYYY/MM/DD')) as duree, travaux.montantnondeductible, travaux.reduction, travaux.pdf\r\n"
+				+ "from travaux, concerne, lieuxdelocations\r\n"
+				+ "where travaux.numfact = concerne.numfact\r\n"
+				+ "and concerne.idlogement = lieuxdelocations.idlogement\r\n"
+				+ "and travaux.datefin is not null";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	
 	public TravauxAnciens() {
 		setTitle("Anciens Travaux");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -236,30 +254,41 @@ public class TravauxAnciens extends JFrame implements ActionListener {
 		scrollPane.setBounds(16, 53, 940, 269);
 		contentPane.add(scrollPane);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-			},
-			new String[] {
-				"Date de facturation", "Libelle entreprise", "Numéro SIREN", "Montant payer", "Numéro facture", "Date de début", "Date de fin", "Détail", "PDF"
+		final String[] columns = {"libelle", "libelle travaux", "montant", "numero fact", "date fin", "duree travaux", "montant non déducible", "réduction", "pdf"};
+		scrollPane.setViewportView(tableAnciensTravaux);
+		
+		final DefaultTableModel model = new DefaultTableModel(columns, 0);
+		tableAnciensTravaux = new JTable(model);
+		tableAnciensTravaux.setRowSelectionAllowed(false);
+		tableAnciensTravaux.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableAnciensTravaux.setSurrendersFocusOnKeystroke(true);
+		
+		try {
+			ResultSet rsEnsTravauxAncien = RequeteTableauAnciensTravaux();
+			while ( rsEnsTravauxAncien.next()) {
+				String libellelocation = rsEnsTravauxAncien.getString(1);
+				libellelocation += " ";
+				libellelocation += rsEnsTravauxAncien.getString(2);
+				String travauxlibelle = rsEnsTravauxAncien.getString(3);
+				int resmontanttravaux = rsEnsTravauxAncien.getInt(4);
+				String montantregler = String.valueOf(resmontanttravaux);
+				String numfact = rsEnsTravauxAncien.getString(5);
+				Date resDateT = rsEnsTravauxAncien.getDate(6);
+				String DateT = String.valueOf(resDateT);
+				int resDuree = rsEnsTravauxAncien.getInt(7);
+				String Duree = String.valueOf(resDuree);
+				int resmontantnondeductible = rsEnsTravauxAncien.getInt(8);
+				String montantnondeductible = String.valueOf(resmontantnondeductible);
+				int resreduction = rsEnsTravauxAncien.getInt(9);
+				String reduction = String.valueOf(resreduction);
+				//a modifier pour faire en sorte que ce soit un bouton qui renvoie vers le pdf du fichier
+				String pdf = rsEnsTravauxAncien.getString(10);
+				model.addRow(new String[]{libellelocation, travauxlibelle, montantregler,numfact, DateT, Duree, montantnondeductible,reduction, pdf});
 			}
-		));
-		scrollPane.setViewportView(table);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		scrollPane.setViewportView(tableAnciensTravaux);
 		
 		JLabel TitreAnciensTravaux = new JLabel("Anciens travaux");
 		TitreAnciensTravaux.setFont(new Font("Tahoma", Font.BOLD, 20));
