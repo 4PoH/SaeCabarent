@@ -7,6 +7,9 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,9 +20,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import Requetes.Requete;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
@@ -36,7 +41,7 @@ import vue.insertion.NouvelleTaxeFonciere;
 public class FacturesElectriciteAnciennes extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTable table;
+	private JTable tableAncienneFactElec;
 
 	/**
 	 * Launch the application.
@@ -57,6 +62,22 @@ public class FacturesElectriciteAnciennes extends JFrame implements ActionListen
 	/**
 	 * Create the frame.
 	 */
+	
+	private ResultSet RequeteTableauAncienneFactElec() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "select bati.adresse, bati.codepostal, factureelectrique.numfact, concerneelectrique.datefact as datefacturation, factureelectrique.total, factureelectrique.pdf\r\n"
+				+ "from factureelectrique, concerneelectrique, bati\r\n"
+				+ "where bati.adresse = concerneelectrique.adresse\r\n"
+				+ "and bati.codepostal = concerneelectrique.codepostal\r\n"
+				+ "and concerneelectrique.siren = factureelectrique.siren\r\n"
+				+ "and concerneelectrique.numfact = factureelectrique.numfact\r\n"
+				+ "and concerneelectrique.datefact is not null\r\n"
+				+ "order by concerneelectrique.datefact desc";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	
 	public FacturesElectriciteAnciennes() {
 		setBackground(new Color(240, 240, 240));
 		setTitle("Anciennes factures d'électricité");
@@ -238,29 +259,36 @@ public class FacturesElectriciteAnciennes extends JFrame implements ActionListen
 		scrollPane.setBounds(22, 49, 914, 278);
 		contentPane.add(scrollPane);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-			},
-			new String[] {
-				"Location", "Numero facture", "Date facture", "Prix unitaire m3", "Montant payer", "Partie fixe", "Total", "Pdf"
+		final String[] columns = {"Bati", "num fact", "date de facturation", "total", "pdf"};
+		scrollPane.setViewportView(tableAncienneFactElec);
+		
+		final DefaultTableModel model = new DefaultTableModel(columns, 0);
+		tableAncienneFactElec = new JTable(model);
+		tableAncienneFactElec.setRowSelectionAllowed(false);
+		tableAncienneFactElec.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableAncienneFactElec.setSurrendersFocusOnKeystroke(true);
+		
+		try {
+			ResultSet rsEnsFactElecPaye = RequeteTableauAncienneFactElec();
+			while ( rsEnsFactElecPaye.next()) {
+				String libellebati = rsEnsFactElecPaye.getString(1);
+				libellebati += " ";
+				libellebati += rsEnsFactElecPaye.getString(2);
+				String numfact = rsEnsFactElecPaye.getString(3);
+				Date resDateFactElec = rsEnsFactElecPaye.getDate(4);
+				String dateT = String.valueOf(resDateFactElec);
+				int restotal = rsEnsFactElecPaye.getInt(5);
+				String total = String.valueOf(restotal);
+				//a modifier pour faire en sorte que ce soit un bouton qui renvoie vers le pdf du fichier
+				String pdf = rsEnsFactElecPaye.getString(6);
+				model.addRow(new String[]{libellebati, numfact, dateT,total, pdf});
 			}
-		));
-		scrollPane.setViewportView(table);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+
+		scrollPane.setViewportView(tableAncienneFactElec);
 		
 		JLabel TitreFactureEauAncienne = new JLabel("Anciennes factures d'électricité");
 		TitreFactureEauAncienne.setFont(new Font("Tahoma", Font.BOLD, 20));

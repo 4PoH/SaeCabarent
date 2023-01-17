@@ -6,6 +6,9 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,9 +19,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import Requetes.Requete;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
@@ -34,7 +39,7 @@ import vue.insertion.NouvelleTaxeFonciere;
 public class ProtectionJuridique extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTable table;
+	private JTable tableProtectionJuridique;
 
 	/**
 	 * Launch the application.
@@ -55,6 +60,21 @@ public class ProtectionJuridique extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
+	
+	private ResultSet RequeteTableauProtectionJuridique() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "select bati.adresse, bati.codepostal, concerneprotection.numcontrat, concerneprotection.datefact as datefacturation, protectionjuridique.prime, protectionjuridique.primejuris, concerneprotection.quotitejuris, protectionjuridique.pdf\r\n"
+				+ "from bati, concerneprotection, protectionjuridique\r\n"
+				+ "where bati.adresse = concerneprotection.adresse\r\n"
+				+ "and bati.codepostal = concerneprotection.codepostal\r\n"
+				+ "and concerneprotection.siren = protectionjuridique.siren\r\n"
+				+ "and protectionjuridique.numcontrat = concerneprotection.numcontrat\r\n"
+				+ "order by concerneprotection.datefact desc";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	
 	public ProtectionJuridique() {
 		setTitle("Consultation protection juridique");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -235,30 +255,38 @@ public class ProtectionJuridique extends JFrame implements ActionListener {
 		scrollPane.setBounds(10, 64, 946, 269);
 		contentPane.add(scrollPane);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-			},
-			new String[] {
-				"Numero SIREN", "numero Facture", "numero Devis", "libelle", "date debut", "date fin", "detail", "montant payer", "montant non deductible", "reduction", "pdf"
+		final String[] columns = {"bati", "num contrat", "date facturation", "prime", "prime juriprudence", "quotite juriprudence", "pdf"};
+		scrollPane.setViewportView(tableProtectionJuridique);
+		
+		final DefaultTableModel model = new DefaultTableModel(columns, 0);
+		tableProtectionJuridique = new JTable(model);
+		tableProtectionJuridique.setRowSelectionAllowed(false);
+		tableProtectionJuridique.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableProtectionJuridique.setSurrendersFocusOnKeystroke(true);
+		
+		try {
+			ResultSet rsEnsProtectionJuri = RequeteTableauProtectionJuridique();
+			while ( rsEnsProtectionJuri.next()) {
+				String libellebati = rsEnsProtectionJuri.getString(1);
+				libellebati += " ";
+				libellebati += rsEnsProtectionJuri.getString(2);
+				String numcontrat = rsEnsProtectionJuri.getString(3);
+				Date resDateF = rsEnsProtectionJuri.getDate(4);
+				String DateF = String.valueOf(resDateF);
+				int resprime = rsEnsProtectionJuri.getInt(5);
+				String prime = String.valueOf(resprime);
+				int resprimejuri = rsEnsProtectionJuri.getInt(6);
+				String primejuri = String.valueOf(resprimejuri);
+				float resquotite = rsEnsProtectionJuri.getFloat(7);
+				String quotite = String.valueOf(resquotite);
+				//a modifier pour faire en sorte que ce soit un bouton qui renvoie vers le pdf du fichier
+				String pdf = rsEnsProtectionJuri.getString(8);
+				model.addRow(new String[]{libellebati, numcontrat, DateF,prime, primejuri, quotite, pdf});
 			}
-		));
-		scrollPane.setViewportView(table);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		scrollPane.setViewportView(tableProtectionJuridique);
 		
 		JLabel TitreProtectionJuridique = new JLabel("Consultation protection juridique");
 		TitreProtectionJuridique.setFont(new Font("Tahoma", Font.BOLD, 20));

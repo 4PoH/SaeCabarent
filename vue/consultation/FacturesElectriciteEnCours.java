@@ -7,6 +7,9 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,9 +20,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import Requetes.Requete;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
@@ -35,7 +40,7 @@ import vue.insertion.NouvelleTaxeFonciere;
 public class FacturesElectriciteEnCours extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTable table;
+	private JTable tableFactElecCours;
 
 	/**
 	 * Launch the application.
@@ -56,6 +61,22 @@ public class FacturesElectriciteEnCours extends JFrame implements ActionListener
 	/**
 	 * Create the frame.
 	 */
+	
+	private ResultSet RequeteTableauFactElecCours() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "select bati.adresse, bati.codepostal, factureelectrique.numfact, factureelectrique.datefact as datefacture, factureelectrique.total, factureelectrique.pdf\r\n"
+				+ "from factureelectrique, concerneelectrique, bati\r\n"
+				+ "where bati.adresse = concerneelectrique.adresse\r\n"
+				+ "and bati.codepostal = concerneelectrique.codepostal\r\n"
+				+ "and concerneelectrique.siren = factureelectrique.siren\r\n"
+				+ "and concerneelectrique.numfact = factureelectrique.numfact\r\n"
+				+ "and concerneelectrique.datefact is null\r\n"
+				+ "order by concerneelectrique.datefact desc";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	
 	public FacturesElectriciteEnCours() {
 		setBackground(new Color(240, 240, 240));
 		setTitle("Facture d'électricité en cours");
@@ -237,30 +258,36 @@ public class FacturesElectriciteEnCours extends JFrame implements ActionListener
 		scrollPane.setBounds(22, 49, 914, 278);
 		contentPane.add(scrollPane);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-			},
-			new String[] {
-				"Location", "Numero facture", "Date facture", "Prix unitaire m3", "Mode de paiment", "Montant payer", "Partie fixe", "Total", "Pdf"
+		final String[] columns = {"bati", "num fact", "date de facture", "total", "pdf"};
+		scrollPane.setViewportView(tableFactElecCours);
+		
+		final DefaultTableModel model = new DefaultTableModel(columns, 0);
+		tableFactElecCours = new JTable(model);
+		tableFactElecCours.setRowSelectionAllowed(false);
+		tableFactElecCours.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableFactElecCours.setSurrendersFocusOnKeystroke(true);
+		
+		try {
+			ResultSet rsEnsFactElecNonPaye = RequeteTableauFactElecCours();
+			while ( rsEnsFactElecNonPaye.next()) {
+				String libellebati = rsEnsFactElecNonPaye.getString(1);
+				libellebati += " ";
+				libellebati += rsEnsFactElecNonPaye.getString(2);
+				String numfact = rsEnsFactElecNonPaye.getString(3);
+				Date resDateFactElec = rsEnsFactElecNonPaye.getDate(4);
+				String dateT = String.valueOf(resDateFactElec);
+				int restotal = rsEnsFactElecNonPaye.getInt(5);
+				String total = String.valueOf(restotal);
+				//a modifier pour faire en sorte que ce soit un bouton qui renvoie vers le pdf du fichier
+				String pdf = rsEnsFactElecNonPaye.getString(6);
+				model.addRow(new String[]{libellebati, numfact, dateT,total, pdf});
 			}
-		));
-		scrollPane.setViewportView(table);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+
+		scrollPane.setViewportView(tableFactElecCours);
 		
 		JLabel TitreFactureEauEnCours = new JLabel("Facture d'électricité en cours");
 		TitreFactureEauEnCours.setFont(new Font("Tahoma", Font.BOLD, 20));
