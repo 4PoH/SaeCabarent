@@ -27,8 +27,11 @@ import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
+import vue.insertion.NouveauDiagnostic;
 import vue.insertion.NouveauEntretien;
+import vue.insertion.NouveauLocataire;
 import vue.insertion.NouveauTravaux;
+import vue.insertion.NouvelleChargeSupp;
 import vue.insertion.NouvelleFactureEau;
 import vue.insertion.NouvelleFactureElectricite;
 import vue.insertion.NouvelleLocation;
@@ -63,16 +66,19 @@ public class LocatairesAnciens extends JFrame implements ActionListener {
 	private ResultSet RequeteTableauAnciensLocataire() throws SQLException {
 		ResultSet retourRequete = null;
 		Requete requete = new Requetes.Requete();
-		String texteSQL = "select Bati.adresse, locataire.nom , locataire.prenom, locataire.mail, locataire.tel, locataire.catesocioprof, contrat.datedepart, documentcontrat.pdf\r\n"
-						+ "from bati, locataire, relie, lieuxdelocations, loue, contrat, documentcontrat  \r\n"
-						+ "where locataire.idlocataire = relie.idlocataire \r\n"
-						+ "and relie.idcontrat = contrat.idcontrat \r\n"
-						+ "and contrat.idcontrat = documentcontrat.idcontrat \r\n"
-						+ "and contrat.idcontrat = loue.idcontrat \r\n"
-						+ "and lieuxdelocations.idlogement = loue.idlogement \r\n"
-						+ "and bati.codepostal = lieuxdelocations.codepostal \r\n"
-						+ "and bati.adresse = lieuxdelocations.adresse \r\n"
-						+ "and contrat.datedepart <> null";
+		String texteSQL = "select bati.adresse, locataire.nom , locataire.prenom, locataire.mail, locataire.tel, locataire.catesocioprof, contrat.datedepart, documentcontrat.pdf\r\n"
+				+ "                        from bati, locataire, relie, lieuxdelocations, loue, contrat, documentcontrat\r\n"
+				+ "                        where locataire.idlocataire = relie.idlocataire\r\n"
+				+ "                        and contrat.idcontrat = documentcontrat.idcontrat\r\n"
+				+ "                        and relie.idcontrat = contrat.idcontrat\r\n"
+				+ "                        and contrat.idcontrat = loue.idcontrat\r\n"
+				+ "                        and lieuxdelocations.idlogement = loue.idlogement\r\n"
+				+ "                        and bati.codepostal = lieuxdelocations.codepostal\r\n"
+				+ "                        and bati.adresse = lieuxdelocations.adresse\r\n"
+				+ "                        and contrat.datedepart is not null\r\n"
+				+ "                        and TO_CHAR(contrat.datedepart, 'MM/YYYY') >= TO_CHAR(loue.datelocation, 'MM/YYYY')\r\n"
+				+ "                        and TO_CHAR(ADD_MONTHS(contrat.datedepart,-1), 'MM/YYYY') <= TO_CHAR(loue.datelocation, 'MM/YYYY')\r\n"
+				+ "                        order by contrat.datedepart desc";
 		retourRequete = requete.requeteSelection(texteSQL);
 		return retourRequete;
 	}
@@ -108,9 +114,11 @@ public class LocatairesAnciens extends JFrame implements ActionListener {
 		MenuLocations.add(MenuItemNouvelleLocation);
 		
 		JMenuItem MenuItemAnciensLocataires = new JMenuItem("Anciens locataires");
+		MenuItemAnciensLocataires.addActionListener(this);
 		MenuLocations.add(MenuItemAnciensLocataires);
 		
 		JMenuItem MenuItemLocatairesEnCours = new JMenuItem("Locataires en cours");
+		MenuItemLocatairesEnCours.addActionListener(this);
 		MenuLocations.add(MenuItemLocatairesEnCours);
 		
 		JMenu MenuCharges = new JMenu("Charges");
@@ -121,26 +129,13 @@ public class LocatairesAnciens extends JFrame implements ActionListener {
 		MenuEntretiens.addActionListener(this);
 		MenuCharges.add(MenuEntretiens);
 		
-		JMenuItem MenuItemAnciensEntretiens = new JMenuItem("Anciens entretiens");
-		MenuItemAnciensEntretiens.addActionListener(this);
-		MenuItemAnciensEntretiens.setSelected(true);
-		MenuEntretiens.add(MenuItemAnciensEntretiens);
-		
-		JMenuItem mntmEntretiensEnCours = new JMenuItem("Entretiens en cours");
-		mntmEntretiensEnCours.addActionListener(this);
-		mntmEntretiensEnCours.setSelected(true);
-		MenuEntretiens.add(mntmEntretiensEnCours);
-		
-		JMenuItem MenuItemNouveauxEntretiens = new JMenuItem("Nouveaux entretiens");
+		JMenuItem MenuItemNouveauxEntretiens = new JMenuItem("Nouveaux entretiens des parties communes");
 		MenuItemNouveauxEntretiens.addActionListener(this);
 		
-		JMenuItem MenuItemAnciensEntretiensPartiesCommunes = new JMenuItem("Anciens entretiens parties communes");
+		JMenuItem MenuItemAnciensEntretiensPartiesCommunes = new JMenuItem("Entretiens des parties communes");
+		MenuItemAnciensEntretiensPartiesCommunes.addActionListener(this);
 		MenuItemAnciensEntretiensPartiesCommunes.setSelected(true);
 		MenuEntretiens.add(MenuItemAnciensEntretiensPartiesCommunes);
-		
-		JMenuItem MenuItemEntretiensPartiesCommunes = new JMenuItem("Entretiens parties communes en cours");
-		MenuItemEntretiensPartiesCommunes.setSelected(true);
-		MenuEntretiens.add(MenuItemEntretiensPartiesCommunes);
 		MenuItemNouveauxEntretiens.setSelected(true);
 		MenuEntretiens.add(MenuItemNouveauxEntretiens);
 		
@@ -148,11 +143,11 @@ public class LocatairesAnciens extends JFrame implements ActionListener {
 		MenuFacturesEau.addActionListener(this);
 		MenuCharges.add(MenuFacturesEau);
 		
-		JMenuItem MenuItemAnciennesFacturesEau = new JMenuItem("Anciennes factures d'eau");
+		JMenuItem MenuItemAnciennesFacturesEau = new JMenuItem("Factures d'eau payées");
 		MenuItemAnciennesFacturesEau.addActionListener(this);
 		MenuFacturesEau.add(MenuItemAnciennesFacturesEau);
 		
-		JMenuItem MenuItemFacturesEauEnCours = new JMenuItem("Factures d'eau en cours");
+		JMenuItem MenuItemFacturesEauEnCours = new JMenuItem("Factures d'eau à payées");
 		MenuItemFacturesEauEnCours.addActionListener(this);
 		MenuFacturesEau.add(MenuItemFacturesEauEnCours);
 		
@@ -164,11 +159,11 @@ public class LocatairesAnciens extends JFrame implements ActionListener {
 		MenuElectricite.addActionListener(this);
 		MenuCharges.add(MenuElectricite);
 		
-		JMenuItem MenuItemAnciennesFacturesElectricite = new JMenuItem("Anciennes factures d'électricité");
+		JMenuItem MenuItemAnciennesFacturesElectricite = new JMenuItem("Factures d'électricité payées");
 		MenuItemAnciennesFacturesElectricite.addActionListener(this);
 		MenuElectricite.add(MenuItemAnciennesFacturesElectricite);
 		
-		JMenuItem mntmFacturesDlectricitEn = new JMenuItem("Factures d'électricité en cours");
+		JMenuItem mntmFacturesDlectricitEn = new JMenuItem("Factures d'électricité à payées");
 		mntmFacturesDlectricitEn.addActionListener(this);
 		MenuElectricite.add(mntmFacturesDlectricitEn);
 		
@@ -297,14 +292,24 @@ public class LocatairesAnciens extends JFrame implements ActionListener {
 		TitreAnciensLocataires.setBounds(10, 10, 230, 29);
 		contentPane.add(TitreAnciensLocataires);
 		
-		JButton ButtonCharger = new JButton("Charger");
-		ButtonCharger.addActionListener(this);
-		ButtonCharger.setBounds(103, 376, 85, 21);
-		contentPane.add(ButtonCharger);
+		JButton ButtonInserer = new JButton("Insérer");
+		ButtonInserer.addActionListener(this);
+		ButtonInserer.setBounds(75, 370, 100, 25);
+		contentPane.add(ButtonInserer);
+		
+		JButton ButtonMiseJour = new JButton("Mise à  jour");
+		ButtonMiseJour.addActionListener(this);
+		ButtonMiseJour.setBounds(305, 370, 100, 25);
+		contentPane.add(ButtonMiseJour);
+		
+		JButton ButtonSupprimer = new JButton("Supprimer");
+		ButtonSupprimer.addActionListener(this);
+		ButtonSupprimer.setBounds(550, 370, 100, 25);
+		contentPane.add(ButtonSupprimer);
 		
 		JButton ButtonAnnuler = new JButton("Annuler");
 		ButtonAnnuler.addActionListener(this);
-		ButtonAnnuler.setBounds(762, 376, 85, 21);
+		ButtonAnnuler.setBounds(790, 370, 100, 25);
 		contentPane.add(ButtonAnnuler);
 	}
 	
@@ -339,28 +344,23 @@ public class LocatairesAnciens extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
-			
-			case "Anciens entretiens":
+				
+			case "Entretiens des parties communes":
 				this.dispose();
-				new EntretiensAnciens().setVisible(true);
+				new EntretiensPartiesAnciens().setVisible(true);
 				break;
 				
-			case "Entretiens en cours":
-				this.dispose();
-				new EntretiensEnCours().setVisible(true);
-				break;
-				
-			case "Nouveaux entretiens":
+			case "Nouveaux entretiens des parties communes":
 				this.dispose();
 				new NouveauEntretien().setVisible(true);
 				break;
 				
-			case "Anciennes factures d'eau":
+			case "Factures d'eau payées":
 				this.dispose();
 				new FacturesEauPayees().setVisible(true);
 				break;
 				
-			case "Factures d'eau en cours":
+			case "Factures d'eau à payées":
 				this.dispose();
 				new FacturesEauAPayees().setVisible(true);
 				break;
@@ -370,12 +370,12 @@ public class LocatairesAnciens extends JFrame implements ActionListener {
 				new NouvelleFactureEau().setVisible(true);
 				break;
 				
-			case "Anciennes factures d'électricité":
+			case "Factures d'électricité payées":
 				this.dispose();
 				new FacturesElectricitePayees().setVisible(true);
 				break;
 				
-			case "Factures d'électricité en cours":
+			case "Factures d'électricité à payées":
 				this.dispose();
 				new FacturesElectriciteAPayees().setVisible(true);
 				break;
@@ -407,12 +407,12 @@ public class LocatairesAnciens extends JFrame implements ActionListener {
 				
 			case "Consultation charges supplémentaires":
 				this.dispose();
-				new TaxeFonciere().setVisible(true);
+				new ChargesSupplementaires().setVisible(true);
 				break;
 			
 			case "Nouvelle charges supplémentaires":
 				this.dispose();
-				new NouvelleTaxeFonciere().setVisible(true);
+				new NouvelleChargeSupp().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
@@ -449,7 +449,25 @@ public class LocatairesAnciens extends JFrame implements ActionListener {
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
-
+				
+			case "Insérer":
+				this.dispose();
+				new NouveauLocataire().setVisible(true);
+				break;
+			
+			case "Mise à jour":
+				//this.dispose();
+				//new ().setVisible(true);
+				System.out.println("A implémenter");
+				break;
+				
+			case "Supprimer":
+				//this.dispose();
+				//new Impositions().setVisible(true);
+				System.out.println("A implémenter");
+				break;
+				
+				
 			case "Annuler":
 				this.dispose();
 				break;

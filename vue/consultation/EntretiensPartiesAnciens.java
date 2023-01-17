@@ -26,8 +26,10 @@ import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
+import vue.insertion.NouveauDiagnostic;
 import vue.insertion.NouveauEntretien;
 import vue.insertion.NouveauTravaux;
+import vue.insertion.NouvelleChargeSupp;
 import vue.insertion.NouvelleFactureEau;
 import vue.insertion.NouvelleFactureElectricite;
 import vue.insertion.NouvelleLocation;
@@ -104,25 +106,28 @@ public class EntretiensPartiesAnciens extends JFrame implements ActionListener {
 		MenuLocations.add(MenuItemNouvelleLocation);
 		
 		JMenuItem MenuItemAnciensLocataires = new JMenuItem("Anciens locataires");
+		MenuItemAnciensLocataires.addActionListener(this);
 		MenuLocations.add(MenuItemAnciensLocataires);
 		
 		JMenuItem MenuItemLocatairesEnCours = new JMenuItem("Locataires en cours");
+		MenuItemLocatairesEnCours.addActionListener(this);
 		MenuLocations.add(MenuItemLocatairesEnCours);
 		
 		JMenu MenuCharges = new JMenu("Charges");
 		MenuCharges.addActionListener(this);
 		menuBarTop.add(MenuCharges);
 		
-		JMenu MenuEntretiens = new JMenu("Entretiens parties communes");
+		JMenu MenuEntretiens = new JMenu("Entretiens");
 		MenuEntretiens.addActionListener(this);
 		MenuCharges.add(MenuEntretiens);
 		
-		JMenuItem MenuItemNouveauxEntretiens = new JMenuItem("Nouveaux entretiens parties communes");
+		JMenuItem MenuItemNouveauxEntretiens = new JMenuItem("Nouveaux entretiens des parties communes");
 		MenuItemNouveauxEntretiens.addActionListener(this);
 		
-		JMenuItem MenuItemEntretiensPartiesCommunes = new JMenuItem("Historique d'entretiens des parties communes");
-		MenuItemEntretiensPartiesCommunes.setSelected(true);
-		MenuEntretiens.add(MenuItemEntretiensPartiesCommunes);
+		JMenuItem MenuItemAnciensEntretiensPartiesCommunes = new JMenuItem("Entretiens des parties communes");
+		MenuItemAnciensEntretiensPartiesCommunes.addActionListener(this);
+		MenuItemAnciensEntretiensPartiesCommunes.setSelected(true);
+		MenuEntretiens.add(MenuItemAnciensEntretiensPartiesCommunes);
 		MenuItemNouveauxEntretiens.setSelected(true);
 		MenuEntretiens.add(MenuItemNouveauxEntretiens);
 		
@@ -130,11 +135,11 @@ public class EntretiensPartiesAnciens extends JFrame implements ActionListener {
 		MenuFacturesEau.addActionListener(this);
 		MenuCharges.add(MenuFacturesEau);
 		
-		JMenuItem MenuItemAnciennesFacturesEau = new JMenuItem("Anciennes factures d'eau");
+		JMenuItem MenuItemAnciennesFacturesEau = new JMenuItem("Factures d'eau payées");
 		MenuItemAnciennesFacturesEau.addActionListener(this);
 		MenuFacturesEau.add(MenuItemAnciennesFacturesEau);
 		
-		JMenuItem MenuItemFacturesEauEnCours = new JMenuItem("Factures d'eau en cours");
+		JMenuItem MenuItemFacturesEauEnCours = new JMenuItem("Factures d'eau à payées");
 		MenuItemFacturesEauEnCours.addActionListener(this);
 		MenuFacturesEau.add(MenuItemFacturesEauEnCours);
 		
@@ -146,11 +151,11 @@ public class EntretiensPartiesAnciens extends JFrame implements ActionListener {
 		MenuElectricite.addActionListener(this);
 		MenuCharges.add(MenuElectricite);
 		
-		JMenuItem MenuItemAnciennesFacturesElectricite = new JMenuItem("Anciennes factures d'électricité");
+		JMenuItem MenuItemAnciennesFacturesElectricite = new JMenuItem("Factures d'électricité payées");
 		MenuItemAnciennesFacturesElectricite.addActionListener(this);
 		MenuElectricite.add(MenuItemAnciennesFacturesElectricite);
 		
-		JMenuItem mntmFacturesDlectricitEn = new JMenuItem("Factures d'électricité en cours");
+		JMenuItem mntmFacturesDlectricitEn = new JMenuItem("Factures d'électricité à payées");
 		mntmFacturesDlectricitEn.addActionListener(this);
 		MenuElectricite.add(mntmFacturesDlectricitEn);
 		
@@ -271,13 +276,13 @@ public class EntretiensPartiesAnciens extends JFrame implements ActionListener {
 		
 		JButton ButtonInserer = new JButton("Insérer");
 		ButtonInserer.addActionListener(this);
-		ButtonInserer.setBounds(230, 376, 85, 21);
+		ButtonInserer.setBounds(150, 370, 85, 25);
 		contentPane.add(ButtonInserer);
 		
-		JButton ButtonSupprimer = new JButton("Supprimer");
-		ButtonSupprimer.addActionListener(this);
-		ButtonSupprimer.setBounds(611, 376, 85, 21);
-		contentPane.add(ButtonSupprimer);
+		JButton ButtonAnnuler = new JButton("Annuler");
+		ButtonAnnuler.addActionListener(this);
+		ButtonAnnuler.setBounds(700, 370, 85, 25);
+		contentPane.add(ButtonAnnuler);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -312,22 +317,22 @@ public class EntretiensPartiesAnciens extends JFrame implements ActionListener {
 				new LocatairesEnCours().setVisible(true);
 				break;
 				
-			case "Nouveaux entretiens parties communes":
-				this.dispose();
-				new NouveauEntretien().setVisible(true);
-				break;
-				
-			case "Historique d'entretiens des parties communes":
+			case "Entretiens des parties communes":
 				this.dispose();
 				new EntretiensPartiesAnciens().setVisible(true);
 				break;
 				
-			case "Anciennes factures d'eau":
+			case "Nouveaux entretiens des parties communes":
+				this.dispose();
+				new NouveauEntretien().setVisible(true);
+				break;
+				
+			case "Factures d'eau payées":
 				this.dispose();
 				new FacturesEauPayees().setVisible(true);
 				break;
 				
-			case "Factures d'eau en cours":
+			case "Factures d'eau à payées":
 				this.dispose();
 				new FacturesEauAPayees().setVisible(true);
 				break;
@@ -337,12 +342,12 @@ public class EntretiensPartiesAnciens extends JFrame implements ActionListener {
 				new NouvelleFactureEau().setVisible(true);
 				break;
 				
-			case "Anciennes factures d'électricité":
+			case "Factures d'électricité payées":
 				this.dispose();
 				new FacturesElectricitePayees().setVisible(true);
 				break;
 				
-			case "Factures d'électricité en cours":
+			case "Factures d'électricité à payées":
 				this.dispose();
 				new FacturesElectriciteAPayees().setVisible(true);
 				break;
@@ -374,12 +379,12 @@ public class EntretiensPartiesAnciens extends JFrame implements ActionListener {
 				
 			case "Consultation charges supplémentaires":
 				this.dispose();
-				new TaxeFonciere().setVisible(true);
+				new ChargesSupplementaires().setVisible(true);
 				break;
 			
 			case "Nouvelle charges supplémentaires":
 				this.dispose();
-				new NouvelleTaxeFonciere().setVisible(true);
+				new NouvelleChargeSupp().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
@@ -416,11 +421,16 @@ public class EntretiensPartiesAnciens extends JFrame implements ActionListener {
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
+				
+			case "Insérer":
+				this.dispose();
+				new NouveauDiagnostic().setVisible(true);
+				break;
        
 			case "Annuler":
 				this.dispose();
 				break;
-				
+       
 			default:
 				System.out.println("Choix incorrect");
 				break;

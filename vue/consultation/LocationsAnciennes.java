@@ -27,8 +27,10 @@ import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
+import vue.insertion.NouveauDiagnostic;
 import vue.insertion.NouveauEntretien;
 import vue.insertion.NouveauTravaux;
+import vue.insertion.NouvelleChargeSupp;
 import vue.insertion.NouvelleFactureEau;
 import vue.insertion.NouvelleFactureElectricite;
 import vue.insertion.NouvelleLocation;
@@ -304,17 +306,25 @@ public class LocationsAnciennes extends JFrame implements ActionListener {
 		TitreAnciennesLocations.setBounds(22, 10, 431, 30);
 		contentPane.add(TitreAnciennesLocations);
 		
-		JButton ButtonCharger = new JButton("Charger");
-		ButtonCharger.addActionListener(this);
-		ButtonCharger.setBounds(216, 357, 85, 21);
-		contentPane.add(ButtonCharger);
+		JButton ButtonInserer = new JButton("Insérer");
+		ButtonInserer.addActionListener(this);
+		ButtonInserer.setBounds(75, 370, 100, 25);
+		contentPane.add(ButtonInserer);
+		
+		JButton ButtonMiseJour = new JButton("Mise à  jour");
+		ButtonMiseJour.addActionListener(this);
+		ButtonMiseJour.setBounds(305, 370, 100, 25);
+		contentPane.add(ButtonMiseJour);
+		
+		JButton ButtonSupprimer = new JButton("Supprimer");
+		ButtonSupprimer.addActionListener(this);
+		ButtonSupprimer.setBounds(550, 370, 100, 25);
+		contentPane.add(ButtonSupprimer);
 		
 		JButton ButtonAnnuler = new JButton("Annuler");
 		ButtonAnnuler.addActionListener(this);
-		ButtonAnnuler.setBounds(642, 357, 85, 21);
+		ButtonAnnuler.setBounds(790, 370, 100, 25);
 		contentPane.add(ButtonAnnuler);
-		
-		
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -348,28 +358,23 @@ public class LocationsAnciennes extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
-			
-			case "Anciens entretiens":
+				
+			case "Entretiens des parties communes":
 				this.dispose();
-				new EntretiensAnciens().setVisible(true);
+				new EntretiensPartiesAnciens().setVisible(true);
 				break;
 				
-			case "Entretiens en cours":
-				this.dispose();
-				new EntretiensEnCours().setVisible(true);
-				break;
-				
-			case "Nouveaux entretiens":
+			case "Nouveaux entretiens des parties communes":
 				this.dispose();
 				new NouveauEntretien().setVisible(true);
 				break;
 				
-			case "Anciennes factures d'eau":
+			case "Factures d'eau payées":
 				this.dispose();
 				new FacturesEauPayees().setVisible(true);
 				break;
 				
-			case "Factures d'eau en cours":
+			case "Factures d'eau à payées":
 				this.dispose();
 				new FacturesEauAPayees().setVisible(true);
 				break;
@@ -379,12 +384,12 @@ public class LocationsAnciennes extends JFrame implements ActionListener {
 				new NouvelleFactureEau().setVisible(true);
 				break;
 				
-			case "Anciennes factures d'électricité":
+			case "Factures d'électricité payées":
 				this.dispose();
 				new FacturesElectricitePayees().setVisible(true);
 				break;
 				
-			case "Factures d'électricité en cours":
+			case "Factures d'électricité à payées":
 				this.dispose();
 				new FacturesElectriciteAPayees().setVisible(true);
 				break;
@@ -416,12 +421,12 @@ public class LocationsAnciennes extends JFrame implements ActionListener {
 				
 			case "Consultation charges supplémentaires":
 				this.dispose();
-				new TaxeFonciere().setVisible(true);
+				new ChargesSupplementaires().setVisible(true);
 				break;
 			
 			case "Nouvelle charges supplémentaires":
 				this.dispose();
-				new NouvelleTaxeFonciere().setVisible(true);
+				new NouvelleChargeSupp().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
@@ -458,7 +463,25 @@ public class LocationsAnciennes extends JFrame implements ActionListener {
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
-
+				
+			case "Insérer":
+				this.dispose();
+				new NouvelleLocation().setVisible(true);
+				break;
+			
+			case "Mise à jour":
+				//this.dispose();
+				//new ().setVisible(true);
+				System.out.println("A implémenter");
+				break;
+				
+			case "Supprimer":
+				//this.dispose();
+				//new Impositions().setVisible(true);
+				System.out.println("A implémenter");
+				break;
+				
+				
 			case "Annuler":
 				this.dispose();
 				break;
@@ -468,5 +491,4 @@ public class LocationsAnciennes extends JFrame implements ActionListener {
 				break;
 		}
 	}
-	
 }
