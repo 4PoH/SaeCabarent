@@ -6,6 +6,9 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,9 +19,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import Requetes.Requete;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
@@ -34,7 +39,7 @@ import vue.insertion.NouvelleTaxeFonciere;
 public class TravauxEnCours extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTable table;
+	private JTable tableTravauxEnCours;
 
 	/**
 	 * Launch the application.
@@ -55,6 +60,19 @@ public class TravauxEnCours extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
+	
+	private ResultSet RequeteTableauTravauxEnCours() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "select lieuxdelocations.libelle, lieuxdelocations.adresse, travaux.libelle,travaux.montant, travaux.numfact, travaux.datefin, (to_date(travaux.datefin, 'YYYY/MM/DD') - to_date(travaux.datedeb, 'YYYY/MM/DD')) as duree, travaux.montantnondeductible, travaux.reduction, travaux.pdf\r\n"
+				+ "from travaux, concerne, lieuxdelocations\r\n"
+				+ "where travaux.numfact = concerne.numfact\r\n"
+				+ "and concerne.idlogement = lieuxdelocations.idlogement\r\n"
+				+ "and travaux.datefin is null";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	
 	public TravauxEnCours() {
 		setTitle("Travaux en cours");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -235,30 +253,41 @@ public class TravauxEnCours extends JFrame implements ActionListener {
 		scrollPane.setBounds(10, 64, 946, 269);
 		contentPane.add(scrollPane);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-			},
-			new String[] {
-				"Numero SIREN", "numero Facture", "numero Devis", "libelle", "date debut", "date fin", "detail", "montant payer", "montant non deductible", "reduction", "pdf"
+		final String[] columns = {"Libelle", "libelle travaux", "montant", "numero fact", "date fin", "duree travaux", "montant non déducible", "réduction", "pdf"};
+		scrollPane.setViewportView(tableTravauxEnCours);
+		
+		final DefaultTableModel model = new DefaultTableModel(columns, 0);
+		tableTravauxEnCours = new JTable(model);
+		tableTravauxEnCours.setRowSelectionAllowed(false);
+		tableTravauxEnCours.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableTravauxEnCours.setSurrendersFocusOnKeystroke(true);
+		
+		try {
+			ResultSet rsEnsLocation = RequeteTableauTravauxEnCours();
+			while ( rsEnsLocation.next()) {
+				String libellelocation = rsEnsLocation.getString(1);
+				libellelocation += " ";
+				libellelocation += rsEnsLocation.getString(2);
+				String travauxlibelle = rsEnsLocation.getString(3);
+				int resmontanttravaux = rsEnsLocation.getInt(4);
+				String montantregler = String.valueOf(resmontanttravaux);
+				String numfact = rsEnsLocation.getString(5);
+				Date resDateT = rsEnsLocation.getDate(6);
+				String DateT = String.valueOf(resDateT);
+				int resDuree = rsEnsLocation.getInt(7);
+				String Duree = String.valueOf(resDuree);
+				int resmontantnondeductible = rsEnsLocation.getInt(8);
+				String montantnondeductible = String.valueOf(resmontantnondeductible);
+				int resreduction = rsEnsLocation.getInt(9);
+				String reduction = String.valueOf(resreduction);
+				//a modifier pour faire en sorte que ce soit un bouton qui renvoie vers le pdf du fichier
+				String pdf = rsEnsLocation.getString(10);
+				model.addRow(new String[]{libellelocation, travauxlibelle, montantregler,numfact, DateT, Duree, montantnondeductible,reduction, pdf});
 			}
-		));
-		scrollPane.setViewportView(table);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		scrollPane.setViewportView(tableTravauxEnCours);
 		
 		JLabel TitreTravauxEnCours = new JLabel("Travaux en cours");
 		TitreTravauxEnCours.setFont(new Font("Tahoma", Font.BOLD, 20));
