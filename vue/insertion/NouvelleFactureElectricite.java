@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -30,8 +31,6 @@ import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
 import vue.consultation.ChargesBatiEnCours;
-import vue.consultation.EntretiensAnciens;
-import vue.consultation.EntretiensEnCours;
 import vue.consultation.FacturesEauAnciennes;
 import vue.consultation.FacturesEauEnCours;
 import vue.consultation.FacturesElectriciteAnciennes;
@@ -49,13 +48,14 @@ import vue.consultation.TravauxEnCours;
 public class NouvelleFactureElectricite extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	public JTextField textFieldNumeroFacture;
-	public JTextField textFieldDateFac;
-	public JTextField textFieldMontant;
-	public JTextField textFieldNomPDF;
-	public JTextField textFieldRepPDF;
-	public JComboBox<String> comboBoxEntreprise;
-	public String comboEntNom;
+	protected JTextField textFieldNumeroFacture;
+	protected JTextField textFieldDateFac;
+	protected JTextField textFieldMontant;
+	protected JTextField textFieldNomPDF;
+	protected JTextField textFieldRepPDF;
+	protected JComboBox<String> comboBoxEntreprise;
+	protected String comboEntNom;
+	protected NouvelleFactureElectricite frame;
 	
 	/**
 	 * Launch the application.
@@ -102,16 +102,17 @@ public class NouvelleFactureElectricite extends JFrame implements ActionListener
 	}
 	
 	// DB INSERT x6 : INT INT INT STRING STRING+STRING
-	private void RequeteInsertFacElec(int siren, int numfact, int total, String datefact, String chemin, String pdf ) throws SQLException {
+	private void RequeteInsertFacElec(int siren, int numfact, float total, String datefact, String chemin, String pdf ) throws SQLException {
 		CictOracleDataSource cict = new CictOracleDataSource();
 		String requete = "{ call insertFactureElectrique(?,?,?,?,?,?) } ";
+		
 				try {
 					Connection connection = cict.getConnection();
 					CallableStatement cs = connection.prepareCall(requete);
 					cs.setInt(1, siren);
 					cs.setInt(2, numfact);
-					cs.setInt(3, total);
-					cs.setString(4, datefact);
+					cs.setFloat(3, total);
+			        cs.setString(4, datefact);
 					cs.setString(5, chemin);
 					cs.setString(6, pdf);
 					cs.execute();
@@ -310,11 +311,11 @@ public class NouvelleFactureElectricite extends JFrame implements ActionListener
 		textFieldDateFac.setBounds(165, 157, 68, 20);
 		contentPane.add(textFieldDateFac);
 		
-		JLabel LabelDateFacture = new JLabel("Date de la facture  :");
+		JLabel LabelDateFacture = new JLabel("* Date de la facture  :");
 		LabelDateFacture.setBounds(37, 157, 132, 14);
 		contentPane.add(LabelDateFacture);
 		
-		JLabel LabelMontant = new JLabel("Montant  total :");
+		JLabel LabelMontant = new JLabel("* Montant  total :");
 		LabelMontant.setBounds(37, 188, 132, 14);
 		contentPane.add(LabelMontant);
 		
@@ -365,8 +366,7 @@ public class NouvelleFactureElectricite extends JFrame implements ActionListener
 		
 		JComboBox<String> comboBoxEntreprise = new JComboBox<String>();
 		comboBoxEntreprise.setBounds(165, 92, 132, 22);
-		contentPane.add(comboBoxEntreprise);	
-
+		contentPane.add(comboBoxEntreprise);
 			try {
 				ResultSet rsEntNom = RequeteAfficheComboEntreprise();
 				int i = 0;
@@ -388,7 +388,7 @@ public class NouvelleFactureElectricite extends JFrame implements ActionListener
 		LabelCheminPDF.setBounds(49, 253, 119, 14);
 		contentPane.add(LabelCheminPDF);
 		
-		JLabel LabelPDF = new JLabel("Fichier :");
+		JLabel LabelPDF = new JLabel("* Fichier :");
 		LabelPDF.setBounds(37, 223, 132, 14);
 		contentPane.add(LabelPDF);
 		
@@ -400,12 +400,12 @@ public class NouvelleFactureElectricite extends JFrame implements ActionListener
 		        comboEntNom = (String) jcmbType.getSelectedItem();
 		      }
 		    });
+				
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
 			case "Nouvelle entreprise":
-				this.dispose();
 				new NouvelleEntreprise().setVisible(true);
 				break;
 			case "Annuler":
@@ -414,15 +414,16 @@ public class NouvelleFactureElectricite extends JFrame implements ActionListener
 				break;
 				
 			case "Ajouter":				
+				String datefact = textFieldDateFac.getText();		
+				String chemin = textFieldRepPDF.getText() ;
+				String pdf = textFieldNomPDF.getText() ;				
+				int numfact = Integer.parseInt(textFieldNumeroFacture.getText());
+		        
+		        float total = Float.parseFloat(textFieldMontant.getText());
 				try {
-					String datefact = textFieldDateFac.getText();
-					String chemin = textFieldRepPDF.getText() ;				
-					String pdf = textFieldNomPDF.getText() ;				
-			        int numfact = Integer.parseInt(textFieldNumeroFacture.getText());
-			        int total = Integer.parseInt(textFieldMontant.getText());
-					int siren = RequeteGetSirenEntrepriseCombo(comboEntNom);
-				//	System.out.println(siren + " " + numfact + " " + total + " " + datefact + " " + chemin + " " + pdf);
+					int siren = RequeteGetSirenEntrepriseCombo(comboEntNom);					
 					RequeteInsertFacElec(siren, numfact, total, datefact, chemin, pdf);
+					JOptionPane.showMessageDialog(frame, "Facture " + numfact + " insérée.");
 				} catch (SQLException e3) {
 					e3.printStackTrace();
 				}				
@@ -457,16 +458,6 @@ public class NouvelleFactureElectricite extends JFrame implements ActionListener
 			case "Locataires en cours":
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
-				break;
-			
-			case "Anciens entretiens":
-				this.dispose();
-				new EntretiensAnciens().setVisible(true);
-				break;
-				
-			case "Entretiens en cours":
-				this.dispose();
-				new EntretiensEnCours().setVisible(true);
 				break;
 				
 			case "Nouveaux entretiens":

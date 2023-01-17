@@ -243,18 +243,19 @@ public class Quittances extends JFrame implements ActionListener {
 		contentPane.add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
 		
-		JLabel LabelQuittances = new JLabel("Générer Quitances");
+		JLabel LabelQuittances = new JLabel("Générer quitances");
 		LabelQuittances.setFont(new Font("Tahoma", Font.BOLD, 20));
 		LabelQuittances.setForeground(new Color(0, 0, 0));
-		LabelQuittances.setBounds(10, 10, 235, 30);
+		LabelQuittances.setBounds(132, 74, 200, 30);
 		panel.add(LabelQuittances);
 		
-		JButton ButtonAnnuler = new JButton("Annuler");
-		ButtonAnnuler.setBounds(20, 368, 85, 21);
+		JButton ButtonAnnuler = new JButton("Retour à l'accueil");
+		ButtonAnnuler.setBounds(80, 170, 140, 25);
 		panel.add(ButtonAnnuler);
 		
 		JButton ButtonGenerer = new JButton("Générer");
-		ButtonGenerer.setBounds(326, 368, 85, 21);
+		ButtonGenerer.addActionListener(this);
+		ButtonGenerer.setBounds(260, 170, 140, 25);
 		panel.add(ButtonGenerer);
 	}
 	

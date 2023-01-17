@@ -6,6 +6,9 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,6 +22,7 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import Requetes.Requete;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
@@ -55,7 +59,23 @@ public class TaxeFonciere extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
+	
+	private ResultSet RequeteTableauTaxeFonciere() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "select bati.adresse, bati.codepostal, taxefonciere.refavis, attacher.datefact,\r\n"
+				+ "    taxefonciere.totaltaxefonciere, taxefonciere.totalorduremenagere , taxefonciere.pdf\r\n"
+				+ "from taxefonciere, attacher, bati\r\n"
+				+ "where taxefonciere.refavis = attacher.refavis\r\n"
+				+ "and attacher.adresse = bati.adresse\r\n"
+				+ "and attacher.codepostal = bati.codepostal\r\n"
+				+ "order by attacher.datefact DESC";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	
 	public TaxeFonciere() {
+		
 		setTitle("Consultation taxe foncière");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 980, 480);
@@ -235,30 +255,30 @@ public class TaxeFonciere extends JFrame implements ActionListener {
 		scrollPane.setBounds(10, 64, 946, 269);
 		contentPane.add(scrollPane);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-			},
-			new String[] {
-				"Numero SIREN", "numero Facture", "numero Devis", "libelle", "date debut", "date fin", "detail", "montant payer", "montant non deductible", "reduction", "pdf"
+		// Header de JTable 
+	    final String[] columns = {"Adresse", "Code postal", "Référence", "Date facture", "Total taxe foncière", "Total ordure ménagère", "PDF"};
+		// Créer le modèle de table
+	    final DefaultTableModel model = new DefaultTableModel(columns, 0);
+		JTable tableTaxeFonciere = new JTable(model);
+		
+		int totalLoyer = 0;
+		
+		try {
+			ResultSet rsTaxeFonciere = RequeteTableauTaxeFonciere();
+			while (rsTaxeFonciere.next()) {
+				String adresse = rsTaxeFonciere.getString("ADRESSE");
+				String codep = rsTaxeFonciere.getString("CODEPOSTAL");
+				String ref = rsTaxeFonciere.getString("REFAVIS");
+				String datefact = String.valueOf(rsTaxeFonciere.getDate("DATEFACT"));
+				String tottaxefonc = String.valueOf(rsTaxeFonciere.getInt("totaltaxefonciere"));
+				String totordmen = String.valueOf(rsTaxeFonciere.getInt("totalorduremenagere"));
+				String pdf = rsTaxeFonciere.getString("pdf");
+				model.addRow(new String[]{adresse,codep,ref,datefact,tottaxefonc,totordmen,pdf});
 			}
-		));
-		scrollPane.setViewportView(table);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		scrollPane.setViewportView(tableTaxeFonciere);
 		
 		JLabel TitreTaxeFonciere = new JLabel("Consultation taxe foncière");
 		TitreTaxeFonciere.setFont(new Font("Tahoma", Font.BOLD, 20));
@@ -321,16 +341,6 @@ public class TaxeFonciere extends JFrame implements ActionListener {
 			case "Locataires en cours":
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
-				break;
-			
-			case "Anciens entretiens":
-				this.dispose();
-				new EntretiensAnciens().setVisible(true);
-				break;
-				
-			case "Entretiens en cours":
-				this.dispose();
-				new EntretiensEnCours().setVisible(true);
 				break;
 				
 			case "Nouveaux entretiens":

@@ -1,8 +1,5 @@
 package vue;
 
-import java.awt.BorderLayout;
-
-import java.awt.DisplayMode;
 import java.awt.EventQueue;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -27,8 +24,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import Requetes.Requete;
-import vue.consultation.EntretiensAnciens;
-import vue.consultation.EntretiensEnCours;
 import vue.consultation.FacturesEauAnciennes;
 import vue.consultation.FacturesEauEnCours;
 import vue.consultation.FacturesElectriciteAnciennes;
@@ -79,10 +74,18 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 	private ResultSet RequeteTableauBati() throws SQLException {
 		ResultSet retourRequete = null;
 		Requete requete = new Requetes.Requete();
-		String texteSQL = "select distinct lieuxdelocations.adresse, lieuxdelocations.codepostal, lieuxdelocations.libelle, locataire.nom, locataire.prenom\r\n"
-						+ "from loue, lieuxdelocations, contrat, relie, locataire \r\n"
-						+ "where loue.idlogement = lieuxdelocations.idlogement and loue.idcontrat = contrat.idcontrat and contrat.idcontrat = relie.idcontrat \r\n"
-						+ "and relie.idlocataire = locataire.idlocataire and to_date(add_months(sysdate, -12),'dd/mm/yyyy') < to_date(loue.datelocation, 'dd/mm/yyyy')";
+		String texteSQL = "select distinct lieuxdelocations.adresse, lieuxdelocations.codepostal, lieuxdelocations.libelle, locataire.nom, locataire.prenom, l.montantloyer, contrat.idcontrat\r\n"
+				+ "from loue l, lieuxdelocations, contrat, relie, locataire\r\n"
+				+ "where l.idlogement = lieuxdelocations.idlogement\r\n"
+				+ "and l.idcontrat = contrat.idcontrat \r\n"
+				+ "and contrat.idcontrat = relie.idcontrat\r\n"
+				+ "and relie.idlocataire = locataire.idlocataire\r\n"
+				+ "and to_date(add_months(sysdate, -12),'dd/mm/yyyy') < to_date(l.datelocation, 'dd/mm/yyyy')\r\n"
+				+ "and l.datelocation =( select max(l2.datelocation)\r\n"
+				+ "                      from loue l2 \r\n"
+				+ "                      where l2.idcontrat = l.idcontrat \r\n"
+				+ "                      and l2.idlogement = l.idlogement\r\n"
+				+ "                    )";
 		retourRequete = requete.requeteSelection(texteSQL);
 		return retourRequete;
 	}
@@ -276,12 +279,14 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 		tableAcceuilBati.setRowSelectionAllowed(false);
 		tableAcceuilBati.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableAcceuilBati.setSurrendersFocusOnKeystroke(true);
-				
+		
+		int totalLoyer = 0;
+		
 		try {
 			ResultSet rsEnsBati = RequeteTableauBati();
-			int i = 0;
-			rsEnsBati.next();
-			while ( i < rsEnsBati.getRow()) {
+			while (rsEnsBati.next()) {
+				totalLoyer += rsEnsBati.getInt("MONTANTLOYER");
+				String loyer = String.valueOf(rsEnsBati.getInt("MONTANTLOYER"));
 				String adresse = rsEnsBati.getString("ADRESSE");
 				adresse += ", ";
 				adresse += rsEnsBati.getString("CODEPOSTAL");
@@ -289,14 +294,13 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 				adresse += rsEnsBati.getString("LIBELLE");
 				adresse += ", ";
 				adresse += rsEnsBati.getString("NOM");
-				adresse += ", ";
-				adresse += rsEnsBati.getString("PRENOM");
-				model.addRow(new String[]{adresse,"",""});
-				rsEnsBati.next();
+				adresse += " ";
+				adresse += rsEnsBati.getString("PRENOM");				
+				model.addRow(new String[]{adresse,loyer,""});
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} 
+		}
 		
 		tableAcceuilBati.getColumnModel().getColumn(0).setPreferredWidth(560);
 		tableAcceuilBati.getColumnModel().getColumn(1).setPreferredWidth(120);
@@ -307,7 +311,8 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 		menuBar.setBounds(10, 380, 680, 30);
 		contentPane.add(menuBar);
 		
-		JLabel LabelTotal = new JLabel("Total : ");
+		String stringLabelTotal = "Total : " + String.valueOf(totalLoyer);
+		JLabel LabelTotal = new JLabel(stringLabelTotal);
 		LabelTotal.setHorizontalAlignment(SwingConstants.RIGHT);
 		menuBar.add(LabelTotal);
 		
@@ -344,16 +349,6 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 			case "Locataires en cours":
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
-				break;
-			
-			case "Anciens entretiens":
-				this.dispose();
-				new EntretiensAnciens().setVisible(true);
-				break;
-				
-			case "Entretiens en cours":
-				this.dispose();
-				new EntretiensEnCours().setVisible(true);
 				break;
 				
 			case "Nouveaux entretiens":

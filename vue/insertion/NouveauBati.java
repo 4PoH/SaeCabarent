@@ -5,6 +5,10 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -14,16 +18,16 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import JDBC.CictOracleDataSource;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.EntretiensAnciens;
-import vue.consultation.EntretiensEnCours;
 import vue.consultation.FacturesEauAnciennes;
 import vue.consultation.FacturesEauEnCours;
 import vue.consultation.FacturesElectriciteAnciennes;
@@ -44,8 +48,14 @@ public class NouveauBati extends JFrame implements ActionListener {
 	private JTextField textFieldCodePostal;
 	private JTextField textFieldVille;
 	private JTextField textFieldAnnee;
-	private JTextField textFieldAddresse;
+	private JTextField textFieldAdresse;
 	private JTextField textFieldPartiesCommunes;
+	private JComboBox<String> comboBoxTypeHabitation;
+	private String comboTypeHabitation;
+	private JCheckBox checkboxCopropriete;
+	private JTextField textFieldAnneObtention;
+	private String copropriete;
+	private NouveauBati frame;
 
 	/**
 	 * Launch the application.
@@ -63,6 +73,27 @@ public class NouveauBati extends JFrame implements ActionListener {
 		});
 	}
 
+	// DB INSERT x8 : STRING INT STRING STRING STRING STRING BOOLEAN STRING
+	private void RequeteInsertBati(String adresse, int code, String ville, String typeHabitation, String anneeConstruction, String listePartieCommune, String copropriete, String dateObtention) throws SQLException {
+		CictOracleDataSource cict = new CictOracleDataSource();
+		String requete = "{ call insertBati(?,?,?,?,?,?,?,?) } ";		
+				try {
+					Connection connection = cict.getConnection();
+					CallableStatement cs = connection.prepareCall(requete);
+					cs.setString(1, adresse);
+					cs.setInt(2, code);
+					cs.setString(3, ville);
+					cs.setString(4, typeHabitation);
+			        cs.setString(5, anneeConstruction);
+					cs.setString(6, listePartieCommune);					
+					cs.setString(7, copropriete);
+					cs.setString(8, dateObtention);
+					cs.execute();
+				} catch(SQLException e) {
+					e.printStackTrace();
+				}
+	}
+	
 	/**
 	 * Create the frame.
 	 */
@@ -244,28 +275,29 @@ public class NouveauBati extends JFrame implements ActionListener {
 		
 		textFieldCodePostal = new JTextField();
 		textFieldCodePostal.setColumns(10);
-		textFieldCodePostal.setBounds(179, 127, 68, 20);
+		textFieldCodePostal.setBounds(181, 113, 68, 20);
 		contentPane.add(textFieldCodePostal);
 		
 		JLabel LabelCodePostal = new JLabel("* Code postal :");
-		LabelCodePostal.setBounds(37, 126, 132, 14);
+		LabelCodePostal.setBounds(39, 112, 132, 14);
 		contentPane.add(LabelCodePostal);
 		
 		JLabel LabelVille = new JLabel("Ville :");
-		LabelVille.setBounds(35, 158, 144, 14);
+		LabelVille.setBounds(37, 144, 144, 14);
 		contentPane.add(LabelVille);
 		
 		textFieldVille = new JTextField();
 		textFieldVille.setColumns(10);
-		textFieldVille.setBounds(177, 159, 132, 20);
+		textFieldVille.setBounds(179, 145, 132, 20);
 		contentPane.add(textFieldVille);
 		
 		JLabel LabelTypeHabitat = new JLabel("Type d'habitat :");
-		LabelTypeHabitat.setBounds(35, 189, 132, 14);
+		LabelTypeHabitat.setBounds(37, 175, 132, 14);
 		contentPane.add(LabelTypeHabitat);
 		
 		JButton ButtonAjouter = new JButton("Ajouter");
 		ButtonAjouter.setBounds(307, 384, 132, 23);
+		ButtonAjouter.addActionListener(this);
 		contentPane.add(ButtonAjouter);
 		
 		JButton ButtonAnnuler = new JButton("Annuler");
@@ -279,46 +311,102 @@ public class NouveauBati extends JFrame implements ActionListener {
 		
 		textFieldAnnee = new JTextField();
 		textFieldAnnee.setColumns(10);
-		textFieldAnnee.setBounds(177, 222, 68, 20);
+		textFieldAnnee.setBounds(179, 208, 68, 20);
 		contentPane.add(textFieldAnnee);
 		
 		JLabel LabelAnnee = new JLabel("Année de construction :");
-		LabelAnnee.setBounds(35, 221, 132, 14);
+		LabelAnnee.setBounds(37, 207, 132, 14);
 		contentPane.add(LabelAnnee);
 		
 		JLabel LabelAdresse = new JLabel("* Adresse :");
-		LabelAdresse.setBounds(37, 96, 132, 14);
+		LabelAdresse.setBounds(39, 82, 132, 14);
 		contentPane.add(LabelAdresse);
 		
-		textFieldAddresse = new JTextField();
-		textFieldAddresse.setColumns(10);
-		textFieldAddresse.setBounds(179, 96, 233, 20);
-		contentPane.add(textFieldAddresse);
-		
-		JComboBox comboBoxTypeHabitat = new JComboBox();
-		comboBoxTypeHabitat.setBounds(179, 190, 130, 22);
-		contentPane.add(comboBoxTypeHabitat);
+		textFieldAdresse = new JTextField();
+		textFieldAdresse.setColumns(10);
+		textFieldAdresse.setBounds(181, 82, 233, 20);
+		contentPane.add(textFieldAdresse);
 		
 		JLabel LabelPartiesCommunes = new JLabel("Liste des parties communes :");
-		LabelPartiesCommunes.setBounds(37, 258, 132, 14);
+		LabelPartiesCommunes.setBounds(39, 244, 132, 14);
 		contentPane.add(LabelPartiesCommunes);
 		
 		textFieldPartiesCommunes = new JTextField();
 		textFieldPartiesCommunes.setColumns(10);
-		textFieldPartiesCommunes.setBounds(177, 253, 132, 20);
+		textFieldPartiesCommunes.setBounds(179, 239, 235, 73);
 		contentPane.add(textFieldPartiesCommunes);
 		
 		JLabel LabelCopropriete = new JLabel("Copropriété :");
-		LabelCopropriete.setBounds(37, 288, 132, 14);
+		LabelCopropriete.setBounds(39, 323, 132, 14);
 		contentPane.add(LabelCopropriete);
 		
-		JCheckBox checkboxCopropriete = new JCheckBox("");
-		checkboxCopropriete.setBounds(174, 284, 97, 23);
+		JCheckBox checkboxCopropriete = new JCheckBox("Copropriété");
+		checkboxCopropriete.setBounds(176, 319, 97, 23);
 		contentPane.add(checkboxCopropriete);
+		checkboxCopropriete.addActionListener(this);
+		
+		JComboBox comboBoxTypeHabitation = new JComboBox();
+		comboBoxTypeHabitation.setBounds(181, 176, 130, 22);
+		contentPane.add(comboBoxTypeHabitation);
+		ArrayList<String> typeHab = new ArrayList<String>();
+		typeHab.add("Appartement");
+		typeHab.add("Maison");
+		typeHab.add("Autres...");
+		int indexTypeHab = 0;
+		while ( indexTypeHab < typeHab.size()) {
+			comboBoxTypeHabitation.addItem(typeHab.get(indexTypeHab));
+			indexTypeHab++;
+		}
+		comboBoxTypeHabitation.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        comboTypeHabitation = (String) jcmbType.getSelectedItem();
+		      }
+		    });
+		
+		JLabel LabelAnneeObtention = new JLabel("Date d'obtention :");
+		LabelAnneeObtention.setBounds(39, 348, 132, 14);
+		contentPane.add(LabelAnneeObtention);
+		
+		textFieldAnneObtention = new JTextField();
+		textFieldAnneObtention.setColumns(10);
+		textFieldAnneObtention.setBounds(181, 349, 68, 20);
+		contentPane.add(textFieldAnneObtention);
+		
+		this.copropriete = "N";
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Ajouter":	
+				System.out.println("test");
+				String adresse = textFieldAdresse.getText();
+				int code = Integer.parseInt(textFieldCodePostal.getText()) ;
+				String ville = textFieldVille.getText();
+				String typeHabitation = comboTypeHabitation ;
+				String anneeConstruction = textFieldAnnee.getText();
+				String listePartieCommune = textFieldPartiesCommunes.getText() ; 
+				String dateObtention = textFieldAnneObtention.getText();
+				String copropriete = this.copropriete;
+		        System.out.println(adresse + code + ville + typeHabitation + anneeConstruction + listePartieCommune + dateObtention + copropriete);
+				try {					
+					RequeteInsertBati(adresse,code, ville, typeHabitation, anneeConstruction, listePartieCommune, copropriete, dateObtention);
+					JOptionPane.showMessageDialog(frame, "Batîment " + typeHabitation + " de " + anneeConstruction + " inséré.");
+				} catch (SQLException e3) {
+					e3.printStackTrace();
+				}
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
+			case "Copropriété":
+				this.checkboxCopropriete = (JCheckBox) e.getSource();
+				if (checkboxCopropriete.isSelected()) {
+					this.copropriete = "Y";
+				} else {
+					this.copropriete = "N";
+				}
+				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -348,16 +436,6 @@ public class NouveauBati extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
-			
-			case "Anciens entretiens":
-				this.dispose();
-				new EntretiensAnciens().setVisible(true);
-				break;
-				
-			case "Entretiens en cours":
-				this.dispose();
-				new EntretiensEnCours().setVisible(true);
-				break;
 				
 			case "Nouveaux entretiens":
 				this.dispose();
@@ -379,27 +457,27 @@ public class NouveauBati extends JFrame implements ActionListener {
 				new NouvelleFactureEau().setVisible(true);
 				break;
 				
-			case "Anciennes factures d'électricité":
+			case "Anciennes factures d'Ã©lectricitÃ©":
 				this.dispose();
 				new FacturesElectriciteAnciennes().setVisible(true);
 				break;
 				
-			case "Factures d'électricité en cours":
+			case "Factures d'Ã©lectricitÃ© en cours":
 				this.dispose();
 				new FacturesElectriciteEnCours().setVisible(true);
 				break;
 				
-			case "Nouvelles factures d'électricité":
+			case "Nouvelles factures d'Ã©lectricitÃ©":
 				this.dispose();
 				new NouvelleFactureElectricite().setVisible(true);
 				break;
 				
-			case "Consultation taxes foncières":
+			case "Consultation taxes fonciÃ¨res":
 				this.dispose();
 				new TaxeFonciere().setVisible(true);
 				break;
 			
-			case "Nouvelles taxes foncières":
+			case "Nouvelles taxes fonciÃ¨res":
 				this.dispose();
 				new NouvelleTaxeFonciere().setVisible(true);
 				break;
@@ -414,12 +492,12 @@ public class NouveauBati extends JFrame implements ActionListener {
 				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 				
-			case "Consultation charges supplémentaires":
+			case "Consultation charges supplÃ©mentaires":
 				this.dispose();
 				new TaxeFonciere().setVisible(true);
 				break;
 			
-			case "Nouvelle charges supplémentaires":
+			case "Nouvelle charges supplÃ©mentaires":
 				this.dispose();
 				new NouvelleTaxeFonciere().setVisible(true);
 				break;

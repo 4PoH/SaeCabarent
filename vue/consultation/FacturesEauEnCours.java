@@ -7,6 +7,8 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,6 +22,7 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import Requetes.Requete;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
@@ -56,9 +59,26 @@ public class FacturesEauEnCours extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
+	
+	private ResultSet RequeteTableauEauCourante() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "select bati.adresse, bati.codepostal, factureeau.siren, entreprise.nom ,factureeau.numfact, factureeau.prixm3, factureeau.datefact datefacture,\r\n"
+				+ "    factureeau.partiefixe, factureeau.total, factureeau.pdf\r\n"
+				+ "from factureeau, bati, rattacher, entreprise\r\n"
+				+ "where factureeau.siren = rattacher.siren\r\n"
+				+ "and factureeau.numfact = rattacher.numfact\r\n"
+				+ "and rattacher.adresse = bati.adresse\r\n"
+				+ "and rattacher.codepostal = bati.codepostal\r\n"
+				+ "and entreprise.siren = factureeau.siren\r\n"
+				+ "and rattacher.datefact is null order by datefacture desc";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	
 	public FacturesEauEnCours() {
 		setBackground(new Color(240, 240, 240));
-		setTitle("Factures d'eau en cours");
+		setTitle("Factures d'eau à payer");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 960, 480);
 		
@@ -237,32 +257,30 @@ public class FacturesEauEnCours extends JFrame implements ActionListener {
 		scrollPane.setBounds(22, 49, 914, 278);
 		contentPane.add(scrollPane);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null},
-			},
-			new String[] {
-				"Location", "Numero facture", "Date facture", "Prix unitaire m3", "Mode de paiment", "Montant payer", "Partie fixe", "Total", "Pdf"
-			}
-		));
-		scrollPane.setViewportView(table);
+		// Header de JTable 
+	    final String[] columns = {"Bâti", "Entreprise", "Numéro de facture", "Prix au m3", "Date de facture", "Partie fixe", "Total", "Lien PDF"};
+		// Créer le modèle de table
+	    final DefaultTableModel model = new DefaultTableModel(columns, 0);
+		JTable tableFactureEauCourante = new JTable(model);
 		
-		JLabel TitreFactureEauEnCours = new JLabel("Factures d'eau en cours");
+		try {
+			ResultSet rsEauCourante = RequeteTableauEauCourante();
+			while (rsEauCourante.next()) {
+				String bati = rsEauCourante.getString("ADRESSE") + ", " + rsEauCourante.getString("CODEPOSTAL");
+				String entreprise = rsEauCourante.getString("NOM");
+				String numfact = rsEauCourante.getString("NUMFACT");
+				String datefact = String.valueOf(rsEauCourante.getDate("DATEFACTURE"));
+				String prixm3 =  String.valueOf(rsEauCourante.getFloat("PRIXM3"));
+				String partieFixe = String.valueOf(rsEauCourante.getFloat("PARTIEFIXE"));
+				String total = String.valueOf(rsEauCourante.getFloat("TOTAL"));
+				String pdf = rsEauCourante.getString("PDF");
+				model.addRow(new String[]{bati, entreprise, numfact, prixm3, datefact, partieFixe, total, pdf});
+			}
+		} catch (SQLException e) { e.printStackTrace();}
+			
+		scrollPane.setViewportView(tableFactureEauCourante);
+		
+		JLabel TitreFactureEauEnCours = new JLabel("Factures d'eau à payer");
 		TitreFactureEauEnCours.setFont(new Font("Tahoma", Font.BOLD, 20));
 		TitreFactureEauEnCours.setBounds(10, 10, 241, 29);
 		contentPane.add(TitreFactureEauEnCours);
@@ -323,16 +341,6 @@ public class FacturesEauEnCours extends JFrame implements ActionListener {
 			case "Locataires en cours":
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
-				break;
-			
-			case "Anciens entretiens":
-				this.dispose();
-				new EntretiensAnciens().setVisible(true);
-				break;
-				
-			case "Entretiens en cours":
-				this.dispose();
-				new EntretiensEnCours().setVisible(true);
 				break;
 				
 			case "Nouveaux entretiens":

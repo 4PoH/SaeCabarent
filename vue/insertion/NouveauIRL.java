@@ -1,11 +1,13 @@
-package vue.consultation;
+package vue.insertion;
 
-import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,28 +15,37 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
 
+import JDBC.CictOracleDataSource;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.insertion.NouveauEntretien;
-import vue.insertion.NouveauTravaux;
-import vue.insertion.NouvelleFactureEau;
-import vue.insertion.NouvelleFactureElectricite;
-import vue.insertion.NouvelleLocation;
-import vue.insertion.NouvelleProtectionJuridique;
-import vue.insertion.NouvelleTaxeFonciere;
+import vue.consultation.FacturesEauAnciennes;
+import vue.consultation.FacturesEauEnCours;
+import vue.consultation.FacturesElectriciteAnciennes;
+import vue.consultation.FacturesElectriciteEnCours;
+import vue.consultation.Impositions;
+import vue.consultation.LocatairesAnciens;
+import vue.consultation.LocatairesEnCours;
+import vue.consultation.LocationsAnciennes;
+import vue.consultation.LocationsEnCours;
+import vue.consultation.ProtectionJuridique;
+import vue.consultation.TaxeFonciere;
+import vue.consultation.TravauxAnciens;
+import vue.consultation.TravauxEnCours;
 
-public class EntretiensEnCours extends JFrame implements ActionListener {
+public class NouveauIRL extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTable table;
+	private JTextField textFieldAnnee;
+	private JTextField textFieldTrimestre;
+	private JTextField textFieldMontant;
+	protected NouveauIRL frame;
 
 	/**
 	 * Launch the application.
@@ -43,7 +54,7 @@ public class EntretiensEnCours extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					EntretiensEnCours frame = new EntretiensEnCours();
+					NouveauIRL frame = new NouveauIRL();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -55,11 +66,27 @@ public class EntretiensEnCours extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public EntretiensEnCours() {
-		setBackground(new Color(240, 240, 240));
-		setTitle("Entretiens en cours");
+	
+	private void RequeteInsertIRL(String annee, int trimestre, float montant) throws SQLException {
+		CictOracleDataSource cict = new CictOracleDataSource();
+		String requete = "{ call insertIRL(?,?,?) }";
+				try {
+					Connection connection = cict.getConnection();
+					CallableStatement cs = connection.prepareCall(requete);
+					cs.setString(1, annee);
+					cs.setInt(2, trimestre);
+					cs.setFloat(3, montant);
+					cs.execute();
+				} catch(SQLException e) {
+					e.printStackTrace();
+				}
+	}
+	
+	public NouveauIRL() {
+		setResizable(false);
+		setTitle("Nouvel IRL");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 960, 480);
+		setBounds(100, 100, 480, 480);
 		
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(5, 5, 5, 5));
@@ -232,49 +259,47 @@ public class EntretiensEnCours extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(22, 49, 914, 278);
-		contentPane.add(scrollPane);
+		textFieldAnnee = new JTextField();
+		textFieldAnnee.setBounds(230, 60, 132, 20);
+		contentPane.add(textFieldAnnee);
+		textFieldAnnee.setColumns(10);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-			},
-			new String[] {
-				"Bâti", "Numéro facture", "Date de paiement", "Total", "PDF"
-			}
-		));
-		scrollPane.setViewportView(table);
+		textFieldTrimestre = new JTextField();
+		textFieldTrimestre.setColumns(10);
+		textFieldTrimestre.setBounds(230, 91, 132, 20);
+		contentPane.add(textFieldTrimestre);
 		
-		JLabel TitreEntretiensEnCours = new JLabel("Entretiens en cours");
-		TitreEntretiensEnCours.setFont(new Font("Tahoma", Font.BOLD, 20));
-		TitreEntretiensEnCours.setBounds(10, 10, 500, 29);
-		contentPane.add(TitreEntretiensEnCours);
+		JLabel LabelAnnee = new JLabel("Année (ex : 2022):");
+		LabelAnnee.setBounds(90, 63, 132, 14);
+		contentPane.add(LabelAnnee);
 		
-		JButton ButtonCharger = new JButton("Charger");
-		ButtonCharger.addActionListener(this);
-		ButtonCharger.setBounds(114, 376, 85, 21);
-		contentPane.add(ButtonCharger);
+		JLabel LabelTrimestre = new JLabel("Trimestre (de 1 à 4):");
+		LabelTrimestre.setBounds(90, 94, 132, 14);
+		contentPane.add(LabelTrimestre);
+		
+		textFieldMontant = new JTextField();
+		textFieldMontant.setColumns(10);
+		textFieldMontant.setBounds(230, 122, 132, 20);
+		contentPane.add(textFieldMontant);
+		
+		JLabel LabelMontant = new JLabel("Montant :");
+		LabelMontant.setBounds(90, 125, 132, 14);
+		contentPane.add(LabelMontant);
+		
+		JButton ButtonAjouter = new JButton("Ajouter");
+		ButtonAjouter.setBounds(307, 384, 132, 23);
+		ButtonAjouter.addActionListener(this);
+		contentPane.add(ButtonAjouter);
 		
 		JButton ButtonAnnuler = new JButton("Annuler");
+		ButtonAnnuler.setBounds(49, 384, 132, 23);
 		ButtonAnnuler.addActionListener(this);
-		ButtonAnnuler.setBounds(769, 376, 85, 21);
 		contentPane.add(ButtonAnnuler);
+		
+		JLabel Bailleur = new JLabel("Nouvel IRL");
+		Bailleur.setFont(new Font("Tahoma", Font.BOLD, 20));
+		Bailleur.setBounds(49, 11, 307, 41);
+		contentPane.add(Bailleur);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -307,16 +332,6 @@ public class EntretiensEnCours extends JFrame implements ActionListener {
 			case "Locataires en cours":
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
-				break;
-			
-			case "Anciens entretiens":
-				this.dispose();
-				new EntretiensAnciens().setVisible(true);
-				break;
-				
-			case "Entretiens en cours":
-				this.dispose();
-				new EntretiensEnCours().setVisible(true);
 				break;
 				
 			case "Nouveaux entretiens":
@@ -418,11 +433,21 @@ public class EntretiensEnCours extends JFrame implements ActionListener {
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
-
-			case "Annuler":
-				this.dispose();
-				break;
 				
+			case "Ajouter":
+				String annee = textFieldAnnee.getText();
+				int trimestre = Integer.parseInt(textFieldTrimestre.getText());
+				float montant = Float.parseFloat(textFieldMontant.getText());
+				try {						
+					RequeteInsertIRL(annee,trimestre,montant);
+					JOptionPane.showMessageDialog(frame, "L'IRL du trimestre " + trimestre + " de " + annee + " inséré.");
+				} catch (SQLException e3) {
+					e3.printStackTrace();
+				}				
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
+       
 			default:
 				System.out.println("Choix incorrect");
 				break;

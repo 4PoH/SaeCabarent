@@ -5,6 +5,9 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -12,16 +15,16 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import JDBC.CictOracleDataSource;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.EntretiensAnciens;
-import vue.consultation.EntretiensEnCours;
 import vue.consultation.FacturesEauAnciennes;
 import vue.consultation.FacturesEauEnCours;
 import vue.consultation.FacturesElectriciteAnciennes;
@@ -39,14 +42,14 @@ import vue.consultation.TravauxEnCours;
 public class NouvelleEntreprise extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField textFieldNumeroSiren;
 	private JTextField textFieldNom;
 	private JTextField textFieldTelephone;
 	private JTextField textFieldVille;
 	private JTextField textFieldMail;
 	private JTextField textFieldNumeroSiret;
 	private JTextField textFieldCodePostal;
-
+	private JTextField textFieldAdresse;
+	protected NouveauTravaux frame;
 	/**
 	 * Launch the application.
 	 */
@@ -54,7 +57,7 @@ public class NouvelleEntreprise extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					NouveauTravaux frame = new NouveauTravaux();
+					NouvelleEntreprise frame = new NouvelleEntreprise();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -63,6 +66,27 @@ public class NouvelleEntreprise extends JFrame implements ActionListener {
 		});
 	}
 
+	// DB INSERT x8 : int String String String String int String int
+	private void RequeteInsertEntreprise(String siren, String nom, String numero, String adresse, String ville, int codepostal, String email, String siret) throws SQLException {
+		CictOracleDataSource cict = new CictOracleDataSource();
+		String requete = "{ call insertEntreprise(?,?,?,?,?,?,?,?) } ";		
+				try {
+					Connection connection = cict.getConnection();
+					CallableStatement cs = connection.prepareCall(requete);
+					cs.setString(1, siren);					
+			        cs.setString(2, nom);
+					cs.setString(3, numero);
+					cs.setString(4, adresse);
+					cs.setString(5, ville);
+					cs.setInt(6, codepostal);
+					cs.setString(7, email);
+					cs.setString(8, siret);
+					cs.execute();
+				} catch(SQLException e) {
+					e.printStackTrace();
+				}
+	}
+	
 	/**
 	 * Create the frame.
 	 */
@@ -242,58 +266,49 @@ public class NouvelleEntreprise extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textFieldNumeroSiren = new JTextField();
-		textFieldNumeroSiren.setBounds(165, 63, 132, 20);
-		contentPane.add(textFieldNumeroSiren);
-		textFieldNumeroSiren.setColumns(10);
-		
 		textFieldNom = new JTextField();
 		textFieldNom.setColumns(10);
-		textFieldNom.setBounds(165, 125, 132, 20);
+		textFieldNom.setBounds(165, 103, 132, 20);
 		contentPane.add(textFieldNom);
 		
-		JLabel LabelNumeroSiren = new JLabel("* Numéro de SIREN :");
-		LabelNumeroSiren.setBounds(37, 63, 132, 14);
-		contentPane.add(LabelNumeroSiren);
-		
 		JLabel LabelNom = new JLabel("Nom :");
-		LabelNom.setBounds(37, 125, 132, 14);
+		LabelNom.setBounds(37, 103, 132, 14);
 		contentPane.add(LabelNom);
 		
 		textFieldTelephone = new JTextField();
 		textFieldTelephone.setColumns(10);
-		textFieldTelephone.setBounds(165, 156, 132, 20);
+		textFieldTelephone.setBounds(165, 134, 132, 20);
 		contentPane.add(textFieldTelephone);
 		
 		JLabel LabelTelephone = new JLabel("Téléphone :");
-		LabelTelephone.setBounds(37, 156, 132, 14);
+		LabelTelephone.setBounds(37, 134, 132, 14);
 		contentPane.add(LabelTelephone);
 		
 		textFieldVille = new JTextField();
 		textFieldVille.setColumns(10);
-		textFieldVille.setBounds(165, 187, 132, 20);
+		textFieldVille.setBounds(165, 196, 132, 20);
 		contentPane.add(textFieldVille);
 		
 		JLabel LabelVille = new JLabel("Ville :");
-		LabelVille.setBounds(37, 187, 132, 14);
+		LabelVille.setBounds(37, 196, 132, 14);
 		contentPane.add(LabelVille);
 		
 		JLabel LabelEmail = new JLabel("Adresse mail :");
-		LabelEmail.setBounds(37, 248, 132, 14);
+		LabelEmail.setBounds(37, 257, 132, 14);
 		contentPane.add(LabelEmail);
 		
 		textFieldMail = new JTextField();
 		textFieldMail.setColumns(10);
-		textFieldMail.setBounds(165, 248, 132, 20);
+		textFieldMail.setBounds(165, 257, 132, 20);
 		contentPane.add(textFieldMail);
 		
 		JLabel LabelNumeroSiret = new JLabel("Numéro de SIRET :");
-		LabelNumeroSiret.setBounds(37, 94, 132, 14);
+		LabelNumeroSiret.setBounds(37, 72, 132, 14);
 		contentPane.add(LabelNumeroSiret);
 		
 		textFieldNumeroSiret = new JTextField();
 		textFieldNumeroSiret.setColumns(10);
-		textFieldNumeroSiret.setBounds(165, 94, 132, 20);
+		textFieldNumeroSiret.setBounds(165, 72, 132, 20);
 		contentPane.add(textFieldNumeroSiret);
 		
 		JButton ButtonAjouter = new JButton("Ajouter");
@@ -313,17 +328,44 @@ public class NouvelleEntreprise extends JFrame implements ActionListener {
 		contentPane.add(LabelNouvelleEntreprise);
 		
 		JLabel LabelCodePostal = new JLabel("Code postal :");
-		LabelCodePostal.setBounds(37, 220, 132, 14);
+		LabelCodePostal.setBounds(37, 229, 132, 14);
 		contentPane.add(LabelCodePostal);
 		
 		textFieldCodePostal = new JTextField();
 		textFieldCodePostal.setColumns(10);
-		textFieldCodePostal.setBounds(165, 217, 132, 20);
+		textFieldCodePostal.setBounds(165, 226, 132, 20);
 		contentPane.add(textFieldCodePostal);
+		
+		JLabel LabelAdresse = new JLabel("Adresse :");
+		LabelAdresse.setBounds(37, 165, 132, 14);
+		contentPane.add(LabelAdresse);
+		
+		textFieldAdresse = new JTextField();
+		textFieldAdresse.setColumns(10);
+		textFieldAdresse.setBounds(165, 165, 132, 20);
+		contentPane.add(textFieldAdresse);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Ajouter":				
+				String siret = textFieldNumeroSiret.getText();
+				String nom = textFieldNom.getText();
+				String numero = textFieldTelephone.getText();
+				String adresse = textFieldAdresse.getText();
+				String ville = textFieldVille.getText() ;
+				int codepostal = Integer.parseInt(textFieldCodePostal.getText().trim()) ;
+				String email = textFieldMail.getText() ;
+				String siren = textFieldNumeroSiret.getText().substring(0, textFieldNumeroSiret.getText().length() - 5);
+				try {				
+					RequeteInsertEntreprise(siren, nom, numero, adresse, ville, codepostal, email, siret) ;
+					JOptionPane.showMessageDialog(frame, "Entreprise n°" + siret + " insérée.");
+				} catch (SQLException e3) {
+					e3.printStackTrace();
+				}				
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -352,16 +394,6 @@ public class NouvelleEntreprise extends JFrame implements ActionListener {
 			case "Locataires en cours":
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
-				break;
-			
-			case "Anciens entretiens":
-				this.dispose();
-				new EntretiensAnciens().setVisible(true);
-				break;
-				
-			case "Entretiens en cours":
-				this.dispose();
-				new EntretiensEnCours().setVisible(true);
 				break;
 				
 			case "Nouveaux entretiens":

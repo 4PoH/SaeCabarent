@@ -5,24 +5,31 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import JDBC.CictOracleDataSource;
+import Requetes.Requete;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.EntretiensAnciens;
-import vue.consultation.EntretiensEnCours;
 import vue.consultation.FacturesEauAnciennes;
 import vue.consultation.FacturesEauEnCours;
 import vue.consultation.FacturesElectriciteAnciennes;
@@ -42,7 +49,36 @@ public class NouveauContrat extends JFrame implements ActionListener {
 	private JPanel contentPane;
 	private JTextField textFieldDate;
 	private JTextField textFieldCaution;
-	private JTextField textFieldNbLocataire;
+	protected JLabel LabelLibelleNbLocataire;
+	protected JLabel LabelLibelleLocataire;
+	protected JCheckBox chckbxColocataire ;
+	protected JButton ButtonColocationPlus;
+	protected JButton ButtonColocationMoins;
+	private int nbLocataire = 1;
+	private JComboBox<String> comboBoxTypeLocation;
+	private JComboBox<String> comboBoxLocataire;
+	private String locataire;
+	private String idLocataire;
+	private boolean locataireSelected;
+	private JComboBox<String> comboBoxLocataire2;
+	private String locataire2;
+	private String idLocataire2;
+	private boolean locataireSelected2;
+	private JComboBox<String> comboBoxLocataire3;
+	private String locataire3;
+	private String idLocataire3;
+	private boolean locataireSelected3;
+	private JComboBox<String> comboBoxLocataire4;
+	private String locataire4;
+	private String idLocataire4;
+	private boolean locataireSelected4;
+	private JComboBox<String> comboBoxLocataire5;
+	private String locataire5;
+	private String idLocataire5;
+	private boolean locataireSelected5;
+	private JComboBox<String> comboBoxDocuments;
+	private String typeLocation;
+	protected NouveauContrat frame;
 
 	/**
 	 * Launch the application.
@@ -63,6 +99,74 @@ public class NouveauContrat extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
+	
+	// SHOW COMBO NOM PRENOM LOCATAIRE
+	private ResultSet RequeteAfficheComboLocataire() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "select NOM, PRENOM, IDLOCATAIRE from LOCATAIRE order by 1";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	// SHOW COMBO NOM PRENOM LOCATAIRE2
+	private ResultSet RequeteAfficheComboLocataire2() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "select NOM, PRENOM, IDLOCATAIRE from LOCATAIRE where IDLOCATAIRE !=" + idLocataire + "order by 1";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	// SHOW COMBO NOM PRENOM LOCATAIRE3
+	private ResultSet RequeteAfficheComboLocataire3() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "select NOM, PRENOM, IDLOCATAIRE from LOCATAIRE where IDLOCATAIRE !=" + idLocataire + " AND IDLOCATAIRE !=" + idLocataire2 + "order by 1";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	// SHOW COMBO NOM PRENOM LOCATAIRE4
+	private ResultSet RequeteAfficheComboLocataire4() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "select NOM, PRENOM, IDLOCATAIRE from LOCATAIRE where IDLOCATAIRE !=" + idLocataire + " AND IDLOCATAIRE !=" + idLocataire2 + " AND IDLOCATAIRE !=" + idLocataire3 +"order by 1";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	// SHOW COMBO NOM PRENOM LOCATAIRE5
+	private ResultSet RequeteAfficheComboLocataire5() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "select NOM, PRENOM, IDLOCATAIRE from LOCATAIRE where IDLOCATAIRE !=" + idLocataire + " AND IDLOCATAIRE !=" + idLocataire2 + " AND IDLOCATAIRE !=" + idLocataire3 + " AND IDLOCATAIRE !=" + idLocataire4 + "order by 1";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	
+	
+	// SHOW COMBO DOCUMENTS
+	private ResultSet RequeteAfficheComboDocuments() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "select LIBELLE, DATEDOCUMENT from DOCUMENTCONTRAT order by 2 desc";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+
+	// DB INSERT x3 : STRING FLOAT STRING
+	private void RequeteInsertContrat(String DATEMISEENEFFET, float CAUTION, String TYPELOC) throws SQLException {
+		CictOracleDataSource cict = new CictOracleDataSource();
+		String requete = "{ call insertContrat(?,?,?) } ";		
+				try {
+					Connection connection = cict.getConnection();
+					CallableStatement cs = connection.prepareCall(requete);
+					cs.setString(1, DATEMISEENEFFET);					
+			        cs.setFloat(2, CAUTION);
+					cs.setString(3, TYPELOC);
+					cs.execute();
+				} catch(SQLException e) {
+					e.printStackTrace();
+				}
+	}
+	
 	public NouveauContrat() {
 		setTitle("Nouveau contrat");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -240,25 +344,25 @@ public class NouveauContrat extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 		
 		textFieldDate = new JTextField();
-		textFieldDate.setBounds(166, 60, 61, 20);
+		textFieldDate.setBounds(136, 97, 75, 20);
 		contentPane.add(textFieldDate);
 		textFieldDate.setColumns(10);
 		
 		JLabel LabelDateMiseEnEffet = new JLabel("* Date de mise en effet :");
-		LabelDateMiseEnEffet.setBounds(24, 63, 132, 14);
+		LabelDateMiseEnEffet.setBounds(11, 97, 132, 14);
 		contentPane.add(LabelDateMiseEnEffet);
 		
 		textFieldCaution = new JTextField();
 		textFieldCaution.setColumns(10);
-		textFieldCaution.setBounds(166, 182, 132, 20);
+		textFieldCaution.setBounds(136, 166, 132, 20);
 		contentPane.add(textFieldCaution);
 		
 		JLabel LabelCaution = new JLabel("Caution :");
-		LabelCaution.setBounds(24, 184, 132, 14);
+		LabelCaution.setBounds(11, 165, 132, 14);
 		contentPane.add(LabelCaution);
 		
 		JLabel LabelType = new JLabel("Type de location :");
-		LabelType.setBounds(24, 91, 132, 14);
+		LabelType.setBounds(11, 198, 132, 14);
 		contentPane.add(LabelType);
 		
 		JButton ButtonAjouter = new JButton("Ajouter");
@@ -271,53 +375,340 @@ public class NouveauContrat extends JFrame implements ActionListener {
 		ButtonAnnuler.addActionListener(this);
 		contentPane.add(ButtonAnnuler);
 		
-		JLabel LabelContrat = new JLabel("Nouveau contrat WIP");
+		JLabel LabelContrat = new JLabel("Nouveau contrat");
 		LabelContrat.setFont(new Font("Tahoma", Font.BOLD, 20));
 		LabelContrat.setBounds(24, 0, 307, 41);
 		contentPane.add(LabelContrat);
 		
 		JComboBox comboBoxTypeLocation = new JComboBox();
-		comboBoxTypeLocation.setBounds(166, 87, 132, 22);
+		comboBoxTypeLocation.setBounds(136, 197, 182, 22);
 		contentPane.add(comboBoxTypeLocation);
+		ArrayList<String> typeLoc = new ArrayList<String>();
+		typeLoc.add("Appartement");
+		typeLoc.add("Maison");
+		typeLoc.add("Autres...");
+		int indexTypeLoc = 0;
+		while ( indexTypeLoc < typeLoc.size()) {
+			comboBoxTypeLocation.addItem(typeLoc.get(indexTypeLoc));
+			indexTypeLoc++;
+		}
+		comboBoxTypeLocation.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        typeLocation = (String) jcmbType.getSelectedItem();
+		        System.out.println(typeLocation);
+		      }
+		    });
 		
-		JLabel LabelLibelle = new JLabel("* Locataire(s)  :");
-		LabelLibelle.setBounds(23, 152, 132, 14);
-		contentPane.add(LabelLibelle);
 		
-		JComboBox comboBoxLocataires = new JComboBox();
-		comboBoxLocataires.setBounds(165, 149, 132, 22);
-		contentPane.add(comboBoxLocataires);
+		
+		this.LabelLibelleLocataire = new JLabel("* Locataire :");
+		LabelLibelleLocataire.setBounds(10, 270, 132, 14);
+		contentPane.add(LabelLibelleLocataire);
+		
+		JCheckBox chckbxColocataire = new JCheckBox("Colocation");
+		chckbxColocataire.setBounds(11, 233, 97, 23);
+		contentPane.add(chckbxColocataire);
+		chckbxColocataire.addActionListener(this);
+		
+		this.LabelLibelleNbLocataire = new JLabel("Locataires : x" + this.nbLocataire);
+		LabelLibelleNbLocataire.setBounds(135, 233, 110, 23);
+		contentPane.add(LabelLibelleNbLocataire);
+		this.LabelLibelleNbLocataire.setVisible(false);
 		
 		JButton ButtonNouveauLocataire = new JButton("Nouveau Locataire");
-		ButtonNouveauLocataire.setBounds(307, 148, 132, 23);
+		ButtonNouveauLocataire.setBounds(322, 270, 132, 23);
 		ButtonNouveauLocataire.addActionListener(this);
 		contentPane.add(ButtonNouveauLocataire);
 		
-		JLabel LabelNombreDeLocataires = new JLabel("Nombre de locataire(s) :");
-		LabelNombreDeLocataires.setBounds(24, 119, 132, 14);
-		contentPane.add(LabelNombreDeLocataires);
-		
-		textFieldNbLocataire = new JTextField();
-		textFieldNbLocataire.setColumns(10);
-		textFieldNbLocataire.setBounds(166, 116, 19, 20);
-		contentPane.add(textFieldNbLocataire);
-		
-		JLabel LabelDocumentss = new JLabel("* Documents(s)  :");
-		LabelDocumentss.setBounds(23, 217, 132, 14);
-		contentPane.add(LabelDocumentss);
+		JLabel LabelDocuments = new JLabel("* Documents(s)  :");
+		LabelDocuments.setBounds(10, 131, 132, 14);
+		contentPane.add(LabelDocuments);
 		
 		JComboBox comboBoxDocuments = new JComboBox();
-		comboBoxDocuments.setBounds(165, 214, 132, 22);
+		comboBoxDocuments.setBounds(135, 131, 182, 22);
+		comboBoxDocuments.setFont(new Font("Tahoma", Font.ROMAN_BASELINE, 10));
 		contentPane.add(comboBoxDocuments);
+		try {
+			ResultSet rsDocDateLib= RequeteAfficheComboDocuments();
+			int i = 0;
+			rsDocDateLib.next();
+			while ( i < rsDocDateLib.getRow()) {
+				String libDoc = rsDocDateLib.getString("LIBELLE");
+				String dateDoc = rsDocDateLib.getString("DATEDOCUMENT");
+				comboBoxDocuments.addItem( libDoc + " : " + dateDoc.substring(0,10) );
+				rsDocDateLib.next();
+				}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
 		JButton ButtonNouveauDocument = new JButton("Nouveau Document");
-		ButtonNouveauDocument.setBounds(307, 213, 132, 23);
+		ButtonNouveauDocument.setBounds(322, 130, 132, 23);
 		ButtonNouveauDocument.addActionListener(this);
 		contentPane.add(ButtonNouveauDocument);
+		
+		this.ButtonColocationPlus = new JButton("+");
+		ButtonColocationPlus.setBounds(300, 233, 50, 23);
+		ButtonColocationPlus.addActionListener(this);
+		contentPane.add(ButtonColocationPlus);
+		ButtonColocationPlus.setVisible(false);
+		ButtonColocationPlus.setFont(new Font("Tahoma", Font.BOLD, 20));
+		
+		this.ButtonColocationMoins = new JButton("-");
+		ButtonColocationMoins.setBounds(250, 233, 50, 23);
+		ButtonColocationMoins.addActionListener(this);
+		contentPane.add(ButtonColocationMoins);
+		ButtonColocationMoins.setVisible(false);
+		ButtonColocationMoins.setFont(new Font("Tahoma", Font.BOLD, 25));
+	
+	//LOCATAIRE
+		this.comboBoxLocataire = new JComboBox();
+		comboBoxLocataire.setBounds(136, 270, 182, 22);
+		contentPane.add(comboBoxLocataire);
+		try {
+			ResultSet rsLocNomPrenom = RequeteAfficheComboLocataire();
+			int i = 0;
+			rsLocNomPrenom.next();
+			while ( i < rsLocNomPrenom.getRow()) {
+				comboBoxLocataire.addItem(rsLocNomPrenom.getString("NOM") + " " + rsLocNomPrenom.getString("PRENOM") + " - (" + rsLocNomPrenom.getString("IDLOCATAIRE")+ ")");
+				rsLocNomPrenom.next();
+				}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		// GET COMBO LOCATAIRE SELECTED VALUE
+		comboBoxLocataire.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        locataire = (String) jcmbType.getSelectedItem();
+		        idLocataire = locataire.substring(locataire.length()-2, locataire.length()-1);
+		        System.out.println(idLocataire);	
+		        locataireSelected = true;
+		        if ( locataireSelected ) {
+		        	ButtonColocationPlus.setVisible(true);
+		        }
+		      }
+		      
+		    });
+		
+	//LOCATAIRE2
+		this.comboBoxLocataire2 = new JComboBox();
+		comboBoxLocataire2.setBounds(136, 290, 182, 22);
+		contentPane.add(comboBoxLocataire2);
+		comboBoxLocataire2.setVisible(false);
+
+		// GET COMBO LOCATAIRE2 SELECTED VALUE
+		comboBoxLocataire2.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        locataire2 = (String) jcmbType.getSelectedItem();
+		        idLocataire2 = locataire2.substring(locataire2.length()-2, locataire2.length()-1);
+		        System.out.println(idLocataire2);
+		        locataireSelected2=true;
+		        if (locataireSelected && locataireSelected2 ) {
+		        	ButtonColocationPlus.setVisible(true);
+		        }
+		      }
+		    });
+		
+	//LOCATAIRE3
+		this.comboBoxLocataire3 = new JComboBox();
+		comboBoxLocataire3.setBounds(136, 310, 182, 22);
+		contentPane.add(comboBoxLocataire3);
+		comboBoxLocataire3.setVisible(false);
+		
+		// GET COMBO LOCATAIRE3 SELECTED VALUE
+		comboBoxLocataire3.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        locataire3 = (String) jcmbType.getSelectedItem();
+		        idLocataire3 = locataire3.substring(locataire3.length()-2, locataire3.length()-1);
+		        System.out.println(idLocataire3);
+		        locataireSelected3=true;
+		        if ( locataireSelected && locataireSelected2 && locataireSelected3 ) {
+		        	ButtonColocationPlus.setVisible(true);
+		        }
+		      }
+		    });
+		
+	//LOCATAIRE4
+		this.comboBoxLocataire4 = new JComboBox();
+		comboBoxLocataire4.setBounds(136, 330, 182, 22);
+		contentPane.add(comboBoxLocataire4);
+		comboBoxLocataire4.setVisible(false);
+		
+		// GET COMBO LOCATAIRE4 SELECTED VALUE
+		comboBoxLocataire4.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        locataire4 = (String) jcmbType.getSelectedItem();
+		        idLocataire4 = locataire4.substring(locataire4.length()-2, locataire4.length()-1);
+		        System.out.println(idLocataire4);
+		        locataireSelected4=true;
+		        if ( locataireSelected && locataireSelected2 && locataireSelected3 && locataireSelected4 ) {
+		        	ButtonColocationPlus.setVisible(true);
+		        }
+		      }
+		    });
+		
+	//LOCATAIRE5
+		this.comboBoxLocataire5 = new JComboBox();
+		comboBoxLocataire5.setBounds(136, 350, 182, 22);
+		contentPane.add(comboBoxLocataire5);
+		comboBoxLocataire5.setVisible(false);
+
+		// GET COMBO LOCATAIRE5 SELECTED VALUE
+		comboBoxLocataire5.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        locataire5 = (String) jcmbType.getSelectedItem();
+		        idLocataire5 = locataire5.substring(locataire5.length()-2, locataire5.length()-1);
+		        System.out.println(idLocataire5);
+		        locataireSelected5=true;
+		      }
+		    });
+		
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Ajouter":				
+				String DATEMISEENEFFET = textFieldDate.getText();
+				float CAUTION = Float.parseFloat(textFieldCaution.getText());
+				String TYPELOC = this.typeLocation;
+				try {				
+					RequeteInsertContrat(DATEMISEENEFFET, CAUTION, TYPELOC) ;
+					JOptionPane.showMessageDialog(frame, "Nouveau contrat inséré.");
+				} catch (SQLException e3) {
+					e3.printStackTrace();
+				}				
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
+			case "Colocation":
+				this.chckbxColocataire = (JCheckBox) e.getSource();
+				if (chckbxColocataire.isSelected()) {
+					this.LabelLibelleNbLocataire.setVisible(true);		
+					this.ButtonColocationPlus.setVisible(false);
+					this.ButtonColocationMoins.setVisible(true);
+					this.LabelLibelleLocataire.setText("* Locataires :");
+				} else {
+					this.LabelLibelleNbLocataire.setVisible(false);
+					this.ButtonColocationPlus.setVisible(false);
+					this.ButtonColocationMoins.setVisible(false);					
+					this.comboBoxLocataire2.setVisible(false);
+					this.comboBoxLocataire2.removeAllItems();
+					this.comboBoxLocataire3.setVisible(false);
+					this.comboBoxLocataire3.removeAllItems();
+					this.comboBoxLocataire4.setVisible(false);
+					this.comboBoxLocataire4.removeAllItems();
+					this.comboBoxLocataire5.setVisible(false);
+					this.comboBoxLocataire5.removeAllItems();
+					this.nbLocataire=1;
+					this.LabelLibelleNbLocataire.setText("Locataires : x" + this.nbLocataire);
+					this.LabelLibelleLocataire.setText("* Locataire :");
+				}
+				break;
+			case "+":
+				if ( this.nbLocataire<5) {
+					this.nbLocataire+=1;
+					this.LabelLibelleNbLocataire.setText("Locataires : x" + this.nbLocataire);
+					switch(this.nbLocataire){
+						case 2:
+							this.comboBoxLocataire2.setVisible(true);
+							try {
+								ResultSet rsLoc2NomPrenom = RequeteAfficheComboLocataire2();
+								int i = 0;
+								rsLoc2NomPrenom.next();
+								while ( i < rsLoc2NomPrenom.getRow()) {
+									comboBoxLocataire2.addItem(rsLoc2NomPrenom.getString("NOM") + " " + rsLoc2NomPrenom.getString("PRENOM") + " - (" + rsLoc2NomPrenom.getString("IDLOCATAIRE")+ ")");
+									rsLoc2NomPrenom.next();
+									}
+							} catch (SQLException e2) {
+								e2.printStackTrace();
+							}
+							this.ButtonColocationPlus.setVisible(false);
+							break;
+						case 3:
+							this.comboBoxLocataire3.setVisible(true);
+							try {
+								ResultSet rsLoc3NomPrenom = RequeteAfficheComboLocataire3();
+								int i = 0;
+								rsLoc3NomPrenom.next();
+								while ( i < rsLoc3NomPrenom.getRow()) {
+									comboBoxLocataire3.addItem(rsLoc3NomPrenom.getString("NOM") + " " + rsLoc3NomPrenom.getString("PRENOM") + " - (" + rsLoc3NomPrenom.getString("IDLOCATAIRE")+ ")");
+									rsLoc3NomPrenom.next();
+									}
+							} catch (SQLException e3) {
+								e3.printStackTrace();
+							}
+							this.ButtonColocationPlus.setVisible(false);
+							
+							break;
+						case 4:
+							this.comboBoxLocataire4.setVisible(true);
+							try {
+								ResultSet rsLocNomPrenom4 = RequeteAfficheComboLocataire4();
+								int i = 0;
+								rsLocNomPrenom4.next();
+								while ( i < rsLocNomPrenom4.getRow()) {
+									comboBoxLocataire4.addItem(rsLocNomPrenom4.getString("NOM") + " " + rsLocNomPrenom4.getString("PRENOM") + " - (" + rsLocNomPrenom4.getString("IDLOCATAIRE")+ ")");
+									rsLocNomPrenom4.next();
+									}
+							} catch (SQLException e4) {
+								e4.printStackTrace();
+							}
+							this.ButtonColocationPlus.setVisible(false);							
+							break;
+						case 5:
+							this.comboBoxLocataire5.setVisible(true);
+							try {
+								ResultSet rsLocNomPrenom5 = RequeteAfficheComboLocataire5();
+								int i = 0;
+								rsLocNomPrenom5.next();
+								while ( i < rsLocNomPrenom5.getRow()) {
+									comboBoxLocataire5.addItem(rsLocNomPrenom5.getString("NOM") + " " + rsLocNomPrenom5.getString("PRENOM") + " - (" + rsLocNomPrenom5.getString("IDLOCATAIRE")+ ")");
+									rsLocNomPrenom5.next();
+									}
+							} catch (SQLException e5) {
+								e5.printStackTrace();
+							}
+							this.ButtonColocationPlus.setVisible(false);							
+							break;
+					}
+				}
+				break;
+			case "-":
+				if ( this.nbLocataire>1) {
+					this.nbLocataire-=1;
+					this.LabelLibelleNbLocataire.setText("Locataires : x" + this.nbLocataire);
+					switch(this.nbLocataire){
+					case 4:
+						this.comboBoxLocataire5.setVisible(false);
+						this.comboBoxLocataire5.removeAllItems();
+						break;
+					case 3:
+						this.comboBoxLocataire4.setVisible(false);
+						this.comboBoxLocataire4.removeAllItems();
+						break;
+					case 2:
+						this.comboBoxLocataire3.setVisible(false);
+						this.comboBoxLocataire3.removeAllItems();
+						break;
+					case 1:
+						this.comboBoxLocataire2.setVisible(false);
+						this.comboBoxLocataire2.removeAllItems();
+						break;
+					}
+				}
+				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -346,16 +737,6 @@ public class NouveauContrat extends JFrame implements ActionListener {
 			case "Locataires en cours":
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
-				break;
-			
-			case "Anciens entretiens":
-				this.dispose();
-				new EntretiensAnciens().setVisible(true);
-				break;
-				
-			case "Entretiens en cours":
-				this.dispose();
-				new EntretiensEnCours().setVisible(true);
 				break;
 				
 			case "Nouveaux entretiens":

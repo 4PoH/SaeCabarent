@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,6 +21,7 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import Requetes.Requete;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
@@ -55,6 +58,21 @@ public class EntretiensPartiesAnciens extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
+	
+	private ResultSet RequeteTableauAnciensEntretienPartiesCommunes() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "select  concerneentretien.adresse, entretienpartiscommune.numfact, entretienpartiscommune.datefact,\r\n"
+				+ "        entretienpartiscommune.total, entretienpartiscommune.pdf, entreprise.nom,\r\n"
+				+ "        concerneentretien.modepaiement, concerneentretien.numcheque\r\n"
+				+ "        from entretienpartiscommune, concerneentretien, entreprise\r\n"
+				+ "        where entretienpartiscommune.siren = concerneentretien.siren\r\n"
+				+ "        and entretienpartiscommune.numfact = concerneentretien.numfact\r\n"
+				+ "        and entreprise.siren = entretienpartiscommune.siren";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	
 	public EntretiensPartiesAnciens() {
 		setBackground(new Color(240, 240, 240));
 		setTitle("Anciens entertiens des parties communes");
@@ -95,28 +113,14 @@ public class EntretiensPartiesAnciens extends JFrame implements ActionListener {
 		MenuCharges.addActionListener(this);
 		menuBarTop.add(MenuCharges);
 		
-		JMenu MenuEntretiens = new JMenu("Entretiens");
+		JMenu MenuEntretiens = new JMenu("Entretiens parties communes");
 		MenuEntretiens.addActionListener(this);
 		MenuCharges.add(MenuEntretiens);
 		
-		JMenuItem MenuItemAnciensEntretiens = new JMenuItem("Anciens entretiens");
-		MenuItemAnciensEntretiens.addActionListener(this);
-		MenuItemAnciensEntretiens.setSelected(true);
-		MenuEntretiens.add(MenuItemAnciensEntretiens);
-		
-		JMenuItem mntmEntretiensEnCours = new JMenuItem("Entretiens en cours");
-		mntmEntretiensEnCours.addActionListener(this);
-		mntmEntretiensEnCours.setSelected(true);
-		MenuEntretiens.add(mntmEntretiensEnCours);
-		
-		JMenuItem MenuItemNouveauxEntretiens = new JMenuItem("Nouveaux entretiens");
+		JMenuItem MenuItemNouveauxEntretiens = new JMenuItem("Nouveaux entretiens parties communes");
 		MenuItemNouveauxEntretiens.addActionListener(this);
 		
-		JMenuItem MenuItemAnciensEntretiensPartiesCommunes = new JMenuItem("Anciens entretiens parties communes");
-		MenuItemAnciensEntretiensPartiesCommunes.setSelected(true);
-		MenuEntretiens.add(MenuItemAnciensEntretiensPartiesCommunes);
-		
-		JMenuItem MenuItemEntretiensPartiesCommunes = new JMenuItem("Entretiens parties communes en cours");
+		JMenuItem MenuItemEntretiensPartiesCommunes = new JMenuItem("Historique d'entretiens des parties communes");
 		MenuItemEntretiensPartiesCommunes.setSelected(true);
 		MenuEntretiens.add(MenuItemEntretiensPartiesCommunes);
 		MenuItemNouveauxEntretiens.setSelected(true);
@@ -236,60 +240,44 @@ public class EntretiensPartiesAnciens extends JFrame implements ActionListener {
 		scrollPane.setBounds(22, 49, 914, 278);
 		contentPane.add(scrollPane);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-			},
-			new String[] {
-				"Bati", "numero facture", "total", "date paiement", "mode de paiement", "numero de cheque", "pdf"
+		// Header de JTable 
+	    final String[] columns = {"Bâti", "Numéro de facture", "Total", "Date de paiement", "Mode de paiement", "Numéro de cheque","Lien PDF"};
+		// Créer le modèle de table
+	    final DefaultTableModel model = new DefaultTableModel(columns, 0);
+		JTable tableEntretiens = new JTable(model);
+		tableEntretiens.setRowSelectionAllowed(false);
+		tableEntretiens.setSurrendersFocusOnKeystroke(true);
+		
+		try {
+			ResultSet rsAncEntrePartCom = RequeteTableauAnciensEntretienPartiesCommunes();
+			while (rsAncEntrePartCom.next()) {
+				String bati = rsAncEntrePartCom.getString("ADRESSE");
+				String numfact = rsAncEntrePartCom.getString("NUMFACT");
+				String total = String.valueOf(rsAncEntrePartCom.getInt("TOTAL"));
+				String datePaiement = rsAncEntrePartCom.getString("DATEFACT");
+				String modePaiement =  rsAncEntrePartCom.getString("MODEPAIEMENT");
+				String numeroCheque = String.valueOf(rsAncEntrePartCom.getInt("NUMCHEQUE"));
+				String pdf = rsAncEntrePartCom.getString("PDF");
+				model.addRow(new String[]{bati, numfact, total, datePaiement, modePaiement, numeroCheque, pdf});
 			}
-		));
-		scrollPane.setViewportView(table);
+		} catch (SQLException e) { e.printStackTrace();}
+			
+		scrollPane.setViewportView(tableEntretiens);
 		
-		JLabel TitreEntretiensPartiesAnciens = new JLabel("Anciens entretiens des parties communes");
+		JLabel TitreEntretiensPartiesAnciens = new JLabel("Historique d'entretiens des parties communes");
 		TitreEntretiensPartiesAnciens.setFont(new Font("Tahoma", Font.BOLD, 20));
-		TitreEntretiensPartiesAnciens.setBounds(10, 10, 430, 29);
+		TitreEntretiensPartiesAnciens.setBounds(10, 10, 569, 29);
 		contentPane.add(TitreEntretiensPartiesAnciens);
-		
-		JButton ButtonCharger = new JButton("Charger");
-		ButtonCharger.addActionListener(this);
-		ButtonCharger.setBounds(35, 376, 85, 21);
-		contentPane.add(ButtonCharger);
 		
 		JButton ButtonInserer = new JButton("Insérer");
 		ButtonInserer.addActionListener(this);
 		ButtonInserer.setBounds(230, 376, 85, 21);
 		contentPane.add(ButtonInserer);
 		
-		JButton ButtonMiseJour = new JButton("Mise à jour");
-		ButtonMiseJour.addActionListener(this);
-		ButtonMiseJour.setBounds(414, 376, 85, 21);
-		contentPane.add(ButtonMiseJour);
-		
 		JButton ButtonSupprimer = new JButton("Supprimer");
 		ButtonSupprimer.addActionListener(this);
 		ButtonSupprimer.setBounds(611, 376, 85, 21);
 		contentPane.add(ButtonSupprimer);
-		
-		JButton ButtonAnnuler = new JButton("Annuler");
-		ButtonAnnuler.addActionListener(this);
-		ButtonAnnuler.setBounds(816, 376, 85, 21);
-		contentPane.add(ButtonAnnuler);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -323,20 +311,15 @@ public class EntretiensPartiesAnciens extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
-			
-			case "Anciens entretiens":
-				this.dispose();
-				new EntretiensAnciens().setVisible(true);
-				break;
 				
-			case "Entretiens en cours":
-				this.dispose();
-				new EntretiensEnCours().setVisible(true);
-				break;
-				
-			case "Nouveaux entretiens":
+			case "Nouveaux entretiens parties communes":
 				this.dispose();
 				new NouveauEntretien().setVisible(true);
+				break;
+				
+			case "Historique d'entretiens des parties communes":
+				this.dispose();
+				new EntretiensPartiesAnciens().setVisible(true);
 				break;
 				
 			case "Anciennes factures d'eau":

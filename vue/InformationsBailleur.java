@@ -5,8 +5,13 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -17,6 +22,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import JDBC.CictOracleDataSource;
+import Requetes.Requete;
 import vue.consultation.EntretiensAnciens;
 import vue.consultation.EntretiensEnCours;
 import vue.consultation.FacturesEauAnciennes;
@@ -46,10 +53,12 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 	private JTextField textFieldNom;
 	private JTextField textFieldPrenom;
 	private JTextField textFieldAdresse;
+	private JTextField textFieldVille;
 	private JTextField textFieldCodeP;
 	private JTextField textFieldMail;
 	private JTextField textFieldTel;
-
+	private JTextField textFieldDestination;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -65,10 +74,43 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 			}
 		});
 	}
-
-	/**
-	 * Create the frame.
-	 */
+	
+	private ResultSet resInfosBailleur() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requeteSelect = new Requetes.Requete();
+		String texteSQL = "select * from bailleur";
+		try {
+			retourRequete = requeteSelect.requeteSelection(texteSQL);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return retourRequete; 
+	}
+	
+	
+	
+	private int updateBailleur(String nomBailleur, String prenomBailleur, String adresseBailleur, String codePost, String villeBailleur, String mailBailleur, String telBailleur, String destinationFichier) {
+		int resultatMiseJour = 0;
+		try {
+		CictOracleDataSource cict = new CictOracleDataSource();		
+			Connection connex = cict.getConnection();
+			CallableStatement CallState = connex.prepareCall("{ call updateBailleur( ?, ?, ?, ?, ?, ?, ?, ?)}");
+			CallState.setString(1, nomBailleur);
+			CallState.setString(2, prenomBailleur);
+			CallState.setString(3, adresseBailleur);
+			CallState.setString(4, codePost);
+			CallState.setString(5, villeBailleur);
+			CallState.setString(6, mailBailleur);
+			CallState.setString(7, telBailleur);
+			CallState.setString(8, destinationFichier);
+			resultatMiseJour = CallState.executeUpdate();
+			
+		} catch(SQLException e) {
+				e.printStackTrace();
+			}
+			return resultatMiseJour;
+	}		
+	
 	public InformationsBailleur() {
 		setTitle("Bailleur");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -254,69 +296,102 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textFieldNom = new JTextField();
-		textFieldNom.setBounds(165, 65, 132, 20);
-		contentPane.add(textFieldNom);
-		textFieldNom.setColumns(10);
-		
-		textFieldPrenom = new JTextField();
-		textFieldPrenom.setColumns(10);
-		textFieldPrenom.setBounds(165, 100, 132, 20);
-		contentPane.add(textFieldPrenom);
+		try {
+			ResultSet resInfosBailleur = resInfosBailleur();
+			int i = 0;
+			resInfosBailleur.next();
+			while ( i < resInfosBailleur.getRow()) {
+				
+				textFieldNom = new JTextField(resInfosBailleur.getString("NOM"));
+				textFieldNom.setBounds(220, 50, 140, 20);
+				contentPane.add(textFieldNom);
+				textFieldNom.setColumns(10);
+				
+				textFieldPrenom = new JTextField(resInfosBailleur.getString("PRENOM"));
+				textFieldPrenom.setColumns(10);
+				textFieldPrenom.setBounds(220, 90, 140, 20);
+				contentPane.add(textFieldPrenom);
+				
+				textFieldAdresse = new JTextField(resInfosBailleur.getString("ADRESSE"));
+				textFieldAdresse.setColumns(10);
+				textFieldAdresse.setBounds(220, 130, 140, 20);
+				contentPane.add(textFieldAdresse);
+				
+				textFieldVille = new JTextField(resInfosBailleur.getString("VILLE"));
+				textFieldVille.setColumns(10);
+				textFieldVille.setBounds(220, 170, 140, 20);
+				contentPane.add(textFieldVille);
+				
+				textFieldCodeP = new JTextField(resInfosBailleur.getString("CODEPOSTAL"));
+				textFieldCodeP.setColumns(10);
+				textFieldCodeP.setBounds(220, 210, 140, 20);
+				contentPane.add(textFieldCodeP);
+				
+				textFieldMail = new JTextField(resInfosBailleur.getString("MAIL"));
+				textFieldMail.setColumns(10);
+				textFieldMail.setBounds(220, 250, 140, 20);
+				contentPane.add(textFieldMail);
+				
+				textFieldTel = new JTextField(resInfosBailleur.getString("NUMTEL"));
+				textFieldTel.setColumns(10);
+				textFieldTel.setBounds(220, 290, 140, 20);
+				contentPane.add(textFieldTel);
+				
+				textFieldDestination = new JTextField(resInfosBailleur.getString("DESTINATION"));
+				textFieldDestination.setColumns(10);
+				textFieldDestination.setBounds(220, 330, 140, 20);
+				contentPane.add(textFieldDestination);
+				
+				i++;
+				resInfosBailleur.next();
+				
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
 		
 		JLabel LabelNom = new JLabel("* Nom");
-		LabelNom.setBounds(37, 71, 132, 14);
+		LabelNom.setBounds(95, 50, 140, 14);
 		contentPane.add(LabelNom);
 		
 		JLabel LabelPrenom = new JLabel("*Prénom");
-		LabelPrenom.setBounds(37, 102, 132, 14);
+		LabelPrenom.setBounds(95, 90, 140, 14);
 		contentPane.add(LabelPrenom);
 		
-		textFieldAdresse = new JTextField();
-		textFieldAdresse.setColumns(10);
-		textFieldAdresse.setBounds(165, 144, 132, 20);
-		contentPane.add(textFieldAdresse);
+		JLabel LabelAdresse = new JLabel("*Adresse");
+		LabelAdresse.setBounds(95, 130, 140, 14);
+		contentPane.add(LabelAdresse);
 		
-		JLabel LabelLibelle = new JLabel("*Adresse");
-		LabelLibelle.setBounds(37, 146, 132, 14);
-		contentPane.add(LabelLibelle);
+		JLabel LabelVille = new JLabel("*Ville");
+		LabelVille.setBounds(95, 170, 140, 14);
+		contentPane.add(LabelVille);
 		
 		JLabel LabelCp = new JLabel("*Code Postal");
-		LabelCp.setBounds(37, 185, 132, 14);
+		LabelCp.setBounds(95, 210, 140, 14);
 		contentPane.add(LabelCp);
 		
-		textFieldCodeP = new JTextField();
-		textFieldCodeP.setColumns(10);
-		textFieldCodeP.setBounds(165, 183, 132, 20);
-		contentPane.add(textFieldCodeP);
-		
 		JLabel LabelMail = new JLabel("*Mail");
-		LabelMail.setBounds(37, 227, 132, 14);
+		LabelMail.setBounds(95, 250, 140, 14);
 		contentPane.add(LabelMail);
 		
-		textFieldMail = new JTextField();
-		textFieldMail.setColumns(10);
-		textFieldMail.setBounds(165, 225, 132, 20);
-		contentPane.add(textFieldMail);
-		
 		JLabel LabelTel = new JLabel("*Telephone");
-		LabelTel.setBounds(37, 274, 132, 14);
+		LabelTel.setBounds(95, 290, 140, 14);
 		contentPane.add(LabelTel);
 		
-		textFieldTel = new JTextField();
-		textFieldTel.setColumns(10);
-		textFieldTel.setBounds(165, 272, 132, 20);
-		contentPane.add(textFieldTel);
+		JButton ButtonDestination = new JButton("Choix fichier...");
+		ButtonDestination.setBounds(70, 327, 140, 25);
+		ButtonDestination.addActionListener(this);
+		contentPane.add(ButtonDestination);
 		
-		JButton btnAjouter = new JButton("Confimer");
-		btnAjouter.setBounds(307, 384, 132, 23);
-		btnAjouter.addActionListener(this);
-		contentPane.add(btnAjouter);
+		JButton ButtonAjouter = new JButton("Confirmer");
+		ButtonAjouter.setBounds(310, 385, 140, 25);
+		ButtonAjouter.addActionListener(this);
+		contentPane.add(ButtonAjouter);
 		
-		JButton btnAnnuler = new JButton("Annuler");
-		btnAnnuler.setBounds(49, 384, 132, 23);
-		btnAnnuler.addActionListener(this);
-		contentPane.add(btnAnnuler);
+		JButton ButtonAnnuler = new JButton("Annuler");
+		ButtonAnnuler.setBounds(50, 385, 140, 25);
+		ButtonAnnuler.addActionListener(this);
+		contentPane.add(ButtonAnnuler);
 		
 		JLabel LabelFactureDEau = new JLabel("Informations du bailleur");
 		LabelFactureDEau.setFont(new Font("Tahoma", Font.BOLD, 20));
@@ -324,6 +399,7 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 		contentPane.add(LabelFactureDEau);
 	}
 	
+
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
 			case "Accueil":
@@ -469,7 +545,34 @@ public class InformationsBailleur extends JFrame implements ActionListener {
 			case "Annuler":
 				this.dispose();
 				break;
-       
+				
+			case "Confirmer":
+				this.dispose();
+				updateBailleur(this.textFieldNom.getText(),
+								this.textFieldPrenom.getText(),
+								this.textFieldAdresse.getText(),
+								this.textFieldCodeP.getText(),
+								this.textFieldVille.getText(),
+								this.textFieldMail.getText(),
+								this.textFieldTel.getText(),
+								this.textFieldDestination.getText());
+				new InformationsBailleur().setVisible(true);
+				break;
+			
+			case "Choix fichier...":
+				JFileChooser chooser = new JFileChooser();
+			    chooser.setDialogTitle("Choisir un répertoire de stockage");
+			    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			    chooser.setAcceptAllFileFilterUsed(false);
+
+			    if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			      System.out.println("getSelectedFile() : " + chooser.getSelectedFile());
+			      this.textFieldDestination.setText("" + chooser.getSelectedFile());
+			      } else {
+			      System.out.println("No Selection ");
+			    }
+				break;
+				
 			default:
 				System.out.println("Choix incorrect");
 				break;

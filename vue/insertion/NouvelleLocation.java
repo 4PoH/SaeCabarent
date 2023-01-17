@@ -1,10 +1,18 @@
 package vue.insertion;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -13,16 +21,18 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 
+import JDBC.CictOracleDataSource;
+import Requetes.Requete;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.EntretiensAnciens;
-import vue.consultation.EntretiensEnCours;
 import vue.consultation.FacturesEauAnciennes;
 import vue.consultation.FacturesEauEnCours;
 import vue.consultation.FacturesElectriciteAnciennes;
@@ -40,12 +50,23 @@ import vue.consultation.TravauxEnCours;
 public class NouvelleLocation extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField textFieldNombreLocataires;
 	private JTextField textFieldMontant;
 	private JTextField textFieldMontantCharges;
 	private JTextField textFieldParticipationEntretien;
 	private JTextField textFieldParticipationElectricite;
-
+	private JTextField textFieldDateCourante;
+	private JTextField textFieldMontantRegle;
+	private JTextField textFieldMontantCompteur;
+	private JComboBox<String> comboBoxContrats;
+	private String selectedComboContrat;
+	private String selectedComboIDContrat;
+	private JComboBox<String> comboBoxLogements;
+	private String selectedComboLogement;
+	private String selectedComboIDLogement;
+	private JComboBox<String> comboBoxMoyenDePaiement;
+	private String selectedMoyenDePaiement;
+	private NouvelleLocation frame;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -62,6 +83,49 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 		});
 	}
 
+	// SHOW COMBO CONTRAT.IDCONTRAT, DATE MISE EN EFFET, TYPE LOCATION
+	private ResultSet RequeteAfficheComboContrat() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "select IDCONTRAT, DATEMISEENEFFET, TYPELOC from CONTRAT order by 2";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	
+	// SHOW COMBO LOGEMENT.ADRESSE, CODEPOSTAL, FROM LOGEMENT
+	private ResultSet RequeteAfficheLogement() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "select IDLOGEMENT, ADRESSE, CODEPOSTAL from LIEUXDELOCATIONS order by 2";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	
+	// DB INSERT x11 : INT INT STRING FLOAT FLOAT FLOAT INT FLOAT FLOAT STRING FLOAT 
+	private void RequeteInsertContrat(int idLog, int idcontr, String dateloc, 
+			float loyer, float loyerregler, float pourcentr, 
+			float compteur, float charge, String modepaie, float pourelec) throws SQLException {
+		CictOracleDataSource cict = new CictOracleDataSource();
+		String requete = "{ call insertLoue(?,?,?,?,?,?,?,?,?,?) } ";		
+				try {
+					Connection connection = cict.getConnection();
+					CallableStatement cs = connection.prepareCall(requete);
+					cs.setInt(1, idLog);					
+			        cs.setInt(2, idcontr);
+					cs.setString(3, dateloc);
+					cs.setFloat(4, loyer);
+					cs.setFloat(5, loyerregler);
+					cs.setFloat(6, pourcentr);
+					cs.setFloat(7, compteur);
+					cs.setFloat(8, charge);
+					cs.setString(9, modepaie);
+					cs.setFloat(10, pourelec);
+					cs.execute();
+				} catch(SQLException e) {
+					e.printStackTrace();
+				}
+	}
+	
 	/**
 	 * Create the frame.
 	 */
@@ -241,61 +305,48 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textFieldNombreLocataires = new JTextField();
-		textFieldNombreLocataires.setColumns(10);
-		textFieldNombreLocataires.setBounds(166, 91, 26, 20);
-		contentPane.add(textFieldNombreLocataires);
-		
 		JLabel LabelContrat = new JLabel("* Contrat :");
-		LabelContrat.setBounds(24, 63, 132, 14);
+		LabelContrat.setBounds(24, 77, 132, 14);
 		contentPane.add(LabelContrat);
 		
-		JLabel LabelNombreLocataire = new JLabel("Nombre de locataire :");
-		LabelNombreLocataire.setBounds(24, 94, 132, 14);
-		contentPane.add(LabelNombreLocataire);
-		
-		JLabel LabelLocataires = new JLabel("* Locataire(s)  :");
-		LabelLocataires.setBounds(24, 125, 132, 14);
-		contentPane.add(LabelLocataires);
-		
 		JLabel LabelLogements = new JLabel("* Logement  :");
-		LabelLogements.setBounds(24, 156, 132, 14);
+		LabelLogements.setBounds(25, 113, 132, 14);
 		contentPane.add(LabelLogements);
 		
-		JLabel LabelMontant = new JLabel("Montant du loyer  :");
-		LabelMontant.setBounds(24, 184, 132, 14);
+		JLabel LabelMontant = new JLabel("!! Montant du loyer  :");
+		LabelMontant.setBounds(24, 148, 132, 14);
 		contentPane.add(LabelMontant);
 		
 		textFieldMontant = new JTextField();
 		textFieldMontant.setColumns(10);
-		textFieldMontant.setBounds(166, 181, 132, 20);
+		textFieldMontant.setBounds(166, 145, 132, 20);
 		contentPane.add(textFieldMontant);
 		
-		JLabel LabelMontantCharges = new JLabel("Montant des charges :");
-		LabelMontantCharges.setBounds(24, 215, 132, 14);
+		JLabel LabelMontantCharges = new JLabel("!! Montant des charges :");
+		LabelMontantCharges.setBounds(24, 179, 132, 14);
 		contentPane.add(LabelMontantCharges);
 		
 		textFieldMontantCharges = new JTextField();
 		textFieldMontantCharges.setColumns(10);
-		textFieldMontantCharges.setBounds(166, 212, 132, 20);
+		textFieldMontantCharges.setBounds(166, 176, 132, 20);
 		contentPane.add(textFieldMontantCharges);
 		
-		JLabel LabelParticipationEntretien = new JLabel("Participation entretien :");
-		LabelParticipationEntretien.setBounds(24, 245, 132, 14);
+		JLabel LabelParticipationEntretien = new JLabel("!! Participation entretien :");
+		LabelParticipationEntretien.setBounds(24, 271, 132, 14);
 		contentPane.add(LabelParticipationEntretien);
 		
 		textFieldParticipationEntretien = new JTextField();
 		textFieldParticipationEntretien.setColumns(10);
-		textFieldParticipationEntretien.setBounds(166, 242, 132, 20);
+		textFieldParticipationEntretien.setBounds(166, 271, 46, 20);
 		contentPane.add(textFieldParticipationEntretien);
 		
 		JButton ButtonAjouter = new JButton("Ajouter");
-		ButtonAjouter.setBounds(307, 384, 132, 23);
+		ButtonAjouter.setBounds(304, 389, 132, 23);
 		ButtonAjouter.addActionListener(this);
 		contentPane.add(ButtonAjouter);
 		
 		JButton ButtonAnnuler = new JButton("Annuler");
-		ButtonAnnuler.setBounds(49, 384, 132, 23);
+		ButtonAnnuler.setBounds(46, 389, 132, 23);
 		ButtonAnnuler.addActionListener(this);
 		contentPane.add(ButtonAnnuler);
 		
@@ -304,45 +355,182 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 		LabelNouvelleLocation.setBounds(24, 0, 307, 41);
 		contentPane.add(LabelNouvelleLocation);
 		
-		JComboBox comboBoxLocataires = new JComboBox();
-		comboBoxLocataires.setBounds(166, 122, 132, 22);
-		contentPane.add(comboBoxLocataires);
-		
-		JButton ButtonNouveauLocataire = new JButton("Nouveau Locataire");
-		ButtonNouveauLocataire.setBounds(308, 121, 132, 23);
-		ButtonNouveauLocataire.addActionListener(this);
-		contentPane.add(ButtonNouveauLocataire);
-		
 		JButton ButtonNouveauContrat = new JButton("Nouveau Contrat");
-		ButtonNouveauContrat.setBounds(308, 59, 132, 23);
+		ButtonNouveauContrat.setBounds(308, 73, 132, 23);
 		ButtonNouveauContrat.addActionListener(this);
 		contentPane.add(ButtonNouveauContrat);
 		
 		JComboBox comboBoxContrats = new JComboBox();
-		comboBoxContrats.setBounds(166, 59, 132, 22);
+		comboBoxContrats.setBounds(166, 73, 132, 22);
+		comboBoxContrats.setFont(new Font("Tahoma", Font.ROMAN_BASELINE, 10));
 		contentPane.add(comboBoxContrats);
+		try {
+			ResultSet rsContrat = RequeteAfficheComboContrat();
+			int i = 0;
+			rsContrat.next();
+			while ( i < rsContrat.getRow()) {
+				String idContrat = rsContrat.getString("IDCONTRAT");
+				String dateContrat = rsContrat.getString("DATEMISEENEFFET").substring(0,10);
+				String typeLoc = rsContrat.getString("TYPELOC");
+				comboBoxContrats.addItem(dateContrat + " " + typeLoc + " (" + idContrat + ") ");
+				rsContrat.next();
+				}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		comboBoxContrats.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        selectedComboContrat = (String) jcmbType.getSelectedItem();
+		        selectedComboIDContrat = selectedComboContrat.substring(selectedComboContrat.lastIndexOf("(")+1,selectedComboContrat.lastIndexOf(")"));
+		      }
+		    });
 		
 		JComboBox comboBoxLogements = new JComboBox();
-		comboBoxLogements.setBounds(166, 150, 132, 22);
+		comboBoxLogements.setBounds(167, 107, 132, 22);
+		comboBoxLogements.setFont(new Font("Tahoma", Font.ROMAN_BASELINE, 8));
 		contentPane.add(comboBoxLogements);
+		try {
+			ResultSet rsLogement = RequeteAfficheLogement();
+			int i = 0;
+			rsLogement.next();
+			while ( i < rsLogement.getRow()) {
+				String idLogement = rsLogement.getString("IDLOGEMENT");
+				String adresse = rsLogement.getString("ADRESSE");
+				String codePostal = rsLogement.getString("CODEPOSTAL");
+				comboBoxLogements.addItem( codePostal + " - " + adresse + " (" +idLogement+") ");
+				rsLogement.next();
+				}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 		
+		comboBoxLogements.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        selectedComboLogement = (String) jcmbType.getSelectedItem();
+		        selectedComboIDLogement = selectedComboLogement.substring(selectedComboLogement.lastIndexOf("(")+1,selectedComboLogement.lastIndexOf(")"));		        
+		      }
+		    });
+		
 		
 		JButton ButtonNouveauLogement = new JButton("Nouveau Logement");
-		ButtonNouveauLogement.setBounds(308, 150, 132, 23);
+		ButtonNouveauLogement.setBounds(309, 107, 132, 23);
 		ButtonNouveauLogement.addActionListener(this);
 		contentPane.add(ButtonNouveauLogement);
 		
-		JLabel LabelParticipationElectricite = new JLabel("Participation éléctricité :");
-		LabelParticipationElectricite.setBounds(24, 273, 132, 14);
+		JLabel LabelParticipationElectricite = new JLabel("!! Participation éléctricité :");
+		LabelParticipationElectricite.setBounds(24, 299, 132, 14);
 		contentPane.add(LabelParticipationElectricite);
 		
 		textFieldParticipationElectricite = new JTextField();
 		textFieldParticipationElectricite.setColumns(10);
-		textFieldParticipationElectricite.setBounds(166, 270, 132, 20);
+		textFieldParticipationElectricite.setBounds(166, 299, 46, 20);
 		contentPane.add(textFieldParticipationElectricite);
+		
+		JLabel LabelDateCourante = new JLabel("* Date courante :");
+		LabelDateCourante.setBounds(24, 46, 132, 14);
+		contentPane.add(LabelDateCourante);
+		
+		textFieldDateCourante = new JTextField();
+		textFieldDateCourante.setColumns(10);
+		textFieldDateCourante.setBounds(166, 43, 66, 20);
+		contentPane.add(textFieldDateCourante);
+		
+		JLabel LabelTypePaiement = new JLabel("Moyen de paiement :");
+		LabelTypePaiement.setBounds(24, 214, 132, 14);
+		contentPane.add(LabelTypePaiement);
+		
+		JComboBox comboBoxMoyenDePaiement = new JComboBox();
+		comboBoxMoyenDePaiement.setBounds(166, 207, 132, 22);
+		contentPane.add(comboBoxMoyenDePaiement);
+		ArrayList<String> moyenPaiement = new ArrayList<String>();
+		moyenPaiement.add("Virement");
+		moyenPaiement.add("Espèces");
+		moyenPaiement.add("Chèque");
+		moyenPaiement.add("Autres...");
+		int indexMoyen = 0;
+		while ( indexMoyen < moyenPaiement.size()) {
+			comboBoxMoyenDePaiement.addItem(moyenPaiement.get(indexMoyen));
+			indexMoyen++;
+		}
+		comboBoxMoyenDePaiement.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        selectedMoyenDePaiement = (String) jcmbType.getSelectedItem();
+		      }
+		    });
+		
+		JButton btnDateDeMaintenant = new JButton("Date");
+		btnDateDeMaintenant.setBounds(232, 42, 66, 23);
+		btnDateDeMaintenant.addActionListener(this);
+		contentPane.add(btnDateDeMaintenant);
+		
+		JLabel LabelMontantRegle = new JLabel("Montant réglé :");
+		LabelMontantRegle.setBounds(24, 239, 132, 14);
+		contentPane.add(LabelMontantRegle);
+		
+		textFieldMontantRegle = new JTextField();
+		textFieldMontantRegle.setColumns(10);
+		textFieldMontantRegle.setBounds(166, 239, 66, 20);
+		contentPane.add(textFieldMontantRegle);
+		
+		JLabel lblMontantCompteur = new JLabel("Montant compteur :");
+		lblMontantCompteur.setBounds(24, 327, 132, 14);
+		contentPane.add(lblMontantCompteur);
+		
+		textFieldMontantCompteur = new JTextField();
+		textFieldMontantCompteur.setColumns(10);
+		textFieldMontantCompteur.setBounds(166, 324, 66, 20);
+		contentPane.add(textFieldMontantCompteur);
+		
+		JTextPane txtpnInformation = new JTextPane();
+		txtpnInformation.setText("            !!   \nAuto complètion de ces champs si ce n'est pas le premier loyer.");
+		txtpnInformation.setBounds(321, 207, 119, 78);
+		txtpnInformation.setFont(new Font("Tahoma", Font.ITALIC, 12));
+		txtpnInformation.setBackground(Color.LIGHT_GRAY);
+		contentPane.add(txtpnInformation);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Nouveau Contrat":
+				new NouveauContrat().setVisible(true);
+				break;
+			case "Nouveau Logement":
+				new NouveauLogement().setVisible(true);
+				break;
+			case "Ajouter":		
+				int idLog = Integer.parseInt(selectedComboIDLogement);
+				int idcontr = Integer.parseInt(selectedComboIDContrat);			
+				String dateloc  = textFieldDateCourante.getText();
+				float loyer = Float.parseFloat(textFieldMontant.getText());
+				float loyerregler = Float.parseFloat(textFieldMontantRegle.getText());			
+				float pourcentr = Float.parseFloat(textFieldParticipationEntretien.getText());			
+				float compteur = Float.parseFloat(textFieldMontantCompteur.getText()); 			
+				float charge= Float.parseFloat(textFieldMontantCharges.getText()); 			
+				String modepaie = selectedMoyenDePaiement; 
+				float pourelec = Float.parseFloat(textFieldParticipationElectricite.getText());			
+				try {
+					RequeteInsertContrat(idLog, idcontr, dateloc, loyer, loyerregler, pourcentr, compteur,  charge, modepaie, pourelec);
+					JOptionPane.showMessageDialog(frame, "Nouvelle location insérée.");
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
+			case "Date":
+				DateTimeFormatter dtfJ = DateTimeFormatter.ofPattern("DD");
+				LocalDate nowDate = LocalDate.now();
+				String jours = nowDate.toString().substring(8);
+				String mois = nowDate.toString().substring(5,7);
+				String annee = nowDate.toString().substring(0,4);
+				String dateCourrante = ( jours + "/" + mois + "/" + annee );
+				this.textFieldDateCourante.setText(""+dateCourrante);
+				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -371,16 +559,6 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 			case "Locataires en cours":
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
-				break;
-			
-			case "Anciens entretiens":
-				this.dispose();
-				new EntretiensAnciens().setVisible(true);
-				break;
-				
-			case "Entretiens en cours":
-				this.dispose();
-				new EntretiensEnCours().setVisible(true);
 				break;
 				
 			case "Nouveaux entretiens":

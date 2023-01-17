@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,6 +20,7 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import Requetes.Requete;
 import vue.consultation.EntretiensAnciens;
 import vue.consultation.EntretiensEnCours;
 import vue.consultation.FacturesEauAnciennes;
@@ -34,6 +37,7 @@ import vue.consultation.TaxeFonciere;
 import vue.consultation.TravauxAnciens;
 import vue.consultation.TravauxEnCours;
 import vue.insertion.NouveauEntretien;
+import vue.insertion.NouveauIRL;
 import vue.insertion.NouveauTravaux;
 import vue.insertion.NouvelleFactureEau;
 import vue.insertion.NouvelleFactureElectricite;
@@ -65,6 +69,15 @@ public class IRL extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
+	
+	private ResultSet RequeteAllIRL() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "select * from IRL order by annee desc";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	
 	public IRL() {
 		setTitle("IRL");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -245,28 +258,43 @@ public class IRL extends JFrame implements ActionListener {
 		scrollPane.setBounds(36, 66, 376, 170);
 		contentPane.add(scrollPane);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-			},
-			new String[] {
-				"Année", "Trimestre", "Montant"
+		// Header de JTable 
+	    final String[] columns = {"Année", "Semestre", "Montant"};
+		// Créer le modèle de table
+	    final DefaultTableModel model = new DefaultTableModel(columns, 0);
+		try {
+			ResultSet rsIRL = RequeteAllIRL();
+			int i = 0;
+			rsIRL.next();
+			while ( i < rsIRL.getRow()) {
+				String annee = String.valueOf(rsIRL.getInt(1));
+				String trimestre = String.valueOf(rsIRL.getInt(2));
+				String montant = String.valueOf(rsIRL.getFloat(3));		
+				model.addRow(new String[]{annee,trimestre,montant});
+				i++;
+				rsIRL.next();
 			}
-		));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		table = new JTable();
+		table.setModel(model);
 		scrollPane.setViewportView(table);
 		
 		JButton ButtonAnnuler = new JButton("Annuler");
+		ButtonAnnuler.addActionListener(this);
 		ButtonAnnuler.setBounds(355, 389, 85, 21);
 		contentPane.add(ButtonAnnuler);
 		
 		JButton ButtonConfirmer = new JButton("Supprimer");
+		ButtonConfirmer.addActionListener(this);
 		ButtonConfirmer.setBounds(244, 389, 85, 21);
 		contentPane.add(ButtonConfirmer);
 		
 		JButton ButtonInserer = new JButton("Insérer");
+		ButtonInserer.addActionListener(this);
 		ButtonInserer.setBounds(21, 389, 85, 21);
 		contentPane.add(ButtonInserer);
 		
@@ -425,6 +453,11 @@ public class IRL extends JFrame implements ActionListener {
 				
 			case "Annuler":
 				this.dispose();
+				break;
+				
+			case "Insérer":
+				this.dispose();
+				new NouveauIRL().setVisible(true);
 				break;
        
 			default:

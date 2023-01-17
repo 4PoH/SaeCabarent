@@ -5,23 +5,31 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import JDBC.CictOracleDataSource;
+import Requetes.Requete;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.EntretiensAnciens;
-import vue.consultation.EntretiensEnCours;
 import vue.consultation.FacturesEauAnciennes;
 import vue.consultation.FacturesEauEnCours;
 import vue.consultation.FacturesElectriciteAnciennes;
@@ -41,7 +49,12 @@ public class NouveauDocumentContrat extends JFrame implements ActionListener {
 	private JPanel contentPane;
 	private JTextField textFieldLibelle;
 	private JTextField textFieldDate;
-	private JTextField textFieldLienPDF;
+	protected JTextField textFieldNomPDF;
+	protected JTextField textFieldRepPDF;
+	private JComboBox<String> comboBoxContrat;
+	private String comboContratNom;
+	private String idContrat;
+	private NouveauDocumentContrat frame;
 
 	/**
 	 * Launch the application.
@@ -59,6 +72,34 @@ public class NouveauDocumentContrat extends JFrame implements ActionListener {
 		});
 	}
 
+
+	// SHOW COMBO * CONTRAT.DATE,TYPE WHERE DEPART IS NULL
+	private ResultSet RequeteAfficheComboContrat() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "select IDCONTRAT, DATEMISEENEFFET, TYPELOC from CONTRAT where DATEDEPART is null";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	
+	// DB INSERT x6 : INT INT INT STRING STRING+STRING
+	private void RequeteInsertDocumentContrat(int idcontrat, String libelle, String chemin, String pdf, String date) throws SQLException {
+		CictOracleDataSource cict = new CictOracleDataSource();
+		String requete = "{ call insertDocumentContrat(?,?,?,?,?) } ";		
+				try {
+					Connection connection = cict.getConnection();
+					CallableStatement cs = connection.prepareCall(requete);
+					cs.setInt(1, idcontrat);
+					cs.setString(2, libelle);
+					cs.setString(3, chemin);
+			        cs.setString(4, pdf);
+					cs.setString(5, date);
+					cs.execute();
+				} catch(SQLException e) {
+					e.printStackTrace();
+				}
+	}
+	
 	/**
 	 * Create the frame.
 	 */
@@ -239,31 +280,22 @@ public class NouveauDocumentContrat extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 		
 		textFieldLibelle = new JTextField();
-		textFieldLibelle.setBounds(166, 60, 132, 20);
+		textFieldLibelle.setBounds(165, 130, 132, 20);
 		contentPane.add(textFieldLibelle);
 		textFieldLibelle.setColumns(10);
 		
 		textFieldDate = new JTextField();
 		textFieldDate.setColumns(10);
-		textFieldDate.setBounds(166, 91, 67, 20);
+		textFieldDate.setBounds(165, 161, 67, 20);
 		contentPane.add(textFieldDate);
 		
 		JLabel LabelLibelle = new JLabel("* Libellé :");
-		LabelLibelle.setBounds(24, 63, 132, 14);
+		LabelLibelle.setBounds(37, 130, 132, 14);
 		contentPane.add(LabelLibelle);
 		
 		JLabel LabelDate = new JLabel("Date d'ajout :");
-		LabelDate.setBounds(24, 94, 132, 14);
+		LabelDate.setBounds(37, 161, 132, 14);
 		contentPane.add(LabelDate);
-		
-		textFieldLienPDF = new JTextField();
-		textFieldLienPDF.setColumns(10);
-		textFieldLienPDF.setBounds(166, 122, 207, 20);
-		contentPane.add(textFieldLienPDF);
-		
-		JLabel LabelLienPDF = new JLabel("Lien pdf :");
-		LabelLienPDF.setBounds(24, 125, 132, 14);
-		contentPane.add(LabelLienPDF);
 		
 		JButton ButtonAjouter = new JButton("Ajouter");
 		ButtonAjouter.setBounds(307, 384, 132, 23);
@@ -279,10 +311,95 @@ public class NouveauDocumentContrat extends JFrame implements ActionListener {
 		Bailleur.setFont(new Font("Tahoma", Font.BOLD, 20));
 		Bailleur.setBounds(24, 0, 307, 41);
 		contentPane.add(Bailleur);
+		
+		JLabel LabelPDF = new JLabel("* Fichier :");
+		LabelPDF.setBounds(37, 193, 132, 14);
+		contentPane.add(LabelPDF);
+		
+		JButton ButtonPDF = new JButton("Choix fichier...");
+		ButtonPDF.setBounds(165, 189, 132, 23);
+		ButtonPDF.addActionListener(this);
+		contentPane.add(ButtonPDF);
+		
+		
+		textFieldRepPDF = new JTextField();
+		textFieldRepPDF.setEditable(false);
+		textFieldRepPDF.setColumns(10);
+		textFieldRepPDF.setBounds(165, 219, 274, 20);
+		contentPane.add(textFieldRepPDF);
+		
+		JLabel LabelCheminPDF = new JLabel("Chemin d'accès  :");
+		LabelCheminPDF.setBounds(49, 223, 119, 14);
+		contentPane.add(LabelCheminPDF);
+		
+		JLabel LabelNomPDF = new JLabel("Nom fichier :");
+		LabelNomPDF.setBounds(49, 255, 119, 14);
+		contentPane.add(LabelNomPDF);
+		
+		textFieldNomPDF = new JTextField();
+		textFieldNomPDF.setEditable(false);
+		textFieldNomPDF.setColumns(10);
+		textFieldNomPDF.setBounds(165, 252, 132, 20);
+		contentPane.add(textFieldNomPDF);
+		
+		JLabel LabelContrat = new JLabel("* Contrat :");
+		LabelContrat.setBounds(37, 98, 132, 14);
+		contentPane.add(LabelContrat);
+		
+		JComboBox<String> comboBoxContrat = new JComboBox<String>();
+		comboBoxContrat.setBounds(165, 94, 132, 22);
+		contentPane.add(comboBoxContrat);
+		comboBoxContrat.setFont(new Font("Tahoma", Font.ROMAN_BASELINE, 8));
+		try {
+			ResultSet rsContratDateType = RequeteAfficheComboContrat();
+			int i = 0;
+			rsContratDateType.next();
+			while ( i < rsContratDateType.getRow()) {
+				String idContratResult = rsContratDateType.getString("IDCONTRAT");
+				String dateMiseEnEffet = rsContratDateType.getString("DATEMISEENEFFET");
+				String typeLoc = rsContratDateType.getString("TYPELOC");
+				comboBoxContrat.addItem( " (" + idContratResult + ") -" + dateMiseEnEffet.substring(0,10) + " " + typeLoc );
+				rsContratDateType.next();
+				}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		// GET COMBO SELECTED VALUE
+		comboBoxContrat.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        comboContratNom = (String) jcmbType.getSelectedItem();
+		        idContrat = comboContratNom.substring(comboContratNom.indexOf("(")+1, comboContratNom.indexOf(")"));
+		      }
+		    });
+		
+		JButton ButtonNouveauContrat = new JButton("Nouveau contrat");
+		ButtonNouveauContrat.setBounds(307, 94, 132, 23);
+		contentPane.add(ButtonNouveauContrat);
+		
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Nouveau contrat":			
+				new NouveauContrat().setVisible(true);
+				break;
+			case "Ajouter":				
+				int idcontrat = Integer.parseInt(this.idContrat) ;
+				String libelle = textFieldLibelle.getText();
+				String chemin = textFieldRepPDF.getText();
+				String pdf = textFieldNomPDF.getText();
+				String date = textFieldDate.getText();
+				try {				
+					RequeteInsertDocumentContrat(idcontrat, libelle, chemin, pdf, date);
+					JOptionPane.showMessageDialog(frame, "Document "+ libelle+ " du " + date + " bien inséré.");
+				} catch (SQLException e3) {
+					e3.printStackTrace();
+				}				
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -312,16 +429,6 @@ public class NouveauDocumentContrat extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
-			
-			case "Anciens entretiens":
-				this.dispose();
-				new EntretiensAnciens().setVisible(true);
-				break;
-				
-			case "Entretiens en cours":
-				this.dispose();
-				new EntretiensEnCours().setVisible(true);
-				break;
 				
 			case "Nouveaux entretiens":
 				this.dispose();
@@ -343,27 +450,27 @@ public class NouveauDocumentContrat extends JFrame implements ActionListener {
 				new NouvelleFactureEau().setVisible(true);
 				break;
 				
-			case "Anciennes factures d'électricité":
+			case "Anciennes factures d'Ã©lectricitÃ©":
 				this.dispose();
 				new FacturesElectriciteAnciennes().setVisible(true);
 				break;
 				
-			case "Factures d'électricité en cours":
+			case "Factures d'Ã©lectricitÃ© en cours":
 				this.dispose();
 				new FacturesElectriciteEnCours().setVisible(true);
 				break;
 				
-			case "Nouvelles factures d'électricité":
+			case "Nouvelles factures d'Ã©lectricitÃ©":
 				this.dispose();
 				new NouvelleFactureElectricite().setVisible(true);
 				break;
 				
-			case "Consultation taxes foncières":
+			case "Consultation taxes fonciÃ¨res":
 				this.dispose();
 				new TaxeFonciere().setVisible(true);
 				break;
 			
-			case "Nouvelles taxes foncières":
+			case "Nouvelles taxes fonciÃ¨res":
 				this.dispose();
 				new NouvelleTaxeFonciere().setVisible(true);
 				break;
@@ -378,12 +485,12 @@ public class NouveauDocumentContrat extends JFrame implements ActionListener {
 				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 				
-			case "Consultation charges supplémentaires":
+			case "Consultation charges supplÃ©mentaires":
 				this.dispose();
 				new TaxeFonciere().setVisible(true);
 				break;
 			
-			case "Nouvelle charges supplémentaires":
+			case "Nouvelle charges supplÃ©mentaires":
 				this.dispose();
 				new NouvelleTaxeFonciere().setVisible(true);
 				break;
@@ -422,6 +529,15 @@ public class NouveauDocumentContrat extends JFrame implements ActionListener {
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
+			case "Choix fichier...":
+				JFileChooser pdfChooser = new JFileChooser();
+				int reponse = pdfChooser.showOpenDialog(null);
+				if (reponse == JFileChooser.APPROVE_OPTION) {
+					File file = new File(pdfChooser.getSelectedFile().getAbsolutePath());
+					textFieldNomPDF.setText(file.getName());
+					textFieldRepPDF.setText(file.getAbsolutePath().substring(0, file.getAbsolutePath().length() - textFieldNomPDF.getText().length() - 1));
+				}
+				break;       
        
 			default:
 				System.out.println("Choix incorrect");

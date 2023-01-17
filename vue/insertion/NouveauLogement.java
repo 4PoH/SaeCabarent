@@ -5,6 +5,11 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -13,16 +18,17 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import JDBC.CictOracleDataSource;
+import Requetes.Requete;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.EntretiensAnciens;
-import vue.consultation.EntretiensEnCours;
 import vue.consultation.FacturesEauAnciennes;
 import vue.consultation.FacturesEauEnCours;
 import vue.consultation.FacturesElectriciteAnciennes;
@@ -40,10 +46,19 @@ import vue.consultation.TravauxEnCours;
 public class NouveauLogement extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField textFieldDateFac;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_3;
+	private JTextField textFieldNbPiece;
+	private JTextField textFieldLibelle;
+	private JTextField textFieldSurface;
+	private JComboBox<String> comboBoxBatiment;
+	private String SelectedComboBatimentCPAdresse;
+	private JComboBox<String> comboBoxTypeReseau;
+	private String SelectedComboTypeReseau;
+	private JComboBox<String> comboBoxModaliteElectricite;
+	private String SelectedComboModElec;
+	private JComboBox<String> comboBoxModaliteEauChaude;
+	private String SelectedComboModEau;
+	private NouveauLogement frame;
+	
 
 	/**
 	 * Launch the application.
@@ -61,6 +76,51 @@ public class NouveauLogement extends JFrame implements ActionListener {
 		});
 	}
 
+	// SHOW COMBO CODEPOSTAL, ADRESSE FROM BATIMENT
+	private ResultSet RequeteAfficheComboBatiment() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "select CODEPOSTAL, ADRESSE from BATI order by 1";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	
+	// SHOW COMBO CODEPOSTAL, ADRESSE FROM BATIMENT
+	public String RequeteGetCPWithAdr(String adresse) throws SQLException  {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		try {
+			String texteSQL = ("select CODEPOSTAL from BATI where ADRESSE = '" + adresse + "'");
+			retourRequete = requete.requeteSelection(texteSQL);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		retourRequete.next();
+		return retourRequete.getString("CODEPOSTAL");
+	}
+	
+		
+	// DB INSERT x8 : FLOAT INT STRING STRING STRING STRING STRING INT
+	private void RequeteInsertLieuLocation(float surfaceLieux,int nbPiece, String typeReseaux, String libelle, String modChauffage, String modProdEau, String adresseLieux,int codepostalLieux) throws SQLException {
+		CictOracleDataSource cict = new CictOracleDataSource();
+		String requete = "{ call insertLieuxDeLocations(?,?,?,?,?,?,?,?) } ";
+				try {
+					Connection connection = cict.getConnection();
+					CallableStatement cs = connection.prepareCall(requete);
+					cs.setFloat(1, surfaceLieux);
+					cs.setInt(2, nbPiece);
+					cs.setString(3, typeReseaux);
+			        cs.setString(4, libelle);
+					cs.setString(5, modChauffage);
+					cs.setString(6, modProdEau);
+					cs.setString(7, adresseLieux);
+					cs.setInt(8, codepostalLieux);
+					cs.execute();
+				} catch(SQLException e) {
+					e.printStackTrace();
+				}
+	}
+		
 	/**
 	 * Create the frame.
 	 */
@@ -240,44 +300,35 @@ public class NouveauLogement extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textFieldDateFac = new JTextField();
-		textFieldDateFac.setColumns(10);
-		textFieldDateFac.setBounds(165, 179, 23, 20);
-		contentPane.add(textFieldDateFac);
+		textFieldNbPiece = new JTextField();
+		textFieldNbPiece.setColumns(10);
+		textFieldNbPiece.setBounds(165, 179, 23, 20);
+		contentPane.add(textFieldNbPiece);
 		
-		JLabel LabelContrat = new JLabel("Surface :");
-		LabelContrat.setBounds(23, 151, 132, 14);
-		contentPane.add(LabelContrat);
+		JLabel LabelSurface = new JLabel("Surface :");
+		LabelSurface.setBounds(23, 151, 132, 14);
+		contentPane.add(LabelSurface);
 		
-		JLabel LabelDateFac = new JLabel("Nombre de pièces :");
-		LabelDateFac.setBounds(23, 182, 132, 14);
-		contentPane.add(LabelDateFac);
+		JLabel LabelNbPieces = new JLabel("Nombre de pièces :");
+		LabelNbPieces.setBounds(23, 182, 132, 14);
+		contentPane.add(LabelNbPieces);
 		
-		JLabel LabelLibelle = new JLabel("* Bâtiment  :");
-		LabelLibelle.setBounds(23, 92, 132, 14);
+		JLabel LabelBatiment = new JLabel("* Bâtiment  :");
+		LabelBatiment.setBounds(23, 92, 132, 14);
+		contentPane.add(LabelBatiment);
+		
+		JLabel LabelTypeReseau = new JLabel("Type d'accés réseau :");
+		LabelTypeReseau.setBounds(23, 214, 132, 14);
+		contentPane.add(LabelTypeReseau);
+		
+		JLabel LabelLibelle = new JLabel("Libellé :");
+		LabelLibelle.setBounds(23, 125, 132, 14);
 		contentPane.add(LabelLibelle);
 		
-		JLabel LabelMontant = new JLabel("Type d'accés réseau :");
-		LabelMontant.setBounds(23, 214, 132, 14);
-		contentPane.add(LabelMontant);
-		
-		JLabel LabelMontantNonDeductible = new JLabel("Ancien compteur d'eau :");
-		LabelMontantNonDeductible.setBounds(23, 245, 132, 14);
-		contentPane.add(LabelMontantNonDeductible);
-		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(165, 242, 132, 20);
-		contentPane.add(textField);
-		
-		JLabel LabelReduction = new JLabel("Libellé :");
-		LabelReduction.setBounds(23, 125, 132, 14);
-		contentPane.add(LabelReduction);
-		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(165, 122, 132, 20);
-		contentPane.add(textField_1);
+		textFieldLibelle = new JTextField();
+		textFieldLibelle.setColumns(10);
+		textFieldLibelle.setBounds(165, 122, 132, 20);
+		contentPane.add(textFieldLibelle);
 		
 		JButton ButtonAjouter = new JButton("Ajouter");
 		ButtonAjouter.setBounds(307, 384, 132, 23);
@@ -294,43 +345,148 @@ public class NouveauLogement extends JFrame implements ActionListener {
 		LabelNouvelleLocation.setBounds(24, 0, 307, 41);
 		contentPane.add(LabelNouvelleLocation);
 		
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setBounds(165, 89, 132, 22);
-		contentPane.add(comboBox_1);
+		JComboBox comboBoxBatiment = new JComboBox();
+		comboBoxBatiment.setBounds(165, 89, 132, 22);
+		contentPane.add(comboBoxBatiment);
+		comboBoxBatiment.setFont(new Font("Tahoma", Font.ROMAN_BASELINE, 10));
+		try {
+			ResultSet rsBatiCPAdress = RequeteAfficheComboBatiment();
+			int i = 0;
+			rsBatiCPAdress.next();
+			while ( i < rsBatiCPAdress.getRow()) {
+				String cp = rsBatiCPAdress.getString("CODEPOSTAL");
+				String adresse =  rsBatiCPAdress.getString("ADRESSE");
+				comboBoxBatiment.addItem( cp + " - " + adresse );
+				rsBatiCPAdress.next();
+				}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		// GET COMBO SELECTED VALUE
+		comboBoxBatiment.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        SelectedComboBatimentCPAdresse = (String) jcmbType.getSelectedItem();
+		      }
+		    });
 		
 		JButton ButtonNouveauatiment = new JButton("Nouveau Bâtiment");
 		ButtonNouveauatiment.setBounds(307, 88, 132, 23);
 		ButtonNouveauatiment.addActionListener(this);
 		contentPane.add(ButtonNouveauatiment);
 		
-		JLabel LabelModaliteChauffage = new JLabel("Modalité de chauffage :");
-		LabelModaliteChauffage.setBounds(24, 273, 132, 14);
-		contentPane.add(LabelModaliteChauffage);
+		textFieldSurface = new JTextField();
+		textFieldSurface.setColumns(10);
+		textFieldSurface.setBounds(165, 148, 132, 20);
+		contentPane.add(textFieldSurface);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(165, 148, 132, 20);
-		contentPane.add(textField_3);
+		JComboBox comboBoxTypeReseau = new JComboBox();
+		comboBoxTypeReseau.setBounds(165, 210, 132, 22);
+		contentPane.add(comboBoxTypeReseau);
+		ArrayList<String> typeReseau = new ArrayList<String>();
+		typeReseau.add("Fibre");
+		typeReseau.add("ADSL");
+		typeReseau.add("Telephone");
+		typeReseau.add("Autres...");
+		int indexTypeReseau = 0;
+		while ( indexTypeReseau < typeReseau.size()) {
+			comboBoxTypeReseau.addItem(typeReseau.get(indexTypeReseau));
+			indexTypeReseau++;
+		}
+		comboBoxTypeReseau.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        SelectedComboTypeReseau = (String) jcmbType.getSelectedItem();
+		        System.out.println(SelectedComboTypeReseau);
+		      }
+		    });
 		
-		JComboBox comboBox_1_1 = new JComboBox();
-		comboBox_1_1.setBounds(165, 210, 132, 22);
-		contentPane.add(comboBox_1_1);
+		JLabel LaelModaliteElectricite = new JLabel("Modalité de l'élétricité :");
+		LaelModaliteElectricite.setBounds(23, 248, 132, 14);
+		contentPane.add(LaelModaliteElectricite);
 		
-		JComboBox comboBox_1_1_1 = new JComboBox();
-		comboBox_1_1_1.setBounds(166, 273, 132, 22);
-		contentPane.add(comboBox_1_1_1);
+		JComboBox comboBoxModaliteElectricite = new JComboBox();
+		comboBoxModaliteElectricite.setBounds(165, 248, 132, 22);
+		contentPane.add(comboBoxModaliteElectricite);
+		ArrayList<String> typeModElec = new ArrayList<String>();
+		typeModElec.add("Electricité");
+		typeModElec.add("Energie 'verte'");
+		typeModElec.add("Gaz");
+		typeModElec.add("Charbon");
+		typeModElec.add("Bois");
+		typeModElec.add("Autres");
+		int indexTypeModElec = 0;
+		while ( indexTypeModElec < typeModElec.size()) {
+			comboBoxModaliteElectricite.addItem(typeModElec.get(indexTypeModElec));
+			indexTypeModElec++;
+		}
+		comboBoxModaliteElectricite.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        SelectedComboModElec = (String) jcmbType.getSelectedItem();
+		        System.out.println(SelectedComboModElec);
+		      }
+		    });
 		
-		JLabel LaelModalitDeLeau = new JLabel("Modalité de l'eau chaude :");
-		LaelModalitDeLeau.setBounds(24, 307, 132, 14);
-		contentPane.add(LaelModalitDeLeau);
+		JLabel LaelModaliteEauChaude = new JLabel("Modalité de l'eau chaude :");
+		LaelModaliteEauChaude.setBounds(23, 285, 132, 14);
+		contentPane.add(LaelModaliteEauChaude);
 		
-		JComboBox comboBox_1_1_1_1 = new JComboBox();
-		comboBox_1_1_1_1.setBounds(166, 307, 132, 22);
-		contentPane.add(comboBox_1_1_1_1);
+		JComboBox comboBoxModaliteEauChaude = new JComboBox();
+		comboBoxModaliteEauChaude.setBounds(165, 285, 132, 22);
+		contentPane.add(comboBoxModaliteEauChaude);
+		ArrayList<String> typeModEau = new ArrayList<String>();
+		typeModEau.add("Electricité");
+		typeModEau.add("Energie 'verte'");
+		typeModEau.add("Gaz");
+		typeModEau.add("Charbon");
+		typeModEau.add("Bois");
+		typeModEau.add("Autres");
+		int indexTypeModEau = 0;
+		while ( indexTypeModEau < typeModEau.size()) {
+			comboBoxModaliteEauChaude.addItem(typeModEau.get(indexTypeModEau));
+			indexTypeModEau++;
+		}
+		comboBoxModaliteEauChaude.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        SelectedComboModEau = (String) jcmbType.getSelectedItem();
+		        System.out.println(SelectedComboModEau);
+		      }
+		    });
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+		
+			case "Nouveau Bâtiment":
+				new NouveauBati().setVisible(true);
+				break;
+				
+			case "Ajouter":
+				float surfaceLieux = Float.parseFloat(textFieldSurface.getText());
+				int nbPiece = Integer.parseInt(textFieldNbPiece.getText());
+				String typeReseaux = SelectedComboTypeReseau;
+				String libelle = textFieldLibelle.getText();
+				String modChauffage = SelectedComboModElec;
+				String modProdEau = SelectedComboModEau;
+				String adresseLieux = SelectedComboBatimentCPAdresse.substring(7);
+				int codepostalLieux = Integer.parseInt(SelectedComboBatimentCPAdresse.substring(0,5));				
+				System.out.println(" /" + codepostalLieux + "/ " + adresseLieux + " " );
+				try {						
+					RequeteInsertLieuLocation(surfaceLieux,nbPiece, typeReseaux, libelle, modChauffage, modProdEau, adresseLieux, codepostalLieux);
+					JOptionPane.showMessageDialog(frame, "Logement " + libelle + " au " + adresseLieux + " inséré.");
+				} catch (SQLException e3) {
+					e3.printStackTrace();
+				}				
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
+				
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -359,16 +515,6 @@ public class NouveauLogement extends JFrame implements ActionListener {
 			case "Locataires en cours":
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
-				break;
-			
-			case "Anciens entretiens":
-				this.dispose();
-				new EntretiensAnciens().setVisible(true);
-				break;
-				
-			case "Entretiens en cours":
-				this.dispose();
-				new EntretiensEnCours().setVisible(true);
 				break;
 				
 			case "Nouveaux entretiens":

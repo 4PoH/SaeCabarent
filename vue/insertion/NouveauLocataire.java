@@ -5,6 +5,9 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -12,16 +15,16 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import JDBC.CictOracleDataSource;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.EntretiensAnciens;
-import vue.consultation.EntretiensEnCours;
 import vue.consultation.FacturesEauAnciennes;
 import vue.consultation.FacturesEauEnCours;
 import vue.consultation.FacturesElectriciteAnciennes;
@@ -45,7 +48,9 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 	private JTextField textFieldCodePostal;
 	private JTextField textFieldVille;
 	private JTextField textFieldMail;
+	private JTextField textFieldCategorieSocio;
 	private JTextField textFieldTelephone;
+	protected NouveauLocataire frame;
 
 	/**
 	 * Launch the application.
@@ -66,6 +71,26 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
+	
+	// DB INSERT x5 : STRING STRING STRING STRING STRING 
+	private void RequeteInsertLocataire( String NOM, String PRENOM, String MAIL, String TEL, String CATESOCIOPROF ) throws SQLException {
+		CictOracleDataSource cict = new CictOracleDataSource();
+		String requete = "{ call insertLocataire(?,?,?,?,?) } ";
+		
+				try {
+					Connection connection = cict.getConnection();
+					CallableStatement cs = connection.prepareCall(requete);
+					cs.setString(1, NOM);
+					cs.setString(2, PRENOM);
+					cs.setString(3, MAIL);
+			        cs.setString(4, TEL);
+					cs.setString(5, CATESOCIOPROF);
+					cs.execute();
+				} catch(SQLException e) {
+					e.printStackTrace();
+				}
+	}
+	
 	public NouveauLocataire() {
 		setTitle("Nouveau locataire");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -243,21 +268,21 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 		
 		textFieldNom = new JTextField();
-		textFieldNom.setBounds(166, 60, 132, 20);
+		textFieldNom.setBounds(201, 106, 132, 20);
 		contentPane.add(textFieldNom);
 		textFieldNom.setColumns(10);
 		
 		JLabel LabelNom = new JLabel("Nom :");
-		LabelNom.setBounds(24, 63, 132, 14);
+		LabelNom.setBounds(38, 106, 132, 14);
 		contentPane.add(LabelNom);
 		
 		textFieldPrenom = new JTextField();
 		textFieldPrenom.setColumns(10);
-		textFieldPrenom.setBounds(166, 91, 132, 20);
+		textFieldPrenom.setBounds(201, 137, 132, 20);
 		contentPane.add(textFieldPrenom);
 		
 		JLabel LabelPrenom = new JLabel("Prénom :");
-		LabelPrenom.setBounds(24, 94, 132, 14);
+		LabelPrenom.setBounds(38, 137, 132, 14);
 		contentPane.add(LabelPrenom);
 		
 		JButton ButtonAjouter = new JButton("Ajouter");
@@ -275,54 +300,51 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 		LabelLocataire.setBounds(24, 0, 307, 41);
 		contentPane.add(LabelLocataire);
 		
-		textFieldAdresse = new JTextField();
-		textFieldAdresse.setColumns(10);
-		textFieldAdresse.setBounds(166, 122, 228, 20);
-		contentPane.add(textFieldAdresse);
+		textFieldCategorieSocio = new JTextField();
+		textFieldCategorieSocio.setColumns(10);
+		textFieldCategorieSocio.setBounds(201, 230, 132, 20);
+		contentPane.add(textFieldCategorieSocio);
 		
-		JLabel LabelAdresse = new JLabel("Adresse :");
-		LabelAdresse.setBounds(24, 125, 132, 14);
-		contentPane.add(LabelAdresse);
-		
-		textFieldCodePostal = new JTextField();
-		textFieldCodePostal.setColumns(10);
-		textFieldCodePostal.setBounds(166, 153, 61, 20);
-		contentPane.add(textFieldCodePostal);
-		
-		JLabel LabelCodePostal = new JLabel("Code postal :");
-		LabelCodePostal.setBounds(24, 156, 132, 14);
-		contentPane.add(LabelCodePostal);
-		
-		textFieldVille = new JTextField();
-		textFieldVille.setColumns(10);
-		textFieldVille.setBounds(166, 184, 132, 20);
-		contentPane.add(textFieldVille);
-		
-		JLabel LabelVille = new JLabel("Ville :");
-		LabelVille.setBounds(24, 187, 132, 14);
-		contentPane.add(LabelVille);
+		JLabel LabelCategorieSocio = new JLabel("Categorie \r\nsocio-professionnelle :");
+		LabelCategorieSocio.setBounds(38, 230, 167, 14);
+		contentPane.add(LabelCategorieSocio);
 		
 		textFieldMail = new JTextField();
 		textFieldMail.setColumns(10);
-		textFieldMail.setBounds(166, 215, 228, 20);
+		textFieldMail.setBounds(201, 168, 228, 20);
 		contentPane.add(textFieldMail);
 		
 		JLabel LabelMail = new JLabel("Adresse mail :");
-		LabelMail.setBounds(24, 218, 132, 14);
+		LabelMail.setBounds(38, 168, 132, 14);
 		contentPane.add(LabelMail);
 		
 		textFieldTelephone = new JTextField();
 		textFieldTelephone.setColumns(10);
-		textFieldTelephone.setBounds(166, 246, 132, 20);
+		textFieldTelephone.setBounds(201, 199, 132, 20);
 		contentPane.add(textFieldTelephone);
 		
 		JLabel LabelTelephone = new JLabel("Numéro de téléphone :");
-		LabelTelephone.setBounds(24, 249, 132, 14);
+		LabelTelephone.setBounds(38, 199, 132, 14);
 		contentPane.add(LabelTelephone);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
+			case "Ajouter":					
+				String NOM = textFieldNom.getText();
+				String PRENOM = textFieldPrenom.getText();
+				String MAIL = textFieldMail.getText();
+				String TEL = textFieldTelephone.getText();
+				String CATESOCIOPROF = textFieldCategorieSocio.getText();
+				try {
+					RequeteInsertLocataire( NOM, PRENOM, MAIL, TEL, CATESOCIOPROF ) ;
+					JOptionPane.showMessageDialog(frame, "Locataire " + NOM + " " +PRENOM + " inséré(e).");
+				} catch (SQLException e3) {
+					e3.printStackTrace();
+				}				
+				this.dispose();
+				new Accueil().setVisible(true);
+				break;
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -352,16 +374,6 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
-			
-			case "Anciens entretiens":
-				this.dispose();
-				new EntretiensAnciens().setVisible(true);
-				break;
-				
-			case "Entretiens en cours":
-				this.dispose();
-				new EntretiensEnCours().setVisible(true);
-				break;
 				
 			case "Nouveaux entretiens":
 				this.dispose();
@@ -383,27 +395,27 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 				new NouvelleFactureEau().setVisible(true);
 				break;
 				
-			case "Anciennes factures d'électricité":
+			case "Anciennes factures d'Ã©lectricitÃ©":
 				this.dispose();
 				new FacturesElectriciteAnciennes().setVisible(true);
 				break;
 				
-			case "Factures d'électricité en cours":
+			case "Factures d'Ã©lectricitÃ© en cours":
 				this.dispose();
 				new FacturesElectriciteEnCours().setVisible(true);
 				break;
 				
-			case "Nouvelles factures d'électricité":
+			case "Nouvelles factures d'Ã©lectricitÃ©":
 				this.dispose();
 				new NouvelleFactureElectricite().setVisible(true);
 				break;
 				
-			case "Consultation taxes foncières":
+			case "Consultation taxes fonciÃ¨res":
 				this.dispose();
 				new TaxeFonciere().setVisible(true);
 				break;
 			
-			case "Nouvelles taxes foncières":
+			case "Nouvelles taxes fonciÃ¨res":
 				this.dispose();
 				new NouvelleTaxeFonciere().setVisible(true);
 				break;
@@ -418,12 +430,12 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 				
-			case "Consultation charges supplémentaires":
+			case "Consultation charges supplÃ©mentaires":
 				this.dispose();
 				new TaxeFonciere().setVisible(true);
 				break;
 			
-			case "Nouvelle charges supplémentaires":
+			case "Nouvelle charges supplÃ©mentaires":
 				this.dispose();
 				new NouvelleTaxeFonciere().setVisible(true);
 				break;
