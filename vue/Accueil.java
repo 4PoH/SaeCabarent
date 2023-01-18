@@ -59,6 +59,7 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
+				
 				try {
 					Accueil frame = new Accueil();
 					frame.setVisible(true);
