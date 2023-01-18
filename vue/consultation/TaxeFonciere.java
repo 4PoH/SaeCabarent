@@ -287,24 +287,42 @@ public class TaxeFonciere extends JFrame implements ActionListener {
 		TitreTaxeFonciere.setBounds(10, 10, 474, 32);
 		contentPane.add(TitreTaxeFonciere);
 		
+<<<<<<< Updated upstream
 		JButton ButtonInserer = new JButton("Insérer");
 		ButtonInserer.addActionListener(this);
 		ButtonInserer.setBounds(75, 370, 100, 25);
+=======
+		JButton ButtonInserer = new JButton("Inserer");
+		ButtonInserer.addActionListener(this);
+		ButtonInserer.setBounds(72, 363, 85, 21);
+>>>>>>> Stashed changes
 		contentPane.add(ButtonInserer);
 		
 		JButton ButtonMiseJour = new JButton("Mise à  jour");
 		ButtonMiseJour.addActionListener(this);
+<<<<<<< Updated upstream
 		ButtonMiseJour.setBounds(305, 370, 100, 25);
+=======
+		ButtonMiseJour.setBounds(305, 363, 97, 21);
+>>>>>>> Stashed changes
 		contentPane.add(ButtonMiseJour);
 		
 		JButton ButtonSupprimer = new JButton("Supprimer");
 		ButtonSupprimer.addActionListener(this);
+<<<<<<< Updated upstream
 		ButtonSupprimer.setBounds(550, 370, 100, 25);
+=======
+		ButtonSupprimer.setBounds(552, 363, 97, 21);
+>>>>>>> Stashed changes
 		contentPane.add(ButtonSupprimer);
 		
 		JButton ButtonAnnuler = new JButton("Annuler");
 		ButtonAnnuler.addActionListener(this);
+<<<<<<< Updated upstream
 		ButtonAnnuler.setBounds(790, 370, 100, 25);
+=======
+		ButtonAnnuler.setBounds(788, 363, 85, 21);
+>>>>>>> Stashed changes
 		contentPane.add(ButtonAnnuler);
 	}
 	
@@ -444,6 +462,7 @@ public class TaxeFonciere extends JFrame implements ActionListener {
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
+<<<<<<< Updated upstream
 				
 			case "Insérer":
 				this.dispose();
@@ -462,9 +481,17 @@ public class TaxeFonciere extends JFrame implements ActionListener {
 				System.out.println("A implémenter");
 				break;
 				
+=======
+
+			case "Inserer":
+				this.dispose();
+				new NouvelleTaxeFonciere().setVisible(true);
+				break;	
+>>>>>>> Stashed changes
 				
 			case "Annuler":
 				this.dispose();
+				new Accueil().setVisible(true);
 				break;
        
 			default:

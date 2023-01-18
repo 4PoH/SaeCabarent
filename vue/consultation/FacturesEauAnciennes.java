@@ -7,7 +7,6 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -20,7 +19,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -38,10 +36,10 @@ import vue.insertion.NouvelleLocation;
 import vue.insertion.NouvelleProtectionJuridique;
 import vue.insertion.NouvelleTaxeFonciere;
 
-public class LocationsEnCours extends JFrame implements ActionListener {
+public class FacturesEauAnciennes extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTable tableLocationEnCours;
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -50,7 +48,7 @@ public class LocationsEnCours extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					LocationsEnCours frame = new LocationsEnCours();
+					FacturesEauAnciennes frame = new FacturesEauAnciennes();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -63,32 +61,25 @@ public class LocationsEnCours extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	
-	private ResultSet RequeteTableauLocationCours() throws SQLException {
+	private ResultSet RequeteTableauEauAncienne() throws SQLException {
 		ResultSet retourRequete = null;
 		Requete requete = new Requetes.Requete();
-		String texteSQL = "select lieuxdelocations.libelle, lieuxdelocations.adresse, locataire.nom, locataire.prenom,contrat.datedepart, loue.montantreglerduloyer, loue.montantloyer, loue.modepaiement, factureeau.total, documentcontrat.pdf\r\n"
-				+ "from factureeau, locataire, relie, lieuxdelocations, loue, contrat, documentcontrat, rattacher, bati\r\n"
-				+ "where locataire.idlocataire = relie.idlocataire\r\n"
-				+ "                        and contrat.idcontrat = documentcontrat.idcontrat\r\n"
-				+ "                        and relie.idcontrat = contrat.idcontrat\r\n"
-				+ "                        and contrat.idcontrat = loue.idcontrat\r\n"
-				+ "                        and lieuxdelocations.idlogement = loue.idlogement\r\n"
-				+ "                        and bati.codepostal = lieuxdelocations.codepostal\r\n"
-				+ "                        and bati.adresse = lieuxdelocations.adresse\r\n"
-				+ "                        and bati.codepostal = rattacher.codepostal\r\n"
-				+ "                        and bati.adresse = rattacher.adresse\r\n"
-				+ "                        and rattacher.numfact = factureeau.numfact\r\n"
-				+ "                        and rattacher.siren = factureeau.siren\r\n"
-				+ "                        and TO_CHAR(SYSDATE, 'MM/YYYY') >= TO_CHAR(loue.datelocation, 'MM/YYYY')\r\n"
-				+ "                        and TO_CHAR(ADD_MONTHS(SYSDATE,-1), 'MM/YYYY') <= TO_CHAR(loue.datelocation, 'MM/YYYY')\r\n"
-				+ "                        and contrat.datedepart is null";
+		String texteSQL = "select bati.adresse, bati.codepostal, factureeau.siren, entreprise.nom ,factureeau.numfact, factureeau.prixm3, rattacher.datefact datefacturation,\r\n"
+				+ "    factureeau.partiefixe, factureeau.total, factureeau.pdf\r\n"
+				+ "from factureeau, bati, rattacher, entreprise\r\n"
+				+ "where factureeau.siren = rattacher.siren\r\n"
+				+ "and factureeau.numfact = rattacher.numfact\r\n"
+				+ "and rattacher.adresse = bati.adresse\r\n"
+				+ "and rattacher.codepostal = bati.codepostal\r\n"
+				+ "and entreprise.siren = factureeau.siren\r\n"
+				+ "and rattacher.datefact is not null order by datefacturation desc";
 		retourRequete = requete.requeteSelection(texteSQL);
 		return retourRequete;
 	}
 	
-	public LocationsEnCours() {
+	public FacturesEauAnciennes() {
 		setBackground(new Color(240, 240, 240));
-		setTitle("Location en cours");
+		setTitle("Factures d'eau payées");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 960, 480);
 		
@@ -267,79 +258,42 @@ public class LocationsEnCours extends JFrame implements ActionListener {
 		scrollPane.setBounds(22, 49, 914, 278);
 		contentPane.add(scrollPane);
 		
-		final String[] columns = {"location", "locataire", "montant regler loyer", "Montant loyer", "moyen de paiement", "Facture d'eau", "pdf contrat"};
-		scrollPane.setViewportView(tableLocationEnCours);
-		
-		final DefaultTableModel model = new DefaultTableModel(columns, 0);
-		tableLocationEnCours = new JTable(model);
-		tableLocationEnCours.setRowSelectionAllowed(false);
-		tableLocationEnCours.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableLocationEnCours.setSurrendersFocusOnKeystroke(true);
+		// Header de JTable 
+	    final String[] columns = {"Bâti", "Entreprise", "Numéro de facture", "Prix au m3", "Date de paiement", "Partie fixe", "Total", "Lien PDF"};
+		// Créer le modèle de table
+	    final DefaultTableModel model = new DefaultTableModel(columns, 0);
+		JTable tableFactureEau = new JTable(model);
 		
 		try {
-			ResultSet rsEnsLocationC = RequeteTableauLocationCours();
-			while ( rsEnsLocationC.next()) {
-				String libelle = rsEnsLocationC.getString(1);
-				String locataire = rsEnsLocationC.getString(2);
-				locataire += " ";
-				locataire += rsEnsLocationC.getString(3);
-				int resmontantregler = rsEnsLocationC.getInt(4);
-				String montantregler = String.valueOf(resmontantregler);
-				int resmontantotal = rsEnsLocationC.getInt(5);
-				String montanttotal = String.valueOf(resmontantotal);
-				String moyenpaiement = rsEnsLocationC.getString(6);
-				int resfacteau = rsEnsLocationC.getInt(7);
-				String facteau = String.valueOf(resfacteau);
-				//a modifier pour faire en sorte que ce soit un bouton qui renvoie vers le pdf du fichier
-				String pdf = rsEnsLocationC.getString(8);
-				model.addRow(new String[]{libelle, locataire, montantregler, montanttotal, moyenpaiement, facteau, pdf});
+			ResultSet rsEauAncienne = RequeteTableauEauAncienne();
+			while (rsEauAncienne.next()) {
+				String bati = rsEauAncienne.getString("ADRESSE") + ", " + rsEauAncienne.getString("CODEPOSTAL");
+				String entreprise = rsEauAncienne.getString("NOM");
+				String numfact = rsEauAncienne.getString("NUMFACT");
+				String datePaiement = String.valueOf(rsEauAncienne.getDate("DATEFACTURATION"));
+				String prixm3 =  String.valueOf(rsEauAncienne.getFloat("PRIXM3"));
+				String partieFixe = String.valueOf(rsEauAncienne.getFloat("PARTIEFIXE"));
+				String total = String.valueOf(rsEauAncienne.getFloat("TOTAL"));
+				String pdf = rsEauAncienne.getString("PDF");
+				model.addRow(new String[]{bati, entreprise, numfact, prixm3, datePaiement, partieFixe, total, pdf});
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		scrollPane.setViewportView(tableLocationEnCours);
+		} catch (SQLException e) { e.printStackTrace();}
+			
+		scrollPane.setViewportView(tableFactureEau);
 		
-		JLabel TitreLocationEnCours = new JLabel("Locations en cours");
-		TitreLocationEnCours.setFont(new Font("Tahoma", Font.BOLD, 20));
-		TitreLocationEnCours.setBounds(10, 10, 442, 29);
-		contentPane.add(TitreLocationEnCours);
+		JLabel TitreFacturesEauAnciennes = new JLabel("Factures d'eau payées");
+		TitreFacturesEauAnciennes.setFont(new Font("Tahoma", Font.BOLD, 20));
+		TitreFacturesEauAnciennes.setBounds(10, 10, 515, 29);
+		contentPane.add(TitreFacturesEauAnciennes);
 		
-<<<<<<< Updated upstream
-		JButton ButtonInserer = new JButton("Insérer");
-		ButtonInserer.addActionListener(this);
-		ButtonInserer.setBounds(75, 370, 100, 25);
-=======
 		JButton ButtonInserer = new JButton("Inserer");
 		ButtonInserer.addActionListener(this);
-		ButtonInserer.setBounds(72, 363, 85, 21);
->>>>>>> Stashed changes
+		ButtonInserer.setBounds(123, 376, 85, 21);
 		contentPane.add(ButtonInserer);
-		
-		JButton ButtonMiseJour = new JButton("Mise à  jour");
-		ButtonMiseJour.addActionListener(this);
-<<<<<<< Updated upstream
-		ButtonMiseJour.setBounds(305, 370, 100, 25);
-=======
-		ButtonMiseJour.setBounds(305, 363, 97, 21);
->>>>>>> Stashed changes
-		contentPane.add(ButtonMiseJour);
-		
-		JButton ButtonSupprimer = new JButton("Supprimer");
-		ButtonSupprimer.addActionListener(this);
-<<<<<<< Updated upstream
-		ButtonSupprimer.setBounds(550, 370, 100, 25);
-=======
-		ButtonSupprimer.setBounds(552, 363, 97, 21);
->>>>>>> Stashed changes
-		contentPane.add(ButtonSupprimer);
 		
 		JButton ButtonAnnuler = new JButton("Annuler");
 		ButtonAnnuler.addActionListener(this);
-<<<<<<< Updated upstream
-		ButtonAnnuler.setBounds(790, 370, 100, 25);
-=======
-		ButtonAnnuler.setBounds(788, 363, 85, 21);
->>>>>>> Stashed changes
+		ButtonAnnuler.setBounds(771, 376, 85, 21);
 		contentPane.add(ButtonAnnuler);
 	}
 	
@@ -374,37 +328,20 @@ public class LocationsEnCours extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
-<<<<<<< Updated upstream
-=======
-			
-			case "Anciens entretiens":
-				this.dispose();
-				//new EntretiensAnciens().setVisible(true);
-				break;
->>>>>>> Stashed changes
-				
-			case "Entretiens des parties communes":
-				this.dispose();
-<<<<<<< Updated upstream
-				new EntretiensPartiesAnciens().setVisible(true);
-=======
-				//new EntretiensEnCours().setVisible(true);
->>>>>>> Stashed changes
-				break;
-				
-			case "Nouveaux entretiens des parties communes":
+				 	
+			case "Nouveaux entretiens":
 				this.dispose();
 				new NouveauEntretien().setVisible(true);
 				break;
 				
-			case "Factures d'eau payées":
+			case "Anciennes factures d'eau":
 				this.dispose();
-				new FacturesEauPayees().setVisible(true);
+				new FacturesEauAnciennes().setVisible(true);
 				break;
 				
-			case "Factures d'eau à payées":
+			case "Factures d'eau en cours":
 				this.dispose();
-				new FacturesEauAPayees().setVisible(true);
+				new FacturesEauEnCours().setVisible(true);
 				break;
 				
 			case "Nouvelles factures d'eau":
@@ -412,14 +349,14 @@ public class LocationsEnCours extends JFrame implements ActionListener {
 				new NouvelleFactureEau().setVisible(true);
 				break;
 				
-			case "Factures d'électricité payées":
+			case "Anciennes factures d'électricité":
 				this.dispose();
-				new FacturesElectricitePayees().setVisible(true);
+				new FacturesElectriciteAnciennes().setVisible(true);
 				break;
 				
-			case "Factures d'électricité à payées":
+			case "Factures d'électricité en cours":
 				this.dispose();
-				new FacturesElectriciteAPayees().setVisible(true);
+				new FacturesElectriciteEnCours().setVisible(true);
 				break;
 				
 			case "Nouvelles factures d'électricité":
@@ -449,12 +386,12 @@ public class LocationsEnCours extends JFrame implements ActionListener {
 				
 			case "Consultation charges supplémentaires":
 				this.dispose();
-				new ChargesSupplementaires().setVisible(true);
+				new TaxeFonciere().setVisible(true);
 				break;
 			
 			case "Nouvelle charges supplémentaires":
 				this.dispose();
-				new NouvelleChargeSupp().setVisible(true);
+				new NouvelleTaxeFonciere().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
@@ -491,38 +428,17 @@ public class LocationsEnCours extends JFrame implements ActionListener {
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
-<<<<<<< Updated upstream
-				
-			case "Insérer":
-				this.dispose();
-				new NouvelleLocation().setVisible(true);
-				break;
 			
-			case "Mise à jour":
-				//this.dispose();
-				//new ().setVisible(true);
-				System.out.println("A implémenter");
-				break;
-				
-			case "Supprimer":
-				//this.dispose();
-				//new Impositions().setVisible(true);
-				System.out.println("A implémenter");
-				break;
-				
-=======
-
 			case "Inserer":
 				this.dispose();
-				new NouvelleLocation().setVisible(true);
+				new NouvelleFactureEau().setVisible(true);
 				break;	
->>>>>>> Stashed changes
 				
 			case "Annuler":
 				this.dispose();
 				new Accueil().setVisible(true);
 				break;
-       
+			
 			default:
 				System.out.println("Choix incorrect");
 				break;

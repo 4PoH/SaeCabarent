@@ -284,6 +284,7 @@ public class FacturesElectricitePayees extends JFrame implements ActionListener 
 		TitreFactureEauAncienne.setBounds(10, 10, 401, 29);
 		contentPane.add(TitreFactureEauAncienne);
 		
+<<<<<<< Updated upstream:vue/consultation/FacturesElectricitePayees.java
 		JButton ButtonInserer = new JButton("Insérer");
 		ButtonInserer.addActionListener(this);
 		ButtonInserer.setBounds(75, 370, 100, 25);
@@ -298,6 +299,12 @@ public class FacturesElectricitePayees extends JFrame implements ActionListener 
 		ButtonSupprimer.addActionListener(this);
 		ButtonSupprimer.setBounds(550, 370, 100, 25);
 		contentPane.add(ButtonSupprimer);
+=======
+		JButton ButtonInserer = new JButton("Inserer");
+		ButtonInserer.addActionListener(this);
+		ButtonInserer.setBounds(123, 376, 85, 21);
+		contentPane.add(ButtonInserer);
+>>>>>>> Stashed changes:vue/consultation/FacturesElectriciteAnciennes.java
 		
 		JButton ButtonAnnuler = new JButton("Annuler");
 		ButtonAnnuler.addActionListener(this);
@@ -336,10 +343,22 @@ public class FacturesElectricitePayees extends JFrame implements ActionListener 
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
+<<<<<<< Updated upstream:vue/consultation/FacturesElectricitePayees.java
+=======
+			
+			case "Anciens entretiens":
+				this.dispose();
+				//new EntretiensAnciens().setVisible(true);
+				break;
+>>>>>>> Stashed changes:vue/consultation/FacturesElectriciteAnciennes.java
 				
 			case "Entretiens des parties communes":
 				this.dispose();
+<<<<<<< Updated upstream:vue/consultation/FacturesElectricitePayees.java
 				new EntretiensPartiesAnciens().setVisible(true);
+=======
+				//new EntretiensEnCours().setVisible(true);
+>>>>>>> Stashed changes:vue/consultation/FacturesElectriciteAnciennes.java
 				break;
 				
 			case "Nouveaux entretiens des parties communes":
@@ -442,11 +461,16 @@ public class FacturesElectricitePayees extends JFrame implements ActionListener 
 				new Impositions().setVisible(true);
 				break;
 				
+<<<<<<< Updated upstream:vue/consultation/FacturesElectricitePayees.java
 			case "Insérer":
+=======
+			case "Inserer":
+>>>>>>> Stashed changes:vue/consultation/FacturesElectriciteAnciennes.java
 				this.dispose();
 				new NouvelleFactureElectricite().setVisible(true);
 				break;
 			
+<<<<<<< Updated upstream:vue/consultation/FacturesElectricitePayees.java
 			case "Mise à jour":
 				//this.dispose();
 				//new ().setVisible(true);
@@ -460,8 +484,11 @@ public class FacturesElectricitePayees extends JFrame implements ActionListener 
 				break;
 				
 				
+=======
+>>>>>>> Stashed changes:vue/consultation/FacturesElectriciteAnciennes.java
 			case "Annuler":
 				this.dispose();
+				new Accueil().setVisible(true);
 				break;
        
 			default:

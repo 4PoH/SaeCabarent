@@ -331,10 +331,22 @@ public class IRL extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
+<<<<<<< Updated upstream
+=======
+			
+			case "Anciens entretiens":
+				this.dispose();
+				//new EntretiensAnciens().setVisible(true);
+				break;
+>>>>>>> Stashed changes
 				
 			case "Entretiens des parties communes":
 				this.dispose();
+<<<<<<< Updated upstream
 				new EntretiensPartiesAnciens().setVisible(true);
+=======
+				//new EntretiensEnCours().setVisible(true);
+>>>>>>> Stashed changes
 				break;
 				
 			case "Nouveaux entretiens des parties communes":
@@ -439,6 +451,7 @@ public class IRL extends JFrame implements ActionListener {
 				
 			case "Annuler":
 				this.dispose();
+				new Accueil().setVisible(true);
 				break;
 				
 			case "Insérer":

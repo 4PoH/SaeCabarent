@@ -70,7 +70,8 @@ public class TravauxEnCours extends JFrame implements ActionListener {
 				+ "from travaux, concerne, lieuxdelocations\r\n"
 				+ "where travaux.numfact = concerne.numfact\r\n"
 				+ "and concerne.idlogement = lieuxdelocations.idlogement\r\n"
-				+ "and travaux.datefin is null";
+				+ "and travaux.datefin is null\r\n"
+				+ "order by travaux.datefin desc";
 		retourRequete = requete.requeteSelection(texteSQL);
 		return retourRequete;
 	}
@@ -255,7 +256,7 @@ public class TravauxEnCours extends JFrame implements ActionListener {
 		scrollPane.setBounds(10, 64, 946, 269);
 		contentPane.add(scrollPane);
 		
-		final String[] columns = {"Libelle", "libelle travaux", "montant", "numero fact", "date fin", "duree travaux", "montant non déducible", "réduction", "pdf"};
+		final String[] columns = {"location", "nom travaux", "montant", "numero fact", "date fin", "duree travaux", "montant non deductible", "reduction", "pdf"};
 		scrollPane.setViewportView(tableTravauxEnCours);
 		
 		final DefaultTableModel model = new DefaultTableModel(columns, 0);
@@ -265,25 +266,25 @@ public class TravauxEnCours extends JFrame implements ActionListener {
 		tableTravauxEnCours.setSurrendersFocusOnKeystroke(true);
 		
 		try {
-			ResultSet rsEnsLocation = RequeteTableauTravauxEnCours();
-			while ( rsEnsLocation.next()) {
-				String libellelocation = rsEnsLocation.getString(1);
+			ResultSet rsEnsTravauxC = RequeteTableauTravauxEnCours();
+			while ( rsEnsTravauxC.next()) {
+				String libellelocation = rsEnsTravauxC.getString(1);
 				libellelocation += " ";
-				libellelocation += rsEnsLocation.getString(2);
-				String travauxlibelle = rsEnsLocation.getString(3);
-				int resmontanttravaux = rsEnsLocation.getInt(4);
+				libellelocation += rsEnsTravauxC.getString(2);
+				String travauxlibelle = rsEnsTravauxC.getString(3);
+				int resmontanttravaux = rsEnsTravauxC.getInt(4);
 				String montantregler = String.valueOf(resmontanttravaux);
-				String numfact = rsEnsLocation.getString(5);
-				Date resDateT = rsEnsLocation.getDate(6);
+				String numfact = rsEnsTravauxC.getString(5);
+				Date resDateT = rsEnsTravauxC.getDate(6);
 				String DateT = String.valueOf(resDateT);
-				int resDuree = rsEnsLocation.getInt(7);
+				int resDuree = rsEnsTravauxC.getInt(7);
 				String Duree = String.valueOf(resDuree);
-				int resmontantnondeductible = rsEnsLocation.getInt(8);
+				int resmontantnondeductible = rsEnsTravauxC.getInt(8);
 				String montantnondeductible = String.valueOf(resmontantnondeductible);
-				int resreduction = rsEnsLocation.getInt(9);
+				int resreduction = rsEnsTravauxC.getInt(9);
 				String reduction = String.valueOf(resreduction);
 				//a modifier pour faire en sorte que ce soit un bouton qui renvoie vers le pdf du fichier
-				String pdf = rsEnsLocation.getString(10);
+				String pdf = rsEnsTravauxC.getString(10);
 				model.addRow(new String[]{libellelocation, travauxlibelle, montantregler,numfact, DateT, Duree, montantnondeductible,reduction, pdf});
 			}
 		} catch (SQLException e) {

@@ -268,10 +268,17 @@ public class ChargesSupplementaires extends JFrame implements ActionListener {
 		TitreDiagnostic.setBounds(10, 10, 189, 29);
 		contentPane.add(TitreDiagnostic);
 		
+<<<<<<< Updated upstream:vue/consultation/ChargesSupplementaires.java
 		JButton ButtonInserer = new JButton("Insérer");
 		ButtonInserer.addActionListener(this);
 		ButtonInserer.setBounds(150, 370, 85, 25);
 		contentPane.add(ButtonInserer);
+=======
+		JButton ButtonCharger = new JButton("Inserer");
+		ButtonCharger.addActionListener(this);
+		ButtonCharger.setBounds(98, 376, 85, 21);
+		contentPane.add(ButtonCharger);
+>>>>>>> Stashed changes:vue/consultation/AncienBatiCharge.java
 		
 		JButton ButtonAnnuler = new JButton("Annuler");
 		ButtonAnnuler.addActionListener(this);
@@ -418,7 +425,11 @@ public class ChargesSupplementaires extends JFrame implements ActionListener {
 				
 			case "Insérer":
 				this.dispose();
+<<<<<<< Updated upstream:vue/consultation/ChargesSupplementaires.java
 				new NouvelleChargeSupp().setVisible(true);
+=======
+				new Accueil().setVisible(true);
+>>>>>>> Stashed changes:vue/consultation/AncienBatiCharge.java
 				break;
        
 			case "Annuler":

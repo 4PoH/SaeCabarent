@@ -32,6 +32,7 @@ import vue.consultation.TaxeFonciere;
 import vue.consultation.TravauxAnciens;
 import vue.consultation.TravauxEnCours;
 import vue.insertion.NouveauEntretien;
+import vue.insertion.NouveauIRL;
 import vue.insertion.NouveauTravaux;
 import vue.insertion.NouvelleFactureEau;
 import vue.insertion.NouvelleFactureElectricite;
@@ -304,12 +305,12 @@ public class RegimeFoncier extends JFrame implements ActionListener {
 			
 			case "Anciens entretiens":
 				this.dispose();
-				new EntretiensAnciens().setVisible(true);
+				//new EntretiensAnciens().setVisible(true);
 				break;
 				
 			case "Entretiens en cours":
 				this.dispose();
-				new EntretiensEnCours().setVisible(true);
+				//new EntretiensEnCours().setVisible(true);
 				break;
 				
 			case "Nouveaux entretiens":
@@ -414,6 +415,13 @@ public class RegimeFoncier extends JFrame implements ActionListener {
 				
 			case "Annuler":
 				this.dispose();
+				new Accueil().setVisible(true);
+				break;
+			
+			case "Confirmer":
+				this.dispose();
+				new Accueil().setVisible(true);
+				System.out.println("Confirmation reussi");
 				break;
        
 			default:

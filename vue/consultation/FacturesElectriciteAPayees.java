@@ -280,29 +280,47 @@ public class FacturesElectriciteAPayees extends JFrame implements ActionListener
 
 		scrollPane.setViewportView(tableFactElecCours);
 		
-		JLabel TitreFactureEauEnCours = new JLabel("Facture d'électricité en cours");
-		TitreFactureEauEnCours.setFont(new Font("Tahoma", Font.BOLD, 20));
-		TitreFactureEauEnCours.setBounds(10, 10, 349, 29);
-		contentPane.add(TitreFactureEauEnCours);
+		JLabel TitreFactureElectriciteEnCours = new JLabel("Facture d'électricité en cours");
+		TitreFactureElectriciteEnCours.setFont(new Font("Tahoma", Font.BOLD, 20));
+		TitreFactureElectriciteEnCours.setBounds(10, 10, 493, 29);
+		contentPane.add(TitreFactureElectriciteEnCours);
 		
+<<<<<<< Updated upstream:vue/consultation/FacturesElectriciteAPayees.java
 		JButton ButtonInserer = new JButton("Insérer");
 		ButtonInserer.addActionListener(this);
 		ButtonInserer.setBounds(75, 370, 100, 25);
+=======
+		JButton ButtonInserer = new JButton("Inserer");
+		ButtonInserer.addActionListener(this);
+		ButtonInserer.setBounds(72, 363, 85, 21);
+>>>>>>> Stashed changes:vue/consultation/FacturesElectriciteEnCours.java
 		contentPane.add(ButtonInserer);
 		
 		JButton ButtonMiseJour = new JButton("Mise à  jour");
 		ButtonMiseJour.addActionListener(this);
+<<<<<<< Updated upstream:vue/consultation/FacturesElectriciteAPayees.java
 		ButtonMiseJour.setBounds(305, 370, 100, 25);
+=======
+		ButtonMiseJour.setBounds(305, 363, 97, 21);
+>>>>>>> Stashed changes:vue/consultation/FacturesElectriciteEnCours.java
 		contentPane.add(ButtonMiseJour);
 		
 		JButton ButtonSupprimer = new JButton("Supprimer");
 		ButtonSupprimer.addActionListener(this);
+<<<<<<< Updated upstream:vue/consultation/FacturesElectriciteAPayees.java
 		ButtonSupprimer.setBounds(550, 370, 100, 25);
+=======
+		ButtonSupprimer.setBounds(552, 363, 97, 21);
+>>>>>>> Stashed changes:vue/consultation/FacturesElectriciteEnCours.java
 		contentPane.add(ButtonSupprimer);
 		
 		JButton ButtonAnnuler = new JButton("Annuler");
 		ButtonAnnuler.addActionListener(this);
+<<<<<<< Updated upstream:vue/consultation/FacturesElectriciteAPayees.java
 		ButtonAnnuler.setBounds(790, 370, 100, 25);
+=======
+		ButtonAnnuler.setBounds(788, 363, 85, 21);
+>>>>>>> Stashed changes:vue/consultation/FacturesElectriciteEnCours.java
 		contentPane.add(ButtonAnnuler);
 	}
 	
@@ -337,10 +355,22 @@ public class FacturesElectriciteAPayees extends JFrame implements ActionListener
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
+<<<<<<< Updated upstream:vue/consultation/FacturesElectriciteAPayees.java
+=======
+			
+			case "Anciens entretiens":
+				this.dispose();
+				//new EntretiensAnciens().setVisible(true);
+				break;
+>>>>>>> Stashed changes:vue/consultation/FacturesElectriciteEnCours.java
 				
 			case "Entretiens des parties communes":
 				this.dispose();
+<<<<<<< Updated upstream:vue/consultation/FacturesElectriciteAPayees.java
 				new EntretiensPartiesAnciens().setVisible(true);
+=======
+				//new EntretiensEnCours().setVisible(true);
+>>>>>>> Stashed changes:vue/consultation/FacturesElectriciteEnCours.java
 				break;
 				
 			case "Nouveaux entretiens des parties communes":
@@ -442,6 +472,7 @@ public class FacturesElectriciteAPayees extends JFrame implements ActionListener
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
+<<<<<<< Updated upstream:vue/consultation/FacturesElectriciteAPayees.java
 				
 			case "Insérer":
 				this.dispose();
@@ -460,9 +491,17 @@ public class FacturesElectriciteAPayees extends JFrame implements ActionListener
 				System.out.println("A implémenter");
 				break;
 				
+=======
+
+			case "Inserer":
+				this.dispose();
+				new NouvelleFactureElectricite().setVisible(true);
+				break;	
+>>>>>>> Stashed changes:vue/consultation/FacturesElectriciteEnCours.java
 				
 			case "Annuler":
 				this.dispose();
+				new Accueil().setVisible(true);
 				break;
        
 			default:

@@ -240,6 +240,7 @@ public class Quittances extends JFrame implements ActionListener {
 		panel.add(LabelQuittances);
 		
 		JButton ButtonAnnuler = new JButton("Retour à l'accueil");
+		ButtonAnnuler.addActionListener(this);
 		ButtonAnnuler.setBounds(80, 170, 140, 25);
 		panel.add(ButtonAnnuler);
 		
@@ -280,10 +281,22 @@ public class Quittances extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
+<<<<<<< Updated upstream
+=======
+			
+			case "Anciens entretiens":
+				this.dispose();
+				//new EntretiensAnciens().setVisible(true);
+				break;
+>>>>>>> Stashed changes
 				
 			case "Entretiens des parties communes":
 				this.dispose();
+<<<<<<< Updated upstream
 				new EntretiensPartiesAnciens().setVisible(true);
+=======
+				//new EntretiensEnCours().setVisible(true);
+>>>>>>> Stashed changes
 				break;
 				
 			case "Nouveaux entretiens des parties communes":
@@ -386,8 +399,10 @@ public class Quittances extends JFrame implements ActionListener {
 				new Impositions().setVisible(true);
 				break;
 				
-			case "Annuler":
+			case "Retour à l'accueil":
 				this.dispose();
+				new Accueil().setVisible(true);
+				System.out.println("sa marche");
 				break;
        
 			default:

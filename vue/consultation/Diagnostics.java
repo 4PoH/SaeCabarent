@@ -274,29 +274,47 @@ public class Diagnostics extends JFrame implements ActionListener {
 		));
 		scrollPane.setViewportView(table);
 		
-		JLabel TitreDiagnostic = new JLabel("Diagnostics");
+		JLabel TitreDiagnostic = new JLabel("Diagnostics :");
 		TitreDiagnostic.setFont(new Font("Tahoma", Font.BOLD, 20));
 		TitreDiagnostic.setBounds(10, 10, 189, 29);
 		contentPane.add(TitreDiagnostic);
 		
+<<<<<<< Updated upstream
 		JButton ButtonInserer = new JButton("Insérer");
 		ButtonInserer.addActionListener(this);
 		ButtonInserer.setBounds(75, 370, 100, 25);
+=======
+		JButton ButtonInserer = new JButton("Inserer");
+		ButtonInserer.addActionListener(this);
+		ButtonInserer.setBounds(72, 363, 85, 21);
+>>>>>>> Stashed changes
 		contentPane.add(ButtonInserer);
 		
 		JButton ButtonMiseJour = new JButton("Mise à  jour");
 		ButtonMiseJour.addActionListener(this);
+<<<<<<< Updated upstream
 		ButtonMiseJour.setBounds(305, 370, 100, 25);
+=======
+		ButtonMiseJour.setBounds(305, 363, 85, 21);
+>>>>>>> Stashed changes
 		contentPane.add(ButtonMiseJour);
 		
 		JButton ButtonSupprimer = new JButton("Supprimer");
 		ButtonSupprimer.addActionListener(this);
+<<<<<<< Updated upstream
 		ButtonSupprimer.setBounds(550, 370, 100, 25);
+=======
+		ButtonSupprimer.setBounds(552, 363, 85, 21);
+>>>>>>> Stashed changes
 		contentPane.add(ButtonSupprimer);
 		
 		JButton ButtonAnnuler = new JButton("Annuler");
 		ButtonAnnuler.addActionListener(this);
+<<<<<<< Updated upstream
 		ButtonAnnuler.setBounds(790, 370, 100, 25);
+=======
+		ButtonAnnuler.setBounds(788, 363, 85, 21);
+>>>>>>> Stashed changes
 		contentPane.add(ButtonAnnuler);
 	}
 	
@@ -331,10 +349,22 @@ public class Diagnostics extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
+<<<<<<< Updated upstream
+=======
+			
+			case "Anciens entretiens":
+				this.dispose();
+				//new EntretiensAnciens().setVisible(true);
+				break;
+>>>>>>> Stashed changes
 				
 			case "Entretiens des parties communes":
 				this.dispose();
+<<<<<<< Updated upstream
 				new EntretiensPartiesAnciens().setVisible(true);
+=======
+				//new EntretiensEnCours().setVisible(true);
+>>>>>>> Stashed changes
 				break;
 				
 			case "Nouveaux entretiens des parties communes":
@@ -439,7 +469,11 @@ public class Diagnostics extends JFrame implements ActionListener {
 				
 			case "Insérer":
 				this.dispose();
+<<<<<<< Updated upstream
 				new NouveauDiagnostic().setVisible(true);
+=======
+				new Accueil().setVisible(true);
+>>>>>>> Stashed changes
 				break;
 			
 			case "Mise à jour":

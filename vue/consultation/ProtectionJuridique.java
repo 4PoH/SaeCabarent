@@ -66,7 +66,7 @@ public class ProtectionJuridique extends JFrame implements ActionListener {
 	private ResultSet RequeteTableauProtectionJuridique() throws SQLException {
 		ResultSet retourRequete = null;
 		Requete requete = new Requetes.Requete();
-		String texteSQL = "select bati.adresse, bati.codepostal, concerneprotection.numcontrat, concerneprotection.datefact as datefacturation, protectionjuridique.prime, protectionjuridique.primejuris, concerneprotection.quotitejuris, protectionjuridique.pdf\r\n"
+		String texteSQL = "select bati.adresse, bati.codepostal, concerneprotection.numcontrat, concerneprotection.datefact as datefacturation,protectionjuridique.dateobt as datedefacture, protectionjuridique.prime, protectionjuridique.primejuris, concerneprotection.quotitejuris, protectionjuridique.pdf\r\n"
 				+ "from bati, concerneprotection, protectionjuridique\r\n"
 				+ "where bati.adresse = concerneprotection.adresse\r\n"
 				+ "and bati.codepostal = concerneprotection.codepostal\r\n"
@@ -257,7 +257,7 @@ public class ProtectionJuridique extends JFrame implements ActionListener {
 		scrollPane.setBounds(10, 64, 946, 269);
 		contentPane.add(scrollPane);
 		
-		final String[] columns = {"bati", "num contrat", "date facturation", "prime", "prime juriprudence", "quotite juriprudence", "pdf"};
+		final String[] columns = {"bati", "num contrat", "date facturation","date obtention", "prime", "prime juriprudence", "quotite juriprudence", "pdf"};
 		scrollPane.setViewportView(tableProtectionJuridique);
 		
 		final DefaultTableModel model = new DefaultTableModel(columns, 0);
@@ -273,17 +273,19 @@ public class ProtectionJuridique extends JFrame implements ActionListener {
 				libellebati += " ";
 				libellebati += rsEnsProtectionJuri.getString(2);
 				String numcontrat = rsEnsProtectionJuri.getString(3);
-				Date resDateF = rsEnsProtectionJuri.getDate(4);
-				String DateF = String.valueOf(resDateF);
-				int resprime = rsEnsProtectionJuri.getInt(5);
+				Date resDateFacturation = rsEnsProtectionJuri.getDate(4);
+				String dateFacturation = String.valueOf(resDateFacturation);
+				Date resDateFacture = rsEnsProtectionJuri.getDate(5);
+				String dateFacture = String.valueOf(resDateFacture);
+				int resprime = rsEnsProtectionJuri.getInt(6);
 				String prime = String.valueOf(resprime);
-				int resprimejuri = rsEnsProtectionJuri.getInt(6);
+				int resprimejuri = rsEnsProtectionJuri.getInt(7);
 				String primejuri = String.valueOf(resprimejuri);
-				float resquotite = rsEnsProtectionJuri.getFloat(7);
+				float resquotite = rsEnsProtectionJuri.getFloat(8);
 				String quotite = String.valueOf(resquotite);
-				//a modifier pour faire en sorte que ce soit un bouton qui renvoie vers le pdf du fichier
-				String pdf = rsEnsProtectionJuri.getString(8);
-				model.addRow(new String[]{libellebati, numcontrat, DateF,prime, primejuri, quotite, pdf});
+				//a modifier pour faire en sorte que ce soiit un bouton qui renvoie vers le pdf du fichier
+				String pdf = rsEnsProtectionJuri.getString(9);
+				model.addRow(new String[]{libellebati, numcontrat, dateFacturation,dateFacture,prime, primejuri, quotite, pdf});
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -295,24 +297,42 @@ public class ProtectionJuridique extends JFrame implements ActionListener {
 		TitreProtectionJuridique.setBounds(10, 10, 449, 32);
 		contentPane.add(TitreProtectionJuridique);
 		
+<<<<<<< Updated upstream
 		JButton ButtonInserer = new JButton("Insérer");
 		ButtonInserer.addActionListener(this);
 		ButtonInserer.setBounds(75, 370, 100, 25);
+=======
+		JButton ButtonInserer = new JButton("Inserer");
+		ButtonInserer.addActionListener(this);
+		ButtonInserer.setBounds(72, 363, 85, 21);
+>>>>>>> Stashed changes
 		contentPane.add(ButtonInserer);
 		
 		JButton ButtonMiseJour = new JButton("Mise à  jour");
 		ButtonMiseJour.addActionListener(this);
+<<<<<<< Updated upstream
 		ButtonMiseJour.setBounds(305, 370, 100, 25);
+=======
+		ButtonMiseJour.setBounds(305, 363, 97, 21);
+>>>>>>> Stashed changes
 		contentPane.add(ButtonMiseJour);
 		
 		JButton ButtonSupprimer = new JButton("Supprimer");
 		ButtonSupprimer.addActionListener(this);
+<<<<<<< Updated upstream
 		ButtonSupprimer.setBounds(550, 370, 100, 25);
+=======
+		ButtonSupprimer.setBounds(552, 363, 97, 21);
+>>>>>>> Stashed changes
 		contentPane.add(ButtonSupprimer);
 		
 		JButton ButtonAnnuler = new JButton("Annuler");
 		ButtonAnnuler.addActionListener(this);
+<<<<<<< Updated upstream
 		ButtonAnnuler.setBounds(790, 370, 100, 25);
+=======
+		ButtonAnnuler.setBounds(788, 363, 85, 21);
+>>>>>>> Stashed changes
 		contentPane.add(ButtonAnnuler);
 	}
 	
@@ -347,10 +367,22 @@ public class ProtectionJuridique extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
+<<<<<<< Updated upstream
+=======
+			
+			case "Anciens entretiens":
+				this.dispose();
+				//new EntretiensAnciens().setVisible(true);
+				break;
+>>>>>>> Stashed changes
 				
 			case "Entretiens des parties communes":
 				this.dispose();
+<<<<<<< Updated upstream
 				new EntretiensPartiesAnciens().setVisible(true);
+=======
+				//new EntretiensEnCours().setVisible(true);
+>>>>>>> Stashed changes
 				break;
 				
 			case "Nouveaux entretiens des parties communes":
@@ -452,6 +484,7 @@ public class ProtectionJuridique extends JFrame implements ActionListener {
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
+<<<<<<< Updated upstream
 				
 			case "Insérer":
 				this.dispose();
@@ -470,9 +503,17 @@ public class ProtectionJuridique extends JFrame implements ActionListener {
 				System.out.println("A implémenter");
 				break;
 				
+=======
+
+			case "Inserer":
+				this.dispose();
+				new NouvelleProtectionJuridique().setVisible(true);
+				break;	
+>>>>>>> Stashed changes
 				
 			case "Annuler":
 				this.dispose();
+				new Accueil().setVisible(true);
 				break;
        
 			default:

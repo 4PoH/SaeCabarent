@@ -69,7 +69,8 @@ public class TravauxAnciens extends JFrame implements ActionListener {
 				+ "from travaux, concerne, lieuxdelocations\r\n"
 				+ "where travaux.numfact = concerne.numfact\r\n"
 				+ "and concerne.idlogement = lieuxdelocations.idlogement\r\n"
-				+ "and travaux.datefin is not null";
+				+ "and travaux.datefin is not null\r\n"
+				+ "order by travaux.datefin desc";
 		retourRequete = requete.requeteSelection(texteSQL);
 		return retourRequete;
 	}
@@ -255,7 +256,7 @@ public class TravauxAnciens extends JFrame implements ActionListener {
 		scrollPane.setBounds(16, 53, 940, 269);
 		contentPane.add(scrollPane);
 		
-		final String[] columns = {"libelle", "libelle travaux", "montant", "numero fact", "date fin", "duree travaux", "montant non déducible", "réduction", "pdf"};
+		final String[] columns = {"location", "nom travaux", "montant", "numero fact", "date fin", "duree travaux", "montant non deductible", "reduction", "pdf"};
 		scrollPane.setViewportView(tableAnciensTravaux);
 		
 		final DefaultTableModel model = new DefaultTableModel(columns, 0);
@@ -296,6 +297,7 @@ public class TravauxAnciens extends JFrame implements ActionListener {
 		TitreAnciensTravaux.setBounds(16, 10, 179, 33);
 		contentPane.add(TitreAnciensTravaux);
 		
+<<<<<<< Updated upstream
 		JButton ButtonInserer = new JButton("Insérer");
 		ButtonInserer.addActionListener(this);
 		ButtonInserer.setBounds(75, 370, 100, 25);
@@ -314,6 +316,16 @@ public class TravauxAnciens extends JFrame implements ActionListener {
 		JButton ButtonAnnuler = new JButton("Annuler");
 		ButtonAnnuler.addActionListener(this);
 		ButtonAnnuler.setBounds(790, 370, 100, 25);
+=======
+		JButton ButtonInserer = new JButton("Inserer");
+		ButtonInserer.addActionListener(this);
+		ButtonInserer.setBounds(123, 376, 85, 21);
+		contentPane.add(ButtonInserer);
+		
+		JButton ButtonAnnuler = new JButton("Annuler");
+		ButtonAnnuler.addActionListener(this);
+		ButtonAnnuler.setBounds(771, 376, 85, 21);
+>>>>>>> Stashed changes
 		contentPane.add(ButtonAnnuler);
 	}
 	
@@ -348,10 +360,22 @@ public class TravauxAnciens extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
+<<<<<<< Updated upstream
+=======
+			
+			case "Anciens entretiens":
+				this.dispose();
+				//new EntretiensAnciens().setVisible(true);
+				break;
+>>>>>>> Stashed changes
 				
 			case "Entretiens des parties communes":
 				this.dispose();
+<<<<<<< Updated upstream
 				new EntretiensPartiesAnciens().setVisible(true);
+=======
+				//new EntretiensEnCours().setVisible(true);
+>>>>>>> Stashed changes
 				break;
 				
 			case "Nouveaux entretiens des parties communes":
@@ -453,6 +477,7 @@ public class TravauxAnciens extends JFrame implements ActionListener {
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
+<<<<<<< Updated upstream
 				
 			case "Insérer":
 				this.dispose();
@@ -472,8 +497,17 @@ public class TravauxAnciens extends JFrame implements ActionListener {
 				break;
 				
 				
+=======
+
+			case "Inserer":
+				this.dispose();
+				new NouveauTravaux().setVisible(true);
+				break;
+			
+>>>>>>> Stashed changes
 			case "Annuler":
 				this.dispose();
+				new Accueil().setVisible(true);
 				break;
        
 			default:

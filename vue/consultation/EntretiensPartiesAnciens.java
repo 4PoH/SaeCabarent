@@ -274,14 +274,18 @@ public class EntretiensPartiesAnciens extends JFrame implements ActionListener {
 		TitreEntretiensPartiesAnciens.setBounds(10, 10, 569, 29);
 		contentPane.add(TitreEntretiensPartiesAnciens);
 		
-		JButton ButtonInserer = new JButton("Insérer");
+		JButton ButtonInserer = new JButton("Inserer");
 		ButtonInserer.addActionListener(this);
 		ButtonInserer.setBounds(150, 370, 85, 25);
 		contentPane.add(ButtonInserer);
 		
 		JButton ButtonAnnuler = new JButton("Annuler");
 		ButtonAnnuler.addActionListener(this);
+<<<<<<< Updated upstream
 		ButtonAnnuler.setBounds(700, 370, 85, 25);
+=======
+		ButtonAnnuler.setBounds(611, 376, 85, 21);
+>>>>>>> Stashed changes
 		contentPane.add(ButtonAnnuler);
 	}
 	
@@ -427,8 +431,14 @@ public class EntretiensPartiesAnciens extends JFrame implements ActionListener {
 				new NouveauDiagnostic().setVisible(true);
 				break;
        
+			case "Inserer":
+				this.dispose();
+				new NouveauEntretien().setVisible(true);
+				break;
+				
 			case "Annuler":
 				this.dispose();
+				new Accueil().setVisible(true);
 				break;
        
 			default:

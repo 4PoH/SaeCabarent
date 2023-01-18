@@ -66,15 +66,19 @@ public class LocatairesEnCours extends JFrame implements ActionListener {
 	private ResultSet RequeteTableauLocataireEnCours() throws SQLException {
 		ResultSet retourRequete = null;
 		Requete requete = new Requetes.Requete();
-		String texteSQL = "select Bati.adresse, locataire.nom , locataire.prenom, locataire.mail, locataire.tel, locataire.catesocioprof, contrat.datedepart\r\n"
-						+ "from bati, locataire, relie, lieuxdelocations, loue, contrat \r\n"
-						+ "where locataire.idlocataire = relie.idlocataire \r\n"
-						+ "and relie.idcontrat = contrat.idcontrat \r\n"
-						+ "and contrat.idcontrat = loue.idcontrat \r\n"
-						+ "and lieuxdelocations.idlogement = loue.idlogement \r\n"
-						+ "and bati.codepostal = lieuxdelocations.codepostal \r\n"
-						+ "and bati.adresse = lieuxdelocations.adresse \r\n"
-						+ "and to_date(add_months(sysdate, -12),'dd/mm/yyyy') < to_date(loue.datelocation, 'dd/mm/yyyy')";
+		String texteSQL = "select bati.adresse, locataire.nom , locataire.prenom, locataire.mail, locataire.tel, locataire.catesocioprof, contrat.datedepart, documentcontrat.pdf\r\n"
+				+ "                        from bati, locataire, relie, lieuxdelocations, loue, contrat, documentcontrat\r\n"
+				+ "                        where locataire.idlocataire = relie.idlocataire\r\n"
+				+ "                        and contrat.idcontrat = documentcontrat.idcontrat\r\n"
+				+ "                        and relie.idcontrat = contrat.idcontrat\r\n"
+				+ "                        and contrat.idcontrat = loue.idcontrat\r\n"
+				+ "                        and lieuxdelocations.idlogement = loue.idlogement\r\n"
+				+ "                        and bati.codepostal = lieuxdelocations.codepostal\r\n"
+				+ "                        and bati.adresse = lieuxdelocations.adresse\r\n"
+				+ "                        and contrat.datedepart is null\r\n"
+				+ "                        and TO_CHAR(SYSDATE, 'MM/YYYY') >= TO_CHAR(loue.datelocation, 'MM/YYYY')\r\n"
+				+ "                        and TO_CHAR(ADD_MONTHS(SYSDATE,-1), 'MM/YYYY') <= TO_CHAR(loue.datelocation, 'MM/YYYY')\r\n"
+				+ "                        order by contrat.datedepart desc";
 		retourRequete = requete.requeteSelection(texteSQL);
 		return retourRequete;
 	}

@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -76,9 +77,16 @@ public class LocatairesAnciens extends JFrame implements ActionListener {
 				+ "                        and bati.codepostal = lieuxdelocations.codepostal\r\n"
 				+ "                        and bati.adresse = lieuxdelocations.adresse\r\n"
 				+ "                        and contrat.datedepart is not null\r\n"
+<<<<<<< Updated upstream
 				+ "                        and TO_CHAR(contrat.datedepart, 'MM/YYYY') >= TO_CHAR(loue.datelocation, 'MM/YYYY')\r\n"
 				+ "                        and TO_CHAR(ADD_MONTHS(contrat.datedepart,-1), 'MM/YYYY') <= TO_CHAR(loue.datelocation, 'MM/YYYY')\r\n"
 				+ "                        order by contrat.datedepart desc";
+=======
+				+ "                        and TO_CHAR(SYSDATE, 'MM/YYYY') >= TO_CHAR(loue.datelocation, 'MM/YYYY')\r\n"
+				+ "                        and TO_CHAR(ADD_MONTHS(SYSDATE,-1), 'MM/YYYY') <= TO_CHAR(loue.datelocation, 'MM/YYYY')\r\n"
+				+ "                        order by contrat.datedepart desc";
+		
+>>>>>>> Stashed changes
 		retourRequete = requete.requeteSelection(texteSQL);
 		return retourRequete;
 	}
@@ -263,21 +271,19 @@ public class LocatairesAnciens extends JFrame implements ActionListener {
 		tableAncienLocataire.setSurrendersFocusOnKeystroke(true);
 		
 		try {
-			ResultSet rsEnsLocataire = RequeteTableauAnciensLocataire();
-			int i = 0;
-			while ( rsEnsLocataire.next()) {
-				String bati = rsEnsLocataire.getString(1);
-				String nom = rsEnsLocataire.getString(2);
-				String prenom = rsEnsLocataire.getString(3);
-				String mail = rsEnsLocataire.getString(4);
-				String tel = rsEnsLocataire.getString(5);
-				String categoriesocio = rsEnsLocataire.getString(6);
+			ResultSet rsEnsLocataireAncien = RequeteTableauAnciensLocataire();
+			while ( rsEnsLocataireAncien.next()) {
+				String bati = rsEnsLocataireAncien.getString(1);
+				String nom = rsEnsLocataireAncien.getString(2);
+				String prenom = rsEnsLocataireAncien.getString(3);
+				String mail = rsEnsLocataireAncien.getString(4);
+				String tel = rsEnsLocataireAncien.getString(5);
+				String categoriesocio = rsEnsLocataireAncien.getString(6);
 				//a modifier pour faire en sorte que ce soit un bouton qui renvoie vers le pdf du fichier
-				String datedepart = rsEnsLocataire.getString(7);
-				String lienpdf = rsEnsLocataire.getString(8);
-				model.addRow(new String[]{bati, nom, prenom, mail, tel, categoriesocio, datedepart, });
-				i++;
-				rsEnsLocataire.next();
+				Date resDateDepart = rsEnsLocataireAncien.getDate(7);
+				String dateDepart = String.valueOf(resDateDepart);
+				String lienpdf = rsEnsLocataireAncien.getString(8);
+				model.addRow(new String[]{bati, nom, prenom, mail, tel, categoriesocio, dateDepart});
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -292,6 +298,7 @@ public class LocatairesAnciens extends JFrame implements ActionListener {
 		TitreAnciensLocataires.setBounds(10, 10, 230, 29);
 		contentPane.add(TitreAnciensLocataires);
 		
+<<<<<<< Updated upstream
 		JButton ButtonInserer = new JButton("Insérer");
 		ButtonInserer.addActionListener(this);
 		ButtonInserer.setBounds(75, 370, 100, 25);
@@ -306,6 +313,12 @@ public class LocatairesAnciens extends JFrame implements ActionListener {
 		ButtonSupprimer.addActionListener(this);
 		ButtonSupprimer.setBounds(550, 370, 100, 25);
 		contentPane.add(ButtonSupprimer);
+=======
+		JButton ButtonInserer = new JButton("Inserer");
+		ButtonInserer.addActionListener(this);
+		ButtonInserer.setBounds(123, 376, 85, 21);
+		contentPane.add(ButtonInserer);
+>>>>>>> Stashed changes
 		
 		JButton ButtonAnnuler = new JButton("Annuler");
 		ButtonAnnuler.addActionListener(this);
@@ -344,10 +357,22 @@ public class LocatairesAnciens extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
+<<<<<<< Updated upstream
+=======
+			
+			case "Anciens entretiens":
+				this.dispose();
+				//new EntretiensAnciens().setVisible(true);
+				break;
+>>>>>>> Stashed changes
 				
 			case "Entretiens des parties communes":
 				this.dispose();
+<<<<<<< Updated upstream
 				new EntretiensPartiesAnciens().setVisible(true);
+=======
+				//new EntretiensEnCours().setVisible(true);
+>>>>>>> Stashed changes
 				break;
 				
 			case "Nouveaux entretiens des parties communes":
@@ -449,6 +474,7 @@ public class LocatairesAnciens extends JFrame implements ActionListener {
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
+<<<<<<< Updated upstream
 				
 			case "Insérer":
 				this.dispose();
@@ -467,9 +493,17 @@ public class LocatairesAnciens extends JFrame implements ActionListener {
 				System.out.println("A implémenter");
 				break;
 				
+=======
+
+			case "Inserer":
+				this.dispose();
+				new NouveauLocataire().setVisible(true);
+				break;	
+>>>>>>> Stashed changes
 				
 			case "Annuler":
 				this.dispose();
+				new Accueil().setVisible(true);
 				break;
        
 			default:

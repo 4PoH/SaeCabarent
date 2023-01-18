@@ -286,24 +286,42 @@ public class FacturesEauAPayees extends JFrame implements ActionListener {
 		TitreFactureEauEnCours.setBounds(10, 10, 241, 29);
 		contentPane.add(TitreFactureEauEnCours);
 		
+<<<<<<< Updated upstream:vue/consultation/FacturesEauAPayees.java
 		JButton ButtonInserer = new JButton("Insérer");
 		ButtonInserer.addActionListener(this);
 		ButtonInserer.setBounds(75, 370, 100, 25);
+=======
+		JButton ButtonInserer = new JButton("Inserer");
+		ButtonInserer.addActionListener(this);
+		ButtonInserer.setBounds(72, 363, 85, 21);
+>>>>>>> Stashed changes:vue/consultation/FacturesEauEnCours.java
 		contentPane.add(ButtonInserer);
 		
 		JButton ButtonMiseJour = new JButton("Mise à  jour");
 		ButtonMiseJour.addActionListener(this);
+<<<<<<< Updated upstream:vue/consultation/FacturesEauAPayees.java
 		ButtonMiseJour.setBounds(305, 370, 100, 25);
+=======
+		ButtonMiseJour.setBounds(305, 363, 100, 21);
+>>>>>>> Stashed changes:vue/consultation/FacturesEauEnCours.java
 		contentPane.add(ButtonMiseJour);
 		
 		JButton ButtonSupprimer = new JButton("Supprimer");
 		ButtonSupprimer.addActionListener(this);
+<<<<<<< Updated upstream:vue/consultation/FacturesEauAPayees.java
 		ButtonSupprimer.setBounds(550, 370, 100, 25);
+=======
+		ButtonSupprimer.setBounds(552, 363, 93, 21);
+>>>>>>> Stashed changes:vue/consultation/FacturesEauEnCours.java
 		contentPane.add(ButtonSupprimer);
 		
 		JButton ButtonAnnuler = new JButton("Annuler");
 		ButtonAnnuler.addActionListener(this);
+<<<<<<< Updated upstream:vue/consultation/FacturesEauAPayees.java
 		ButtonAnnuler.setBounds(790, 370, 100, 25);
+=======
+		ButtonAnnuler.setBounds(788, 363, 85, 21);
+>>>>>>> Stashed changes:vue/consultation/FacturesEauEnCours.java
 		contentPane.add(ButtonAnnuler);
 	}
 	
@@ -443,6 +461,7 @@ public class FacturesEauAPayees extends JFrame implements ActionListener {
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
+<<<<<<< Updated upstream:vue/consultation/FacturesEauAPayees.java
 				
 			case "Insérer":
 				this.dispose();
@@ -461,9 +480,17 @@ public class FacturesEauAPayees extends JFrame implements ActionListener {
 				System.out.println("A implémenter");
 				break;
 				
+=======
+
+			case "Inserer":
+				this.dispose();
+				new NouvelleFactureEau().setVisible(true);
+				break;	
+>>>>>>> Stashed changes:vue/consultation/FacturesEauEnCours.java
 				
 			case "Annuler":
 				this.dispose();
+				new Accueil().setVisible(true);
 				break;
        
 			default:

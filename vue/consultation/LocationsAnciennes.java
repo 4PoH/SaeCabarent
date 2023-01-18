@@ -64,20 +64,22 @@ public class LocationsAnciennes extends JFrame implements ActionListener {
 	private ResultSet RequeteTableauAncieneLocation() throws SQLException {
 		ResultSet retourRequete = null;
 		Requete requete = new Requetes.Requete();
-		String texteSQL = "select lieuxdelocations.libelle, locataire.nom, locataire.prenom,contrat.datedepart, loue.montantreglerduloyer, loue.montantloyer, loue.modepaiement, factureeau.total, documentcontrat.pdf\r\n"
+		String texteSQL = "select lieuxdelocations.libelle, lieuxdelocations.adresse, locataire.nom, locataire.prenom,contrat.datedepart, loue.montantreglerduloyer, loue.montantloyer, loue.modepaiement, factureeau.total, documentcontrat.pdf\r\n"
 				+ "from factureeau, locataire, relie, lieuxdelocations, loue, contrat, documentcontrat, rattacher, bati\r\n"
 				+ "where locataire.idlocataire = relie.idlocataire\r\n"
-				+ "and contrat.idcontrat = documentcontrat.idcontrat\r\n"
-				+ "and relie.idcontrat = contrat.idcontrat\r\n"
-				+ "and contrat.idcontrat = loue.idcontrat\r\n"
-				+ "and lieuxdelocations.idlogement = loue.idlogement\r\n"
-				+ "and bati.codepostal = lieuxdelocations.codepostal\r\n"
-				+ "and bati.adresse = lieuxdelocations.adresse\r\n"
-				+ "and bati.codepostal = rattacher.codepostal\r\n"
-				+ "and bati.adresse = rattacher.adresse\r\n"
-				+ "and rattacher.numfact = factureeau.numfact\r\n"
-				+ "and rattacher.siren = factureeau.siren\r\n"
-				+ "and contrat.datedepart is not null";
+				+ "                        and contrat.idcontrat = documentcontrat.idcontrat\r\n"
+				+ "                        and relie.idcontrat = contrat.idcontrat\r\n"
+				+ "                        and contrat.idcontrat = loue.idcontrat\r\n"
+				+ "                        and lieuxdelocations.idlogement = loue.idlogement\r\n"
+				+ "                        and bati.codepostal = lieuxdelocations.codepostal\r\n"
+				+ "                        and bati.adresse = lieuxdelocations.adresse\r\n"
+				+ "                        and bati.codepostal = rattacher.codepostal\r\n"
+				+ "                        and bati.adresse = rattacher.adresse\r\n"
+				+ "                        and rattacher.numfact = factureeau.numfact\r\n"
+				+ "                        and rattacher.siren = factureeau.siren\r\n"
+				+ "                        and contrat.datedepart is not null\r\n"
+				+ "                        and TO_CHAR(contrat.datedepart, 'MM/YYYY') >= TO_CHAR(loue.datelocation, 'MM/YYYY')\r\n"
+				+ "                        and TO_CHAR(ADD_MONTHS(contrat.datedepart,-1), 'MM/YYYY') <= TO_CHAR(loue.datelocation, 'MM/YYYY');";
 		retourRequete = requete.requeteSelection(texteSQL);
 		return retourRequete;
 	}
@@ -263,7 +265,7 @@ public class LocationsAnciennes extends JFrame implements ActionListener {
 		scrollPane.setBounds(23, 50, 916, 270);
 		contentPane.add(scrollPane);
 		
-		final String[] columns = {"Libelle", "Locataire", "Date fin", "montant r\u00E9gler loyer", "Montant loyer", "moyen de paiement", "Facture d'eau", "pdf contrat"};
+		final String[] columns = {"location", "locataire", "Date fin", "montant r\u00E9gler loyer", "Montant loyer", "moyen de paiement", "Facture d'eau", "pdf contrat"};
 		scrollPane.setViewportView(tableAncienneLocation);
 		
 		final DefaultTableModel model = new DefaultTableModel(columns, 0);
@@ -274,27 +276,26 @@ public class LocationsAnciennes extends JFrame implements ActionListener {
 		
 		try {
 			ResultSet rsEnsLocation = RequeteTableauAncieneLocation();
-			int i = 0;
 			rsEnsLocation.next();
-			while (i < rsEnsLocation.getRow()) {
-				String libelle = rsEnsLocation.getString(1);
-				String locataire = rsEnsLocation.getString(2);
+			while (rsEnsLocation.next()) {
+				String location = rsEnsLocation.getString(1);
+				location += " ";
+				location += rsEnsLocation.getString(2);
+				String locataire = rsEnsLocation.getString(3);
 				locataire += " ";
-				locataire += rsEnsLocation.getString(3);
-				Date resdatedepart = rsEnsLocation.getDate(4);
+				locataire += rsEnsLocation.getString(4);
+				Date resdatedepart = rsEnsLocation.getDate(5);
 				String datedepart = String.valueOf(resdatedepart);
-				int resmontantregler = rsEnsLocation.getInt(5);
+				int resmontantregler = rsEnsLocation.getInt(6);
 				String montantregler = String.valueOf(resmontantregler);
-				int resmontantotal = rsEnsLocation.getInt(6);
+				int resmontantotal = rsEnsLocation.getInt(7);
 				String montanttotal = String.valueOf(resmontantotal);
-				String moyenpaiement = rsEnsLocation.getString(7);
-				int resfacteau = rsEnsLocation.getInt(8);
+				String moyenpaiement = rsEnsLocation.getString(8);
+				int resfacteau = rsEnsLocation.getInt(9);
 				String facteau = String.valueOf(resfacteau);
 				//a modifier pour faire en sorte que ce soit un bouton qui renvoie vers le pdf du fichier
-				String pdf = rsEnsLocation.getString(9);
-				model.addRow(new String[]{libelle, locataire,datedepart, montantregler, montanttotal, moyenpaiement, facteau, pdf});
-				i++;
-				rsEnsLocation.next();
+				String pdf = rsEnsLocation.getString(10);
+				model.addRow(new String[]{location, locataire,datedepart, montantregler, montanttotal, moyenpaiement, facteau, pdf});
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -306,6 +307,7 @@ public class LocationsAnciennes extends JFrame implements ActionListener {
 		TitreAnciennesLocations.setBounds(22, 10, 431, 30);
 		contentPane.add(TitreAnciennesLocations);
 		
+<<<<<<< Updated upstream
 		JButton ButtonInserer = new JButton("Insérer");
 		ButtonInserer.addActionListener(this);
 		ButtonInserer.setBounds(75, 370, 100, 25);
@@ -324,6 +326,16 @@ public class LocationsAnciennes extends JFrame implements ActionListener {
 		JButton ButtonAnnuler = new JButton("Annuler");
 		ButtonAnnuler.addActionListener(this);
 		ButtonAnnuler.setBounds(790, 370, 100, 25);
+=======
+		JButton ButtonInserer = new JButton("Inserer");
+		ButtonInserer.addActionListener(this);
+		ButtonInserer.setBounds(123, 376, 85, 21);
+		contentPane.add(ButtonInserer);
+		
+		JButton ButtonAnnuler = new JButton("Annuler");
+		ButtonAnnuler.addActionListener(this);
+		ButtonAnnuler.setBounds(771, 376, 85, 21);
+>>>>>>> Stashed changes
 		contentPane.add(ButtonAnnuler);
 	}
 	
@@ -358,10 +370,22 @@ public class LocationsAnciennes extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
+<<<<<<< Updated upstream
+=======
+			
+			case "Anciens entretiens":
+				this.dispose();
+				//new EntretiensAnciens().setVisible(true);
+				break;
+>>>>>>> Stashed changes
 				
 			case "Entretiens des parties communes":
 				this.dispose();
+<<<<<<< Updated upstream
 				new EntretiensPartiesAnciens().setVisible(true);
+=======
+				//new EntretiensEnCours().setVisible(true);
+>>>>>>> Stashed changes
 				break;
 				
 			case "Nouveaux entretiens des parties communes":
@@ -463,12 +487,18 @@ public class LocationsAnciennes extends JFrame implements ActionListener {
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
+<<<<<<< Updated upstream
 				
 			case "Insérer":
+=======
+
+			case "Inserer":
+>>>>>>> Stashed changes
 				this.dispose();
 				new NouvelleLocation().setVisible(true);
 				break;
 			
+<<<<<<< Updated upstream
 			case "Mise à jour":
 				//this.dispose();
 				//new ().setVisible(true);
@@ -482,8 +512,11 @@ public class LocationsAnciennes extends JFrame implements ActionListener {
 				break;
 				
 				
+=======
+>>>>>>> Stashed changes
 			case "Annuler":
 				this.dispose();
+				new Accueil().setVisible(true);
 				break;
        
 			default:
