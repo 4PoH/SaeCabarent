@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -30,12 +29,12 @@ import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.EntretiensAnciens;
-import vue.consultation.EntretiensEnCours;
-import vue.consultation.FacturesEauAnciennes;
-import vue.consultation.FacturesEauEnCours;
-import vue.consultation.FacturesElectriciteAnciennes;
-import vue.consultation.FacturesElectriciteEnCours;
+import vue.consultation.ChargesSupplementaires;
+import vue.consultation.EntretiensPartiesAnciens;
+import vue.consultation.FacturesEauAPayees;
+import vue.consultation.FacturesEauPayees;
+import vue.consultation.FacturesElectriciteAPayees;
+import vue.consultation.FacturesElectricitePayees;
 import vue.consultation.Impositions;
 import vue.consultation.LocatairesAnciens;
 import vue.consultation.LocatairesEnCours;
@@ -56,13 +55,10 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 	private JTextField textFieldDateCourante;
 	private JTextField textFieldMontantRegle;
 	private JTextField textFieldMontantCompteur;
-	private JComboBox<String> comboBoxContrats;
 	private String selectedComboContrat;
 	private String selectedComboIDContrat;
-	private JComboBox<String> comboBoxLogements;
 	private String selectedComboLogement;
 	private String selectedComboIDLogement;
-	private JComboBox<String> comboBoxMoyenDePaiement;
 	private String selectedMoyenDePaiement;
 	private NouvelleLocation frame;
 	
@@ -111,14 +107,16 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 		MenuItemLocationEnCour.addActionListener(this);
 		MenuLocations.add(MenuItemLocationEnCour);
 		
-		JMenuItem MenuItemNouvelleLocation = new JMenuItem("Nouvelles locations");
+		JMenuItem MenuItemNouvelleLocation = new JMenuItem("Nouveaux loyers");
 		MenuItemNouvelleLocation.addActionListener(this);
 		MenuLocations.add(MenuItemNouvelleLocation);
 		
 		JMenuItem MenuItemAnciensLocataires = new JMenuItem("Anciens locataires");
+		MenuItemAnciensLocataires.addActionListener(this);
 		MenuLocations.add(MenuItemAnciensLocataires);
 		
 		JMenuItem MenuItemLocatairesEnCours = new JMenuItem("Locataires en cours");
+		MenuItemLocatairesEnCours.addActionListener(this);
 		MenuLocations.add(MenuItemLocatairesEnCours);
 		
 		JMenu MenuCharges = new JMenu("Charges");
@@ -129,26 +127,13 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 		MenuEntretiens.addActionListener(this);
 		MenuCharges.add(MenuEntretiens);
 		
-		JMenuItem MenuItemAnciensEntretiens = new JMenuItem("Anciens entretiens");
-		MenuItemAnciensEntretiens.addActionListener(this);
-		MenuItemAnciensEntretiens.setSelected(true);
-		MenuEntretiens.add(MenuItemAnciensEntretiens);
-		
-		JMenuItem mntmEntretiensEnCours = new JMenuItem("Entretiens en cours");
-		mntmEntretiensEnCours.addActionListener(this);
-		mntmEntretiensEnCours.setSelected(true);
-		MenuEntretiens.add(mntmEntretiensEnCours);
-		
-		JMenuItem MenuItemNouveauxEntretiens = new JMenuItem("Nouveaux entretiens");
+		JMenuItem MenuItemNouveauxEntretiens = new JMenuItem("Nouveaux entretiens des parties communes");
 		MenuItemNouveauxEntretiens.addActionListener(this);
 		
-		JMenuItem MenuItemAnciensEntretiensPartiesCommunes = new JMenuItem("Anciens entretiens parties communes");
+		JMenuItem MenuItemAnciensEntretiensPartiesCommunes = new JMenuItem("Entretiens des parties communes");
+		MenuItemAnciensEntretiensPartiesCommunes.addActionListener(this);
 		MenuItemAnciensEntretiensPartiesCommunes.setSelected(true);
 		MenuEntretiens.add(MenuItemAnciensEntretiensPartiesCommunes);
-		
-		JMenuItem MenuItemEntretiensPartiesCommunes = new JMenuItem("Entretiens parties communes en cours");
-		MenuItemEntretiensPartiesCommunes.setSelected(true);
-		MenuEntretiens.add(MenuItemEntretiensPartiesCommunes);
 		MenuItemNouveauxEntretiens.setSelected(true);
 		MenuEntretiens.add(MenuItemNouveauxEntretiens);
 		
@@ -156,11 +141,11 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 		MenuFacturesEau.addActionListener(this);
 		MenuCharges.add(MenuFacturesEau);
 		
-		JMenuItem MenuItemAnciennesFacturesEau = new JMenuItem("Anciennes factures d'eau");
+		JMenuItem MenuItemAnciennesFacturesEau = new JMenuItem("Factures d'eau payées");
 		MenuItemAnciennesFacturesEau.addActionListener(this);
 		MenuFacturesEau.add(MenuItemAnciennesFacturesEau);
 		
-		JMenuItem MenuItemFacturesEauEnCours = new JMenuItem("Factures d'eau en cours");
+		JMenuItem MenuItemFacturesEauEnCours = new JMenuItem("Factures d'eau à payées");
 		MenuItemFacturesEauEnCours.addActionListener(this);
 		MenuFacturesEau.add(MenuItemFacturesEauEnCours);
 		
@@ -172,11 +157,11 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 		MenuElectricite.addActionListener(this);
 		MenuCharges.add(MenuElectricite);
 		
-		JMenuItem MenuItemAnciennesFacturesElectricite = new JMenuItem("Anciennes factures d'électricité");
+		JMenuItem MenuItemAnciennesFacturesElectricite = new JMenuItem("Factures d'électricité payées");
 		MenuItemAnciennesFacturesElectricite.addActionListener(this);
 		MenuElectricite.add(MenuItemAnciennesFacturesElectricite);
 		
-		JMenuItem mntmFacturesDlectricitEn = new JMenuItem("Factures d'électricité en cours");
+		JMenuItem mntmFacturesDlectricitEn = new JMenuItem("Factures d'électricité à payées");
 		mntmFacturesDlectricitEn.addActionListener(this);
 		MenuElectricite.add(mntmFacturesDlectricitEn);
 		
@@ -256,7 +241,6 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 		JMenuItem MenuItemImpositions = new JMenuItem("Impositions");
 		MenuItemImpositions.addActionListener(this);
 		MenuGenerer.add(MenuItemImpositions);
-		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -317,7 +301,7 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 		ButtonNouveauContrat.addActionListener(this);
 		contentPane.add(ButtonNouveauContrat);
 		
-		JComboBox comboBoxContrats = new JComboBox();
+		JComboBox<String> comboBoxContrats = new JComboBox<String>();
 		comboBoxContrats.setBounds(166, 73, 132, 22);
 		comboBoxContrats.setFont(new Font("Tahoma", Font.ROMAN_BASELINE, 10));
 		contentPane.add(comboBoxContrats);
@@ -338,13 +322,13 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 		comboBoxContrats.addActionListener(new ActionListener() {
 		      @Override
 		      public void actionPerformed(ActionEvent e) {
-		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        JComboBox<?> jcmbType = (JComboBox<?>) e.getSource();
 		        selectedComboContrat = (String) jcmbType.getSelectedItem();
 		        selectedComboIDContrat = selectedComboContrat.substring(selectedComboContrat.lastIndexOf("(")+1,selectedComboContrat.lastIndexOf(")"));
 		      }
 		    });
 		
-		JComboBox comboBoxLogements = new JComboBox();
+		JComboBox<String> comboBoxLogements = new JComboBox<String>();
 		comboBoxLogements.setBounds(167, 107, 132, 22);
 		comboBoxLogements.setFont(new Font("Tahoma", Font.ROMAN_BASELINE, 8));
 		contentPane.add(comboBoxLogements);
@@ -365,7 +349,7 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 		comboBoxLogements.addActionListener(new ActionListener() {
 		      @Override
 		      public void actionPerformed(ActionEvent e) {
-		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        JComboBox<?> jcmbType = (JComboBox<?>) e.getSource();
 		        selectedComboLogement = (String) jcmbType.getSelectedItem();
 		        selectedComboIDLogement = selectedComboLogement.substring(selectedComboLogement.lastIndexOf("(")+1,selectedComboLogement.lastIndexOf(")"));		        
 		      }
@@ -399,7 +383,7 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 		LabelTypePaiement.setBounds(24, 214, 132, 14);
 		contentPane.add(LabelTypePaiement);
 		
-		JComboBox comboBoxMoyenDePaiement = new JComboBox();
+		JComboBox<String> comboBoxMoyenDePaiement = new JComboBox<String>();
 		comboBoxMoyenDePaiement.setBounds(166, 207, 132, 22);
 		contentPane.add(comboBoxMoyenDePaiement);
 		ArrayList<String> moyenPaiement = new ArrayList<String>();
@@ -415,7 +399,7 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 		comboBoxMoyenDePaiement.addActionListener(new ActionListener() {
 		      @Override
 		      public void actionPerformed(ActionEvent e) {
-		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        JComboBox<?> jcmbType = (JComboBox<?>) e.getSource();
 		        selectedMoyenDePaiement = (String) jcmbType.getSelectedItem();
 		      }
 		    });
@@ -480,7 +464,6 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 				new Accueil().setVisible(true);
 				break;
 			case "Date":
-				DateTimeFormatter dtfJ = DateTimeFormatter.ofPattern("DD");
 				LocalDate nowDate = LocalDate.now();
 				String jours = nowDate.toString().substring(8);
 				String mois = nowDate.toString().substring(5,7);
@@ -503,7 +486,7 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 				new LocationsEnCours().setVisible(true);
 				break;
 				
-			case "Nouvelles locations":
+			case "Nouveaux loyers":
 				this.dispose();
 				new NouvelleLocation().setVisible(true);
 				break;
@@ -517,8 +500,41 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
-			
-			
+				
+			case "Entretiens des parties communes":
+				this.dispose();
+				new EntretiensPartiesAnciens().setVisible(true);
+				break;
+				
+			case "Nouveaux entretiens des parties communes":
+				this.dispose();
+				new NouveauEntretien().setVisible(true);
+				break;
+				
+			case "Factures d'eau payées":
+				this.dispose();
+				new FacturesEauPayees().setVisible(true);
+				break;
+				
+			case "Factures d'eau à payées":
+				this.dispose();
+				new FacturesEauAPayees().setVisible(true);
+				break;
+				
+			case "Nouvelles factures d'eau":
+				this.dispose();
+				new NouvelleFactureEau().setVisible(true);
+				break;
+				
+			case "Factures d'électricité payées":
+				this.dispose();
+				new FacturesElectricitePayees().setVisible(true);
+				break;
+				
+			case "Factures d'électricité à payées":
+				this.dispose();
+				new FacturesElectriciteAPayees().setVisible(true);
+				break;
 				
 			case "Nouvelles factures d'électricité":
 				this.dispose();
@@ -547,12 +563,12 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 				
 			case "Consultation charges supplémentaires":
 				this.dispose();
-				new TaxeFonciere().setVisible(true);
+				new ChargesSupplementaires().setVisible(true);
 				break;
 			
 			case "Nouvelle charges supplémentaires":
 				this.dispose();
-				new NouvelleTaxeFonciere().setVisible(true);
+				new NouvelleChargeSupp().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
@@ -589,12 +605,11 @@ public class NouvelleLocation extends JFrame implements ActionListener {
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
-
+				
 			case "Annuler":
 				this.dispose();
-				new LocationsEnCours().setVisible(true);
 				break;
-	
+       
 			default:
 				System.out.println("Choix incorrect");
 				break;

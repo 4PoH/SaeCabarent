@@ -3,7 +3,6 @@ package vue.insertion;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -13,7 +12,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -55,20 +53,10 @@ public class NouveauContrat extends JFrame implements ActionListener {
 	private JTextField textFieldDate;
 	private JTextField textFieldCaution;
 	private JLabel LabelLibelleLocataire;
-	private JCheckBox chckbxColocataire ;
-	private JButton ButtonColocationPlus;
-	private JButton ButtonColocationMoins;
-	private int nbLocataire = 1;
-	private JComboBox<String> comboBoxTypeLocation;
-	private JComboBox<String> comboBoxLocataire;
-	private String locataire;
-	private String idLocataire;
-	private boolean locataireSelected;
 	private String typeLocation;
 	private NouveauContrat frame;
 	private int nbTableRows;
 	private ArrayList<String> tableAllSelectedData = new ArrayList<String>();
-	private String lastIDContrat;
 
 	/**
 	 * Launch the application.
@@ -293,7 +281,7 @@ public class NouveauContrat extends JFrame implements ActionListener {
 		LabelContrat.setBounds(24, 0, 307, 41);
 		contentPane.add(LabelContrat);
 		
-		JComboBox comboBoxTypeLocation = new JComboBox();
+		JComboBox<String> comboBoxTypeLocation = new JComboBox<String>();
 		comboBoxTypeLocation.setBounds(136, 197, 182, 22);
 		contentPane.add(comboBoxTypeLocation);
 		ArrayList<String> typeLoc = new ArrayList<String>();
@@ -308,7 +296,7 @@ public class NouveauContrat extends JFrame implements ActionListener {
 		comboBoxTypeLocation.addActionListener(new ActionListener() {
 		      @Override
 		      public void actionPerformed(ActionEvent e) {
-		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        JComboBox<?> jcmbType = (JComboBox<?>) e.getSource();
 		        typeLocation = (String) jcmbType.getSelectedItem();
 		        System.out.println(typeLocation);
 		      }
@@ -354,8 +342,6 @@ public class NouveauContrat extends JFrame implements ActionListener {
 		table.addMouseListener(new MouseAdapter() {
 		    public void mousePressed(MouseEvent mouseEvent) {
 		        JTable table =(JTable) mouseEvent.getSource();
-		        Point point = mouseEvent.getPoint();
-		        int row = table.rowAtPoint(point);
 		        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
 		        	 String selectedData = null;
 		    	        int[] selectedRow = table.getSelectedRows();

@@ -3,18 +3,14 @@ package vue.insertion;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.sql.CallableStatement;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -33,20 +29,16 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import JDBC.CictOracleDataSource;
-import Requetes.Requete;
-import Requetes.insertion.RequeteInsertion;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.ChargesBatiEnCours;
-import vue.consultation.EntretiensAnciens;
-import vue.consultation.EntretiensEnCours;
-import vue.consultation.FacturesEauAnciennes;
-import vue.consultation.FacturesEauEnCours;
-import vue.consultation.FacturesElectriciteAnciennes;
-import vue.consultation.FacturesElectriciteEnCours;
+import vue.consultation.ChargesSupplementaires;
+import vue.consultation.EntretiensPartiesAnciens;
+import vue.consultation.FacturesEauAPayees;
+import vue.consultation.FacturesEauPayees;
+import vue.consultation.FacturesElectriciteAPayees;
+import vue.consultation.FacturesElectricitePayees;
 import vue.consultation.Impositions;
 import vue.consultation.LocatairesAnciens;
 import vue.consultation.LocatairesEnCours;
@@ -64,15 +56,10 @@ public class NouvelleChargeSupp extends JFrame implements ActionListener {
 	private JTextField textFieldLibelle;
 	private JTextField textFieldDateFac;
 	private JTextField textFieldMontantTotal;
-
-	private JTextField textFieldParticipation;
 	private JTextField textFieldNomPDF;
 	private JTextField textFieldRepPDF;
-	private JComboBox<String> comboBoxEntreprise;
 	private String selectedComboEntNom;
 	private NouvelleChargeSupp frame;
-	private JTable table;
-	private int nbTableRows;
 	private ArrayList<String> tableAllSelectedData = new ArrayList<String>();
 	
 	/**
@@ -123,14 +110,16 @@ public class NouvelleChargeSupp extends JFrame implements ActionListener {
 		MenuItemLocationEnCour.addActionListener(this);
 		MenuLocations.add(MenuItemLocationEnCour);
 		
-		JMenuItem MenuItemNouvelleLocation = new JMenuItem("Nouvelles locations");
+		JMenuItem MenuItemNouvelleLocation = new JMenuItem("Nouveaux loyers");
 		MenuItemNouvelleLocation.addActionListener(this);
 		MenuLocations.add(MenuItemNouvelleLocation);
 		
 		JMenuItem MenuItemAnciensLocataires = new JMenuItem("Anciens locataires");
+		MenuItemAnciensLocataires.addActionListener(this);
 		MenuLocations.add(MenuItemAnciensLocataires);
 		
 		JMenuItem MenuItemLocatairesEnCours = new JMenuItem("Locataires en cours");
+		MenuItemLocatairesEnCours.addActionListener(this);
 		MenuLocations.add(MenuItemLocatairesEnCours);
 		
 		JMenu MenuCharges = new JMenu("Charges");
@@ -141,26 +130,13 @@ public class NouvelleChargeSupp extends JFrame implements ActionListener {
 		MenuEntretiens.addActionListener(this);
 		MenuCharges.add(MenuEntretiens);
 		
-		JMenuItem MenuItemAnciensEntretiens = new JMenuItem("Anciens entretiens");
-		MenuItemAnciensEntretiens.addActionListener(this);
-		MenuItemAnciensEntretiens.setSelected(true);
-		MenuEntretiens.add(MenuItemAnciensEntretiens);
-		
-		JMenuItem mntmEntretiensEnCours = new JMenuItem("Entretiens en cours");
-		mntmEntretiensEnCours.addActionListener(this);
-		mntmEntretiensEnCours.setSelected(true);
-		MenuEntretiens.add(mntmEntretiensEnCours);
-		
-		JMenuItem MenuItemNouveauxEntretiens = new JMenuItem("Nouveaux entretiens");
+		JMenuItem MenuItemNouveauxEntretiens = new JMenuItem("Nouveaux entretiens des parties communes");
 		MenuItemNouveauxEntretiens.addActionListener(this);
 		
-		JMenuItem MenuItemAnciensEntretiensPartiesCommunes = new JMenuItem("Anciens entretiens parties communes");
+		JMenuItem MenuItemAnciensEntretiensPartiesCommunes = new JMenuItem("Entretiens des parties communes");
+		MenuItemAnciensEntretiensPartiesCommunes.addActionListener(this);
 		MenuItemAnciensEntretiensPartiesCommunes.setSelected(true);
 		MenuEntretiens.add(MenuItemAnciensEntretiensPartiesCommunes);
-		
-		JMenuItem MenuItemEntretiensPartiesCommunes = new JMenuItem("Entretiens parties communes en cours");
-		MenuItemEntretiensPartiesCommunes.setSelected(true);
-		MenuEntretiens.add(MenuItemEntretiensPartiesCommunes);
 		MenuItemNouveauxEntretiens.setSelected(true);
 		MenuEntretiens.add(MenuItemNouveauxEntretiens);
 		
@@ -168,11 +144,11 @@ public class NouvelleChargeSupp extends JFrame implements ActionListener {
 		MenuFacturesEau.addActionListener(this);
 		MenuCharges.add(MenuFacturesEau);
 		
-		JMenuItem MenuItemAnciennesFacturesEau = new JMenuItem("Anciennes factures d'eau");
+		JMenuItem MenuItemAnciennesFacturesEau = new JMenuItem("Factures d'eau payées");
 		MenuItemAnciennesFacturesEau.addActionListener(this);
 		MenuFacturesEau.add(MenuItemAnciennesFacturesEau);
 		
-		JMenuItem MenuItemFacturesEauEnCours = new JMenuItem("Factures d'eau en cours");
+		JMenuItem MenuItemFacturesEauEnCours = new JMenuItem("Factures d'eau à payées");
 		MenuItemFacturesEauEnCours.addActionListener(this);
 		MenuFacturesEau.add(MenuItemFacturesEauEnCours);
 		
@@ -184,11 +160,11 @@ public class NouvelleChargeSupp extends JFrame implements ActionListener {
 		MenuElectricite.addActionListener(this);
 		MenuCharges.add(MenuElectricite);
 		
-		JMenuItem MenuItemAnciennesFacturesElectricite = new JMenuItem("Anciennes factures d'électricité");
+		JMenuItem MenuItemAnciennesFacturesElectricite = new JMenuItem("Factures d'électricité payées");
 		MenuItemAnciennesFacturesElectricite.addActionListener(this);
 		MenuElectricite.add(MenuItemAnciennesFacturesElectricite);
 		
-		JMenuItem mntmFacturesDlectricitEn = new JMenuItem("Factures d'électricité en cours");
+		JMenuItem mntmFacturesDlectricitEn = new JMenuItem("Factures d'électricité à payées");
 		mntmFacturesDlectricitEn.addActionListener(this);
 		MenuElectricite.add(mntmFacturesDlectricitEn);
 		
@@ -359,7 +335,7 @@ public class NouvelleChargeSupp extends JFrame implements ActionListener {
 		comboBoxEntreprise.setBounds(152, 62, 132, 22);
 		contentPane.add(comboBoxEntreprise);
 		try {
-			ResultSet rsEntNom = RequeteInsertion.RequeteAfficheComboEntreprise();
+			ResultSet rsEntNom = Requetes.RequeteInsertion.RequeteAfficheComboEntreprise();
 			int i = 0;
 			rsEntNom.next();
 			while ( i < rsEntNom.getRow()) {
@@ -372,7 +348,7 @@ public class NouvelleChargeSupp extends JFrame implements ActionListener {
 		comboBoxEntreprise.addActionListener(new ActionListener() {
 		      @Override
 		      public void actionPerformed(ActionEvent e) {
-		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        JComboBox<?> jcmbType = (JComboBox<?>) e.getSource();
 		        selectedComboEntNom = (String) jcmbType.getSelectedItem();
 		      }
 		    });
@@ -400,7 +376,7 @@ public class NouvelleChargeSupp extends JFrame implements ActionListener {
 		JTable table = new JTable(tableModel);
 		tableModel.addColumn("Logements");
 		try {
-			ResultSet rsTable = RequeteInsertion.RequeteGetLogLocBati();
+			ResultSet rsTable = Requetes.RequeteInsertion.RequeteGetLogLocBati();
 			int i = 0;
 			rsTable.next();
 			while ( i < rsTable.getRow()) {
@@ -424,8 +400,6 @@ public class NouvelleChargeSupp extends JFrame implements ActionListener {
 		table.addMouseListener(new MouseAdapter() {
 		    public void mousePressed(MouseEvent mouseEvent) {
 		        JTable table =(JTable) mouseEvent.getSource();
-		        Point point = mouseEvent.getPoint();
-		        int row = table.rowAtPoint(point);
 		        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
 		        	 String selectedData = null;
 		    	        int[] selectedRow = table.getSelectedRows();
@@ -462,7 +436,6 @@ public class NouvelleChargeSupp extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
 		case "Date":
-			DateTimeFormatter dtfJ = DateTimeFormatter.ofPattern("DD");
 			LocalDate nowDate = LocalDate.now();
 			String jours = nowDate.toString().substring(8);
 			String mois = nowDate.toString().substring(5,7);
@@ -490,9 +463,9 @@ public class NouvelleChargeSupp extends JFrame implements ActionListener {
 	        float total = Float.parseFloat(textFieldMontantTotal.getText());		        
 	        String lib = textFieldLibelle.getText();		        
 			try {
-				int siren = RequeteInsertion.RequeteGetSirenEntrepriseCombo(selectedComboEntNom);
+				int siren = Requetes.RequeteInsertion.RequeteGetSirenEntrepriseCombo(selectedComboEntNom);
 				System.out.println(siren + " " + numfact + " " +lib + " " +total + " " +datefact + " " +chemin + " " + pdf);
-				RequeteInsertion.RequeteInsertChargeSupp(siren, numfact, lib, datefact, total, chemin, pdf);
+				Requetes.RequeteInsertion.RequeteInsertChargeSupp(siren, numfact, lib, datefact, total, chemin, pdf);
 				JOptionPane.showMessageDialog(frame, "Charge supplÃ©mentaire " + numfact + " insÃ©rÃ©e.");
 			} catch (SQLException e3) {
 				e3.printStackTrace();
@@ -514,8 +487,8 @@ public class NouvelleChargeSupp extends JFrame implements ActionListener {
 				 	String DATELOCATION = (tableAllSelectedData.get(counter).substring(tableAllSelectedData.get(counter).lastIndexOf("{")+1,tableAllSelectedData.get(counter).lastIndexOf("}")));
 			        try {	
 
-			        	int siren = RequeteInsertion.RequeteGetSirenEntrepriseCombo(selectedComboEntNom);
-			        	RequeteInsertion.RequeteInsertSupplemente(idlogement, idcontrat, DATELOCATION, numfact, siren, pourcentagepart, modePaiement, datePaiement, numeroCheque);
+			        	int siren = Requetes.RequeteInsertion.RequeteGetSirenEntrepriseCombo(selectedComboEntNom);
+			        	Requetes.RequeteInsertion.RequeteInsertSupplemente(idlogement, idcontrat, DATELOCATION, numfact, siren, pourcentagepart, modePaiement, datePaiement, numeroCheque);
 			        } catch (SQLException e1) {
 							e1.printStackTrace();
 						}
@@ -524,154 +497,148 @@ public class NouvelleChargeSupp extends JFrame implements ActionListener {
 				new Accueil().setVisible(true);
 				break;
 			}			
-			case "Accueil":
-				this.dispose();
-				new Accueil().setVisible(true);
-				break;
-				
-			case "Anciennes locations":
-				this.dispose();
-				new LocationsAnciennes().setVisible(true);
-				break;
-				
-			case "Locations en cours":
-				this.dispose();
-				new LocationsEnCours().setVisible(true);
-				break;
-				
-			case "Nouvelles locations":
-				this.dispose();
-				new NouvelleLocation().setVisible(true);
-				break;
+		case "Accueil":
+			this.dispose();
+			new Accueil().setVisible(true);
+			break;
 			
-			case "Anciens locataires":
-				this.dispose();
-				new LocatairesAnciens().setVisible(true);
-				break;
-				
-			case "Locataires en cours":
-				this.dispose();
-				new LocatairesEnCours().setVisible(true);
-				break;
+		case "Anciennes locations":
+			this.dispose();
+			new LocationsAnciennes().setVisible(true);
+			break;
 			
-			case "Anciens entretiens":
-				this.dispose();
-				new EntretiensAnciens().setVisible(true);
-				break;
-				
-			case "Entretiens en cours":
-				this.dispose();
-				new EntretiensEnCours().setVisible(true);
-				break;
-				
-			case "Nouveaux entretiens":
-				this.dispose();
-				new NouveauEntretien().setVisible(true);
-				break;
-				
-			case "Anciennes factures d'eau":
-				this.dispose();
-				new FacturesEauAnciennes().setVisible(true);
-				break;
-				
-			case "Factures d'eau en cours":
-				this.dispose();
-				new FacturesEauEnCours().setVisible(true);
-				break;
-				
-			case "Nouvelles factures d'eau":
-				this.dispose();
-				new NouvelleFactureEau().setVisible(true);
-				break;
-				
-			case "Anciennes factures d'Ã©lectricitÃ©":
-				this.dispose();
-				new FacturesElectriciteAnciennes().setVisible(true);
-				break;
-				
-			case "Factures d'Ã©lectricitÃ© en cours":
-				this.dispose();
-				new FacturesElectriciteEnCours().setVisible(true);
-				break;
-				
-			case "Nouvelles factures d'Ã©lectricitÃ©":
-				this.dispose();
-				new NouvelleFactureElectricite().setVisible(true);
-				break;
-				
-			case "Consultation taxes fonciÃ¨res":
-				this.dispose();
-				new TaxeFonciere().setVisible(true);
-				break;
+		case "Locations en cours":
+			this.dispose();
+			new LocationsEnCours().setVisible(true);
+			break;
 			
-			case "Nouvelles taxes fonciÃ¨res":
-				this.dispose();
-				new NouvelleTaxeFonciere().setVisible(true);
-				break;
-				
-			case "Consultation protection juridique":
-				this.dispose();
-				new ProtectionJuridique().setVisible(true);
-				break;
+		case "Nouveaux loyers":
+			this.dispose();
+			new NouvelleLocation().setVisible(true);
+			break;
+		
+		case "Anciens locataires":
+			this.dispose();
+			new LocatairesAnciens().setVisible(true);
+			break;
 			
-			case "Nouvelles protection juridique":
-				this.dispose();
-				new NouvelleProtectionJuridique().setVisible(true);
-				break;
-				
-			case "Consultation charges supplÃ©mentaires":
-				this.dispose();
-				new TaxeFonciere().setVisible(true);
-				break;
+		case "Locataires en cours":
+			this.dispose();
+			new LocatairesEnCours().setVisible(true);
+			break;
 			
-			case "Nouvelle charges supplÃ©mentaires":
-				this.dispose();
-				new NouvelleTaxeFonciere().setVisible(true);
-				break;
+		case "Entretiens des parties communes":
+			this.dispose();
+			new EntretiensPartiesAnciens().setVisible(true);
+			break;
 			
-			case "Anciens travaux":
-				this.dispose();
-				new TravauxAnciens().setVisible(true);
-				break;
-				
-			case "Travaux en cours":
-				this.dispose();
-				new TravauxEnCours().setVisible(true);
-				break;
+		case "Nouveaux entretiens des parties communes":
+			this.dispose();
+			new NouveauEntretien().setVisible(true);
+			break;
 			
-			case "Nouveaux travaux":
-				this.dispose();
-				new NouveauTravaux().setVisible(true);
-				break;
-				
-			case "Informations bailleur":
-				this.dispose();
-				new InformationsBailleur().setVisible(true);
-				break;
-				
-			case "IRL":
-				this.dispose();
-				new IRL().setVisible(true);
-				break;
-				
-			case "Quittances":
-				this.dispose();
-				new Quittances().setVisible(true);
-				break;
-				
-			case "Impositions":
-				this.dispose();
-				new Impositions().setVisible(true);
-				break;
-
-			case "Annuler":
-				this.dispose();
-				new ChargesBatiEnCours().setVisible(true);
-				break;
-	
-			default:
-				System.out.println("Choix incorrect");
-				break;
+		case "Factures d'eau payées":
+			this.dispose();
+			new FacturesEauPayees().setVisible(true);
+			break;
+			
+		case "Factures d'eau à payées":
+			this.dispose();
+			new FacturesEauAPayees().setVisible(true);
+			break;
+			
+		case "Nouvelles factures d'eau":
+			this.dispose();
+			new NouvelleFactureEau().setVisible(true);
+			break;
+			
+		case "Factures d'électricité payées":
+			this.dispose();
+			new FacturesElectricitePayees().setVisible(true);
+			break;
+			
+		case "Factures d'électricité à payées":
+			this.dispose();
+			new FacturesElectriciteAPayees().setVisible(true);
+			break;
+			
+		case "Nouvelles factures d'électricité":
+			this.dispose();
+			new NouvelleFactureElectricite().setVisible(true);
+			break;
+			
+		case "Consultation taxes foncières":
+			this.dispose();
+			new TaxeFonciere().setVisible(true);
+			break;
+		
+		case "Nouvelles taxes foncières":
+			this.dispose();
+			new NouvelleTaxeFonciere().setVisible(true);
+			break;
+			
+		case "Consultation protection juridique":
+			this.dispose();
+			new ProtectionJuridique().setVisible(true);
+			break;
+		
+		case "Nouvelles protection juridique":
+			this.dispose();
+			new NouvelleProtectionJuridique().setVisible(true);
+			break;
+			
+		case "Consultation charges supplémentaires":
+			this.dispose();
+			new ChargesSupplementaires().setVisible(true);
+			break;
+		
+		case "Nouvelle charges supplémentaires":
+			this.dispose();
+			new NouvelleChargeSupp().setVisible(true);
+			break;
+		
+		case "Anciens travaux":
+			this.dispose();
+			new TravauxAnciens().setVisible(true);
+			break;
+			
+		case "Travaux en cours":
+			this.dispose();
+			new TravauxEnCours().setVisible(true);
+			break;
+		
+		case "Nouveaux travaux":
+			this.dispose();
+			new NouveauTravaux().setVisible(true);
+			break;
+			
+		case "Informations bailleur":
+			this.dispose();
+			new InformationsBailleur().setVisible(true);
+			break;
+			
+		case "IRL":
+			this.dispose();
+			new IRL().setVisible(true);
+			break;
+			
+		case "Quittances":
+			this.dispose();
+			new Quittances().setVisible(true);
+			break;
+			
+		case "Impositions":
+			this.dispose();
+			new Impositions().setVisible(true);
+			break;
+			
+		case "Annuler":
+			this.dispose();
+			break;
+   
+		default:
+			System.out.println("Choix incorrect");
+			break;
 		}
 	}
 }

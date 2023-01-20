@@ -23,12 +23,12 @@ import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.EntretiensAnciens;
-import vue.consultation.EntretiensEnCours;
-import vue.consultation.FacturesEauAnciennes;
-import vue.consultation.FacturesEauEnCours;
-import vue.consultation.FacturesElectriciteAnciennes;
-import vue.consultation.FacturesElectriciteEnCours;
+import vue.consultation.ChargesSupplementaires;
+import vue.consultation.EntretiensPartiesAnciens;
+import vue.consultation.FacturesEauAPayees;
+import vue.consultation.FacturesEauPayees;
+import vue.consultation.FacturesElectriciteAPayees;
+import vue.consultation.FacturesElectricitePayees;
 import vue.consultation.Impositions;
 import vue.consultation.LocatairesAnciens;
 import vue.consultation.LocatairesEnCours;
@@ -44,9 +44,6 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 	private JPanel contentPane;
 	private JTextField textFieldNom;
 	private JTextField textFieldPrenom;
-	private JTextField textFieldAdresse;
-	private JTextField textFieldCodePostal;
-	private JTextField textFieldVille;
 	private JTextField textFieldMail;
 	private JTextField textFieldCategorieSocio;
 	private JTextField textFieldTelephone;
@@ -78,6 +75,7 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 480, 480);
 		
+
 		JMenuBar menuBarTop = new JMenuBar();
 		menuBarTop.setMargin(new Insets(5, 5, 5, 5));
 		setJMenuBar(menuBarTop);
@@ -98,14 +96,16 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 		MenuItemLocationEnCour.addActionListener(this);
 		MenuLocations.add(MenuItemLocationEnCour);
 		
-		JMenuItem MenuItemNouvelleLocation = new JMenuItem("Nouvelles locations");
+		JMenuItem MenuItemNouvelleLocation = new JMenuItem("Nouveaux loyers");
 		MenuItemNouvelleLocation.addActionListener(this);
 		MenuLocations.add(MenuItemNouvelleLocation);
 		
 		JMenuItem MenuItemAnciensLocataires = new JMenuItem("Anciens locataires");
+		MenuItemAnciensLocataires.addActionListener(this);
 		MenuLocations.add(MenuItemAnciensLocataires);
 		
 		JMenuItem MenuItemLocatairesEnCours = new JMenuItem("Locataires en cours");
+		MenuItemLocatairesEnCours.addActionListener(this);
 		MenuLocations.add(MenuItemLocatairesEnCours);
 		
 		JMenu MenuCharges = new JMenu("Charges");
@@ -116,26 +116,13 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 		MenuEntretiens.addActionListener(this);
 		MenuCharges.add(MenuEntretiens);
 		
-		JMenuItem MenuItemAnciensEntretiens = new JMenuItem("Anciens entretiens");
-		MenuItemAnciensEntretiens.addActionListener(this);
-		MenuItemAnciensEntretiens.setSelected(true);
-		MenuEntretiens.add(MenuItemAnciensEntretiens);
-		
-		JMenuItem mntmEntretiensEnCours = new JMenuItem("Entretiens en cours");
-		mntmEntretiensEnCours.addActionListener(this);
-		mntmEntretiensEnCours.setSelected(true);
-		MenuEntretiens.add(mntmEntretiensEnCours);
-		
-		JMenuItem MenuItemNouveauxEntretiens = new JMenuItem("Nouveaux entretiens");
+		JMenuItem MenuItemNouveauxEntretiens = new JMenuItem("Nouveaux entretiens des parties communes");
 		MenuItemNouveauxEntretiens.addActionListener(this);
 		
-		JMenuItem MenuItemAnciensEntretiensPartiesCommunes = new JMenuItem("Anciens entretiens parties communes");
+		JMenuItem MenuItemAnciensEntretiensPartiesCommunes = new JMenuItem("Entretiens des parties communes");
+		MenuItemAnciensEntretiensPartiesCommunes.addActionListener(this);
 		MenuItemAnciensEntretiensPartiesCommunes.setSelected(true);
 		MenuEntretiens.add(MenuItemAnciensEntretiensPartiesCommunes);
-		
-		JMenuItem MenuItemEntretiensPartiesCommunes = new JMenuItem("Entretiens parties communes en cours");
-		MenuItemEntretiensPartiesCommunes.setSelected(true);
-		MenuEntretiens.add(MenuItemEntretiensPartiesCommunes);
 		MenuItemNouveauxEntretiens.setSelected(true);
 		MenuEntretiens.add(MenuItemNouveauxEntretiens);
 		
@@ -143,11 +130,11 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 		MenuFacturesEau.addActionListener(this);
 		MenuCharges.add(MenuFacturesEau);
 		
-		JMenuItem MenuItemAnciennesFacturesEau = new JMenuItem("Anciennes factures d'eau");
+		JMenuItem MenuItemAnciennesFacturesEau = new JMenuItem("Factures d'eau payées");
 		MenuItemAnciennesFacturesEau.addActionListener(this);
 		MenuFacturesEau.add(MenuItemAnciennesFacturesEau);
 		
-		JMenuItem MenuItemFacturesEauEnCours = new JMenuItem("Factures d'eau en cours");
+		JMenuItem MenuItemFacturesEauEnCours = new JMenuItem("Factures d'eau à payées");
 		MenuItemFacturesEauEnCours.addActionListener(this);
 		MenuFacturesEau.add(MenuItemFacturesEauEnCours);
 		
@@ -159,11 +146,11 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 		MenuElectricite.addActionListener(this);
 		MenuCharges.add(MenuElectricite);
 		
-		JMenuItem MenuItemAnciennesFacturesElectricite = new JMenuItem("Anciennes factures d'électricité");
+		JMenuItem MenuItemAnciennesFacturesElectricite = new JMenuItem("Factures d'électricité payées");
 		MenuItemAnciennesFacturesElectricite.addActionListener(this);
 		MenuElectricite.add(MenuItemAnciennesFacturesElectricite);
 		
-		JMenuItem mntmFacturesDlectricitEn = new JMenuItem("Factures d'électricité en cours");
+		JMenuItem mntmFacturesDlectricitEn = new JMenuItem("Factures d'électricité à payées");
 		mntmFacturesDlectricitEn.addActionListener(this);
 		MenuElectricite.add(mntmFacturesDlectricitEn);
 		
@@ -342,7 +329,7 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 				new LocationsEnCours().setVisible(true);
 				break;
 				
-			case "Nouvelles locations":
+			case "Nouveaux loyers":
 				this.dispose();
 				new NouvelleLocation().setVisible(true);
 				break;
@@ -356,30 +343,25 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
-			
-			case "Anciens entretiens":
+				
+			case "Entretiens des parties communes":
 				this.dispose();
-				new EntretiensAnciens().setVisible(true);
+				new EntretiensPartiesAnciens().setVisible(true);
 				break;
 				
-			case "Entretiens en cours":
-				this.dispose();
-				new EntretiensEnCours().setVisible(true);
-				break;
-				
-			case "Nouveaux entretiens":
+			case "Nouveaux entretiens des parties communes":
 				this.dispose();
 				new NouveauEntretien().setVisible(true);
 				break;
 				
-			case "Anciennes factures d'eau":
+			case "Factures d'eau payées":
 				this.dispose();
-				new FacturesEauAnciennes().setVisible(true);
+				new FacturesEauPayees().setVisible(true);
 				break;
 				
-			case "Factures d'eau en cours":
+			case "Factures d'eau à payées":
 				this.dispose();
-				new FacturesEauEnCours().setVisible(true);
+				new FacturesEauAPayees().setVisible(true);
 				break;
 				
 			case "Nouvelles factures d'eau":
@@ -387,27 +369,27 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 				new NouvelleFactureEau().setVisible(true);
 				break;
 				
-			case "Anciennes factures d'Ã©lectricitÃ©":
+			case "Factures d'électricité payées":
 				this.dispose();
-				new FacturesElectriciteAnciennes().setVisible(true);
+				new FacturesElectricitePayees().setVisible(true);
 				break;
 				
-			case "Factures d'Ã©lectricitÃ© en cours":
+			case "Factures d'électricité à payées":
 				this.dispose();
-				new FacturesElectriciteEnCours().setVisible(true);
+				new FacturesElectriciteAPayees().setVisible(true);
 				break;
 				
-			case "Nouvelles factures d'Ã©lectricitÃ©":
+			case "Nouvelles factures d'électricité":
 				this.dispose();
 				new NouvelleFactureElectricite().setVisible(true);
 				break;
 				
-			case "Consultation taxes fonciÃ¨res":
+			case "Consultation taxes foncières":
 				this.dispose();
 				new TaxeFonciere().setVisible(true);
 				break;
 			
-			case "Nouvelles taxes fonciÃ¨res":
+			case "Nouvelles taxes foncières":
 				this.dispose();
 				new NouvelleTaxeFonciere().setVisible(true);
 				break;
@@ -422,14 +404,14 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 				
-			case "Consultation charges supplÃ©mentaires":
+			case "Consultation charges supplémentaires":
 				this.dispose();
-				new TaxeFonciere().setVisible(true);
+				new ChargesSupplementaires().setVisible(true);
 				break;
 			
-			case "Nouvelle charges supplÃ©mentaires":
+			case "Nouvelle charges supplémentaires":
 				this.dispose();
-				new NouvelleTaxeFonciere().setVisible(true);
+				new NouvelleChargeSupp().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
@@ -466,10 +448,9 @@ public class NouveauLocataire extends JFrame implements ActionListener {
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
-			
+				
 			case "Annuler":
 				this.dispose();
-				new LocatairesEnCours().setVisible(true);
 				break;
        
 			default:

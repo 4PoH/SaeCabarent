@@ -3,7 +3,6 @@ package vue.insertion;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -12,7 +11,6 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -58,18 +56,14 @@ public class NouveauDiagnostic extends JFrame implements ActionListener {
 	private JTextField textFieldNumRef;
 	private JTextField textNomDiagnostic;
 	private JTextField textFieldNumRapport;
-	private JComboBox<String> comboBoxLogements;
 	private String selectedComboIDLogement;
 	private String selectedComboLogement;
-	private JComboBox<String> comboBoxEntreprise;
 	private String comboEntNom;	
 	private JTextField textFieldDateObtention;
 	private JTextField textFieldDateFin;
 	private JTextField textFieldRepPDF;
 	private JTextField textFieldNomPDF;
 	private NouveauDiagnostic frame;
-	private JTable table;
-	private int nbTableRows;
 	private ArrayList<String> tableAllSelectedData = new ArrayList<String>();
 	
 	/**
@@ -312,7 +306,7 @@ public class NouveauDiagnostic extends JFrame implements ActionListener {
 		LabelEntreprise.setBounds(39, 68, 132, 14);
 		contentPane.add(LabelEntreprise);
 		
-		JComboBox comboBoxEntreprise = new JComboBox();
+		JComboBox<String> comboBoxEntreprise = new JComboBox<String>();
 		comboBoxEntreprise.setBounds(159, 64, 132, 22);
 		contentPane.add(comboBoxEntreprise);
 		try {
@@ -330,7 +324,7 @@ public class NouveauDiagnostic extends JFrame implements ActionListener {
 		comboBoxEntreprise.addActionListener(new ActionListener() {
 		      @Override
 		      public void actionPerformed(ActionEvent e) {
-		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        JComboBox<?> jcmbType = (JComboBox<?>) e.getSource();
 		        comboEntNom = (String) jcmbType.getSelectedItem();
 		      }
 		    });
@@ -343,7 +337,7 @@ public class NouveauDiagnostic extends JFrame implements ActionListener {
 		LabelLogements.setBounds(41, 93, 132, 14);
 		contentPane.add(LabelLogements);
 		
-		JComboBox comboBoxLogements = new JComboBox();
+		JComboBox<String> comboBoxLogements = new JComboBox<String>();
 		comboBoxLogements.setFont(new Font("Tahoma", Font.PLAIN, 8));
 		comboBoxLogements.setBounds(159, 92, 132, 22);
 		contentPane.add(comboBoxLogements);
@@ -365,7 +359,7 @@ public class NouveauDiagnostic extends JFrame implements ActionListener {
 		comboBoxLogements.addActionListener(new ActionListener() {
 		      @Override
 		      public void actionPerformed(ActionEvent e) {
-		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        JComboBox<?> jcmbType = (JComboBox<?>) e.getSource();
 		        selectedComboLogement = (String) jcmbType.getSelectedItem();
 		        selectedComboIDLogement = selectedComboLogement.substring(selectedComboLogement.lastIndexOf("(")+1,selectedComboLogement.lastIndexOf(")"));		        
 		      }
@@ -454,8 +448,6 @@ public class NouveauDiagnostic extends JFrame implements ActionListener {
 		table.addMouseListener(new MouseAdapter() {
 		    public void mousePressed(MouseEvent mouseEvent) {
 		        JTable table =(JTable) mouseEvent.getSource();
-		        Point point = mouseEvent.getPoint();
-		        int row = table.rowAtPoint(point);
 		        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
 		        	 String selectedData = null;
 		    	        int[] selectedRow = table.getSelectedRows();
@@ -488,7 +480,6 @@ public class NouveauDiagnostic extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
 			case "Date":
-				DateTimeFormatter dtfJ = DateTimeFormatter.ofPattern("DD");
 				LocalDate nowDate = LocalDate.now();
 				String jours = nowDate.toString().substring(8);
 				String mois = nowDate.toString().substring(5,7);

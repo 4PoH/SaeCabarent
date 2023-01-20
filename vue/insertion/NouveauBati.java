@@ -331,7 +331,7 @@ public class NouveauBati extends JFrame implements ActionListener {
 		comboBoxTypeHabitation.addActionListener(new ActionListener() {
 		      @Override
 		      public void actionPerformed(ActionEvent e) {
-		        JComboBox<String> jcmbType = (JComboBox) e.getSource();
+		        JComboBox<?> jcmbType = (JComboBox<?>) e.getSource();
 		        comboTypeHabitation = (String) jcmbType.getSelectedItem();
 		      }
 		    });

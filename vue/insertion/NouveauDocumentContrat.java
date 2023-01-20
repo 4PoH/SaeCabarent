@@ -49,7 +49,6 @@ public class NouveauDocumentContrat extends JFrame implements ActionListener {
 	private JTextField textFieldDate;
 	protected JTextField textFieldNomPDF;
 	protected JTextField textFieldRepPDF;
-	private JComboBox<String> comboBoxContrat;
 	private String comboContratNom;
 	private String idContrat;
 	private NouveauDocumentContrat frame;
@@ -331,7 +330,7 @@ public class NouveauDocumentContrat extends JFrame implements ActionListener {
 		comboBoxContrat.addActionListener(new ActionListener() {
 		      @Override
 		      public void actionPerformed(ActionEvent e) {
-		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        JComboBox<?> jcmbType = (JComboBox<?>) e.getSource();
 		        comboContratNom = (String) jcmbType.getSelectedItem();
 		        idContrat = comboContratNom.substring(comboContratNom.indexOf("(")+1, comboContratNom.indexOf(")"));
 		      }
