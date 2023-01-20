@@ -9,8 +9,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.sql.CallableStatement;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -18,7 +16,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -34,19 +31,17 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import JDBC.CictOracleDataSource;
-import Requetes.Requete;
-import Requetes.insertion.RequeteInsertion;
+import Requetes.RequeteInsertion;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.EntretiensAnciens;
-import vue.consultation.EntretiensEnCours;
-import vue.consultation.FacturesEauAnciennes;
-import vue.consultation.FacturesEauEnCours;
-import vue.consultation.FacturesElectriciteAnciennes;
-import vue.consultation.FacturesElectriciteEnCours;
+import vue.consultation.ChargesSupplementaires;
+import vue.consultation.EntretiensPartiesAnciens;
+import vue.consultation.FacturesEauAPayees;
+import vue.consultation.FacturesEauPayees;
+import vue.consultation.FacturesElectriciteAPayees;
+import vue.consultation.FacturesElectricitePayees;
 import vue.consultation.Impositions;
 import vue.consultation.LocatairesAnciens;
 import vue.consultation.LocatairesEnCours;
@@ -546,7 +541,7 @@ public class NouveauDiagnostic extends JFrame implements ActionListener {
 				new LocationsEnCours().setVisible(true);
 				break;
 				
-			case "Nouvelles locations":
+			case "Nouveaux loyers":
 				this.dispose();
 				new NouvelleLocation().setVisible(true);
 				break;
@@ -560,30 +555,25 @@ public class NouveauDiagnostic extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
-			
-			case "Anciens entretiens":
+				
+			case "Entretiens des parties communes":
 				this.dispose();
-				new EntretiensAnciens().setVisible(true);
+				new EntretiensPartiesAnciens().setVisible(true);
 				break;
 				
-			case "Entretiens en cours":
-				this.dispose();
-				new EntretiensEnCours().setVisible(true);
-				break;
-				
-			case "Nouveaux entretiens":
+			case "Nouveaux entretiens des parties communes":
 				this.dispose();
 				new NouveauEntretien().setVisible(true);
 				break;
 				
-			case "Anciennes factures d'eau":
+			case "Factures d'eau payées":
 				this.dispose();
-				new FacturesEauAnciennes().setVisible(true);
+				new FacturesEauPayees().setVisible(true);
 				break;
 				
-			case "Factures d'eau en cours":
+			case "Factures d'eau à payées":
 				this.dispose();
-				new FacturesEauEnCours().setVisible(true);
+				new FacturesEauAPayees().setVisible(true);
 				break;
 				
 			case "Nouvelles factures d'eau":
@@ -591,27 +581,27 @@ public class NouveauDiagnostic extends JFrame implements ActionListener {
 				new NouvelleFactureEau().setVisible(true);
 				break;
 				
-			case "Anciennes factures d'Ã©lectricitÃ©":
+			case "Factures d'électricité payées":
 				this.dispose();
-				new FacturesElectriciteAnciennes().setVisible(true);
+				new FacturesElectricitePayees().setVisible(true);
 				break;
 				
-			case "Factures d'Ã©lectricitÃ© en cours":
+			case "Factures d'électricité à payées":
 				this.dispose();
-				new FacturesElectriciteEnCours().setVisible(true);
+				new FacturesElectriciteAPayees().setVisible(true);
 				break;
 				
-			case "Nouvelles factures d'Ã©lectricitÃ©":
+			case "Nouvelles factures d'électricité":
 				this.dispose();
 				new NouvelleFactureElectricite().setVisible(true);
 				break;
 				
-			case "Consultation taxes fonciÃ¨res":
+			case "Consultation taxes foncières":
 				this.dispose();
 				new TaxeFonciere().setVisible(true);
 				break;
 			
-			case "Nouvelles taxes fonciÃ¨res":
+			case "Nouvelles taxes foncières":
 				this.dispose();
 				new NouvelleTaxeFonciere().setVisible(true);
 				break;
@@ -626,14 +616,14 @@ public class NouveauDiagnostic extends JFrame implements ActionListener {
 				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 				
-			case "Consultation charges supplÃ©mentaires":
+			case "Consultation charges supplémentaires":
 				this.dispose();
-				new TaxeFonciere().setVisible(true);
+				new ChargesSupplementaires().setVisible(true);
 				break;
 			
-			case "Nouvelle charges supplÃ©mentaires":
+			case "Nouvelle charges supplémentaires":
 				this.dispose();
-				new NouvelleTaxeFonciere().setVisible(true);
+				new NouvelleChargeSupp().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
@@ -670,9 +660,14 @@ public class NouveauDiagnostic extends JFrame implements ActionListener {
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
+				
+			case "Annuler":
+				this.dispose();
+				break;
        
 			default:
 				System.out.println("Choix incorrect");
 				break;
-		}	}
+		}
+	}
 }

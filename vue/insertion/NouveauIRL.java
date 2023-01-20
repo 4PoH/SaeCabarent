@@ -110,7 +110,7 @@ public class NouveauIRL extends JFrame implements ActionListener {
 		MenuItemLocationEnCour.addActionListener(this);
 		MenuLocations.add(MenuItemLocationEnCour);
 		
-		JMenuItem MenuItemNouvelleLocation = new JMenuItem("Nouvelles locations");
+		JMenuItem MenuItemNouvelleLocation = new JMenuItem("Nouveaux loyers");
 		MenuItemNouvelleLocation.addActionListener(this);
 		MenuLocations.add(MenuItemNouvelleLocation);
 		
@@ -295,164 +295,146 @@ public class NouveauIRL extends JFrame implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
-			case "Accueil":
-				this.dispose();
-				new Accueil().setVisible(true);
-				break;
-				
-			case "Anciennes locations":
-				this.dispose();
-				new LocationsAnciennes().setVisible(true);
-				break;
-				
-			case "Locations en cours":
-				this.dispose();
-				new LocationsEnCours().setVisible(true);
-				break;
-				
-			case "Nouvelles locations":
-				this.dispose();
-				new NouvelleLocation().setVisible(true);
-				break;
+		case "Accueil":
+			this.dispose();
+			new Accueil().setVisible(true);
+			break;
 			
-			case "Anciens locataires":
-				this.dispose();
-				new LocatairesAnciens().setVisible(true);
-				break;
-				
-			case "Locataires en cours":
-				this.dispose();
-				new LocatairesEnCours().setVisible(true);
-				break;
-				
-			case "Entretiens des parties communes":
-				this.dispose();
-				new EntretiensPartiesAnciens().setVisible(true);
-				break;
-				
-			case "Nouveaux entretiens des parties communes":
-				this.dispose();
-				new NouveauEntretien().setVisible(true);
-				break;
-				
-			case "Factures d'eau payées":
-				this.dispose();
-				new FacturesEauPayees().setVisible(true);
-				break;
-				
-			case "Factures d'eau à payées":
-				this.dispose();
-				new FacturesEauAPayees().setVisible(true);
-				break;
-				
-			case "Nouvelles factures d'eau":
-				this.dispose();
-				new NouvelleFactureEau().setVisible(true);
-				break;
-				
-			case "Factures d'électricité payées":
-				this.dispose();
-				new FacturesElectricitePayees().setVisible(true);
-				break;
-				
-			case "Factures d'électricité à payées":
-				this.dispose();
-				new FacturesElectriciteAPayees().setVisible(true);
-				break;
-				
-			case "Nouvelles factures d'électricité":
-				this.dispose();
-				new NouvelleFactureElectricite().setVisible(true);
-				break;
-				
-			case "Consultation taxes foncières":
-				this.dispose();
-				new TaxeFonciere().setVisible(true);
-				break;
+		case "Anciennes locations":
+			this.dispose();
+			new LocationsAnciennes().setVisible(true);
+			break;
 			
-			case "Nouvelles taxes foncières":
-				this.dispose();
-				new NouvelleTaxeFonciere().setVisible(true);
-				break;
-				
-			case "Consultation protection juridique":
-				this.dispose();
-				new ProtectionJuridique().setVisible(true);
-				break;
+		case "Locations en cours":
+			this.dispose();
+			new LocationsEnCours().setVisible(true);
+			break;
 			
-			case "Nouvelles protection juridique":
-				this.dispose();
-				new NouvelleProtectionJuridique().setVisible(true);
-				break;
-				
-			case "Consultation charges supplémentaires":
-				this.dispose();
-				new ChargesSupplementaires().setVisible(true);
-				break;
+		case "Nouveaux loyers":
+			this.dispose();
+			new NouvelleLocation().setVisible(true);
+			break;
+		
+		case "Anciens locataires":
+			this.dispose();
+			new LocatairesAnciens().setVisible(true);
+			break;
 			
-			case "Nouvelle charges supplémentaires":
-				this.dispose();
-				new NouvelleChargeSupp().setVisible(true);
-				break;
+		case "Locataires en cours":
+			this.dispose();
+			new LocatairesEnCours().setVisible(true);
+			break;
 			
-			case "Anciens travaux":
-				this.dispose();
-				new TravauxAnciens().setVisible(true);
-				break;
-				
-			case "Travaux en cours":
-				this.dispose();
-				new TravauxEnCours().setVisible(true);
-				break;
+		case "Entretiens des parties communes":
+			this.dispose();
+			new EntretiensPartiesAnciens().setVisible(true);
+			break;
 			
-			case "Nouveaux travaux":
-				this.dispose();
-				new NouveauTravaux().setVisible(true);
-				break;
-				
-			case "Informations bailleur":
-				this.dispose();
-				new InformationsBailleur().setVisible(true);
-				break;
-				
-			case "IRL":
-				this.dispose();
-				new IRL().setVisible(true);
-				break;
-				
-			case "Quittances":
-				this.dispose();
-				new Quittances().setVisible(true);
-				break;
-				
-			case "Impositions":
-				this.dispose();
-				new Impositions().setVisible(true);
-				break;
-				
-			case "Insérer":
-				this.dispose();
-				new NouveauDiagnostic().setVisible(true);
-				break;
+		case "Nouveaux entretiens des parties communes":
+			this.dispose();
+			new NouveauEntretien().setVisible(true);
+			break;
 			
-			case "Mise à jour":
-				//this.dispose();
-				//new ().setVisible(true);
-				System.out.println("A implémenter");
-				break;
-				
-			case "Supprimer":
-				//this.dispose();
-				//new Impositions().setVisible(true);
-				System.out.println("A implémenter");
-				break;
-				
-				
-			case "Annuler":
-				this.dispose();
-				break;
-				
-			case "Ajouter":
+		case "Factures d'eau payées":
+			this.dispose();
+			new FacturesEauPayees().setVisible(true);
+			break;
+			
+		case "Factures d'eau à payées":
+			this.dispose();
+			new FacturesEauAPayees().setVisible(true);
+			break;
+			
+		case "Nouvelles factures d'eau":
+			this.dispose();
+			new NouvelleFactureEau().setVisible(true);
+			break;
+			
+		case "Factures d'électricité payées":
+			this.dispose();
+			new FacturesElectricitePayees().setVisible(true);
+			break;
+			
+		case "Factures d'électricité à payées":
+			this.dispose();
+			new FacturesElectriciteAPayees().setVisible(true);
+			break;
+			
+		case "Nouvelles factures d'électricité":
+			this.dispose();
+			new NouvelleFactureElectricite().setVisible(true);
+			break;
+			
+		case "Consultation taxes foncières":
+			this.dispose();
+			new TaxeFonciere().setVisible(true);
+			break;
+		
+		case "Nouvelles taxes foncières":
+			this.dispose();
+			new NouvelleTaxeFonciere().setVisible(true);
+			break;
+			
+		case "Consultation protection juridique":
+			this.dispose();
+			new ProtectionJuridique().setVisible(true);
+			break;
+		
+		case "Nouvelles protection juridique":
+			this.dispose();
+			new NouvelleProtectionJuridique().setVisible(true);
+			break;
+			
+		case "Consultation charges supplémentaires":
+			this.dispose();
+			new ChargesSupplementaires().setVisible(true);
+			break;
+		
+		case "Nouvelle charges supplémentaires":
+			this.dispose();
+			new NouvelleChargeSupp().setVisible(true);
+			break;
+		
+		case "Anciens travaux":
+			this.dispose();
+			new TravauxAnciens().setVisible(true);
+			break;
+			
+		case "Travaux en cours":
+			this.dispose();
+			new TravauxEnCours().setVisible(true);
+			break;
+		
+		case "Nouveaux travaux":
+			this.dispose();
+			new NouveauTravaux().setVisible(true);
+			break;
+			
+		case "Informations bailleur":
+			this.dispose();
+			new InformationsBailleur().setVisible(true);
+			break;
+			
+		case "IRL":
+			this.dispose();
+			new IRL().setVisible(true);
+			break;
+			
+		case "Quittances":
+			this.dispose();
+			new Quittances().setVisible(true);
+			break;
+			
+		case "Impositions":
+			this.dispose();
+			new Impositions().setVisible(true);
+			break;
+			
+		case "Annuler":
+			this.dispose();
+			break;
+			
+		case "Ajouter":
 				String annee = textFieldAnnee.getText();
 				int trimestre = Integer.parseInt(textFieldTrimestre.getText());
 				float montant = Float.parseFloat(textFieldMontant.getText());
