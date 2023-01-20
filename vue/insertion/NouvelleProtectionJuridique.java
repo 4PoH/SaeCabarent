@@ -3,8 +3,11 @@ package vue.insertion;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -12,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -23,21 +27,25 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import JDBC.CictOracleDataSource;
 import Requetes.Requete;
+import Requetes.insertion.RequeteInsertion;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.FacturesEauPayees;
-import vue.consultation.ChargesSupplementaires;
-import vue.consultation.EntretiensPartiesAnciens;
-import vue.consultation.FacturesEauAPayees;
-import vue.consultation.FacturesElectricitePayees;
-import vue.consultation.FacturesElectriciteAPayees;
+import vue.consultation.EntretiensAnciens;
+import vue.consultation.EntretiensEnCours;
+import vue.consultation.FacturesEauAnciennes;
+import vue.consultation.FacturesEauEnCours;
+import vue.consultation.FacturesElectriciteAnciennes;
+import vue.consultation.FacturesElectriciteEnCours;
 import vue.consultation.Impositions;
 import vue.consultation.LocatairesAnciens;
 import vue.consultation.LocatairesEnCours;
@@ -60,6 +68,9 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 	private String comboEntNom;
 	private NouvelleProtectionJuridique frame;
 	private JTextField textFieldDateFac;
+	private JTable table;
+	private int nbTableRows;
+	private ArrayList<String> tableAllSelectedData = new ArrayList<String>();
 	
 	/**
 	 * Launch the application.
@@ -76,49 +87,6 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 			}
 		});
 	}
-	// SHOW COMBO * ENTERPRISE.NOM
-		private ResultSet RequeteAfficheComboEntreprise() throws SQLException {
-			ResultSet retourRequete = null;
-			Requete requete = new Requetes.Requete();
-			String texteSQL = "select SIREN, NOM from ENTREPRISE";
-			retourRequete = requete.requeteSelection(texteSQL);
-			return retourRequete;
-		}
-		
-		// GET INT SIREN FROM ENTREPRISE.NOM
-		public int RequeteGetSirenEntrepriseCombo(String nomEnt) throws SQLException  {
-			ResultSet retourRequete = null;
-			Requete requete = new Requetes.Requete();
-			try {
-				String texteSQL = ("select SIREN from ENTREPRISE where NOM = '" + nomEnt + "'");
-				retourRequete = requete.requeteSelection(texteSQL);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			retourRequete.next();
-			return retourRequete.getInt("SIREN");
-		}
-		
-		// DB INSERT x6 : INT INT FLOAT FLOAT STRING+STRING
-		private void RequeteInsertFacElec(int siren, int numeroContr, float primeProtec, float primeJuriProtec, String chemin, String pdf, String date ) throws SQLException {
-			CictOracleDataSource cict = new CictOracleDataSource();
-			String requete = "{ call insertProtectionJuridique(?,?,?,?,?,?,?) } ";
-			
-					try {
-						Connection connection = cict.getConnection();
-						CallableStatement cs = connection.prepareCall(requete);
-						cs.setInt(1, siren);
-						cs.setInt(2, numeroContr);
-						cs.setFloat(3, primeProtec);
-				        cs.setFloat(4, primeJuriProtec);
-						cs.setString(5, chemin);
-						cs.setString(6, pdf);
-						cs.setString(7, date);
-						cs.execute();
-					} catch(SQLException e) {
-						e.printStackTrace();
-					}
-		}
 
 	/**
 	 * Create the frame.
@@ -153,11 +121,9 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 		MenuLocations.add(MenuItemNouvelleLocation);
 		
 		JMenuItem MenuItemAnciensLocataires = new JMenuItem("Anciens locataires");
-		MenuItemAnciensLocataires.addActionListener(this);
 		MenuLocations.add(MenuItemAnciensLocataires);
 		
 		JMenuItem MenuItemLocatairesEnCours = new JMenuItem("Locataires en cours");
-		MenuItemLocatairesEnCours.addActionListener(this);
 		MenuLocations.add(MenuItemLocatairesEnCours);
 		
 		JMenu MenuCharges = new JMenu("Charges");
@@ -168,13 +134,26 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 		MenuEntretiens.addActionListener(this);
 		MenuCharges.add(MenuEntretiens);
 		
-		JMenuItem MenuItemNouveauxEntretiens = new JMenuItem("Nouveaux entretiens des parties communes");
+		JMenuItem MenuItemAnciensEntretiens = new JMenuItem("Anciens entretiens");
+		MenuItemAnciensEntretiens.addActionListener(this);
+		MenuItemAnciensEntretiens.setSelected(true);
+		MenuEntretiens.add(MenuItemAnciensEntretiens);
+		
+		JMenuItem mntmEntretiensEnCours = new JMenuItem("Entretiens en cours");
+		mntmEntretiensEnCours.addActionListener(this);
+		mntmEntretiensEnCours.setSelected(true);
+		MenuEntretiens.add(mntmEntretiensEnCours);
+		
+		JMenuItem MenuItemNouveauxEntretiens = new JMenuItem("Nouveaux entretiens");
 		MenuItemNouveauxEntretiens.addActionListener(this);
 		
-		JMenuItem MenuItemAnciensEntretiensPartiesCommunes = new JMenuItem("Entretiens des parties communes");
-		MenuItemAnciensEntretiensPartiesCommunes.addActionListener(this);
+		JMenuItem MenuItemAnciensEntretiensPartiesCommunes = new JMenuItem("Anciens entretiens parties communes");
 		MenuItemAnciensEntretiensPartiesCommunes.setSelected(true);
 		MenuEntretiens.add(MenuItemAnciensEntretiensPartiesCommunes);
+		
+		JMenuItem MenuItemEntretiensPartiesCommunes = new JMenuItem("Entretiens parties communes en cours");
+		MenuItemEntretiensPartiesCommunes.setSelected(true);
+		MenuEntretiens.add(MenuItemEntretiensPartiesCommunes);
 		MenuItemNouveauxEntretiens.setSelected(true);
 		MenuEntretiens.add(MenuItemNouveauxEntretiens);
 		
@@ -182,11 +161,11 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 		MenuFacturesEau.addActionListener(this);
 		MenuCharges.add(MenuFacturesEau);
 		
-		JMenuItem MenuItemAnciennesFacturesEau = new JMenuItem("Factures d'eau payées");
+		JMenuItem MenuItemAnciennesFacturesEau = new JMenuItem("Anciennes factures d'eau");
 		MenuItemAnciennesFacturesEau.addActionListener(this);
 		MenuFacturesEau.add(MenuItemAnciennesFacturesEau);
 		
-		JMenuItem MenuItemFacturesEauEnCours = new JMenuItem("Factures d'eau à payées");
+		JMenuItem MenuItemFacturesEauEnCours = new JMenuItem("Factures d'eau en cours");
 		MenuItemFacturesEauEnCours.addActionListener(this);
 		MenuFacturesEau.add(MenuItemFacturesEauEnCours);
 		
@@ -198,11 +177,11 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 		MenuElectricite.addActionListener(this);
 		MenuCharges.add(MenuElectricite);
 		
-		JMenuItem MenuItemAnciennesFacturesElectricite = new JMenuItem("Factures d'électricité payées");
+		JMenuItem MenuItemAnciennesFacturesElectricite = new JMenuItem("Anciennes factures d'électricité");
 		MenuItemAnciennesFacturesElectricite.addActionListener(this);
 		MenuElectricite.add(MenuItemAnciennesFacturesElectricite);
 		
-		JMenuItem mntmFacturesDlectricitEn = new JMenuItem("Factures d'électricité à payées");
+		JMenuItem mntmFacturesDlectricitEn = new JMenuItem("Factures d'électricité en cours");
 		mntmFacturesDlectricitEn.addActionListener(this);
 		MenuElectricite.add(mntmFacturesDlectricitEn);
 		
@@ -343,7 +322,7 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 		ButtonNouvelleEntreprise.addActionListener(this);
 		contentPane.add(ButtonNouvelleEntreprise);
 		try {
-			ResultSet rsEntNom = RequeteAfficheComboEntreprise();
+			ResultSet rsEntNom = RequeteInsertion.RequeteAfficheComboEntreprise();
 			int i = 0;
 			rsEntNom.next();
 			while ( i < rsEntNom.getRow()) {
@@ -382,13 +361,13 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 		contentPane.add(LabelCheminPDF);
 		
 		JLabel LabelNomPDF = new JLabel("Nom fichier :");
-		LabelNomPDF.setBounds(49, 305, 119, 14);
+		LabelNomPDF.setBounds(49, 295, 119, 14);
 		contentPane.add(LabelNomPDF);
 		
 		textFieldNomPDF = new JTextField();
 		textFieldNomPDF.setEditable(false);
 		textFieldNomPDF.setColumns(10);
-		textFieldNomPDF.setBounds(165, 302, 132, 20);
+		textFieldNomPDF.setBounds(165, 292, 132, 20);
 		contentPane.add(textFieldNomPDF);
 		
 		JLabel LabelDateFacture = new JLabel("* Date de la facture  :");
@@ -404,6 +383,63 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 		btnDateDeMaintenant.setBounds(235, 157, 66, 23);
 		btnDateDeMaintenant.addActionListener(this);
 		contentPane.add(btnDateDeMaintenant);
+
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(34, 313, 405, 70);
+		contentPane.add(scrollPane);
+		
+		DefaultTableModel tableModel = new DefaultTableModel();
+		JTable table = new JTable(tableModel);
+		tableModel.addColumn("Batiments");
+		try {
+			ResultSet rsTable = RequeteInsertion.RequeteGetBati();
+			int i = 0;
+			rsTable.next();
+			while ( i < rsTable.getRow()) {
+				String lib = rsTable.getString("lib");
+				String cp = rsTable.getString("cp");
+				String adr = rsTable.getString("adr");
+				tableModel.insertRow(0, new Object[] { lib +" ["+ cp + "] (" +  adr + ") "  });
+				rsTable.next();
+				}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		table.addMouseListener(new MouseAdapter() {
+		    public void mousePressed(MouseEvent mouseEvent) {
+		        JTable table =(JTable) mouseEvent.getSource();
+		        Point point = mouseEvent.getPoint();
+		        int row = table.rowAtPoint(point);
+		        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
+		        	 String selectedData = null;
+		    	        int[] selectedRow = table.getSelectedRows();
+		    	        int[] selectedColumns = table.getSelectedColumns();
+		    	        for (int i = 0; i < selectedRow.length; i++) {
+		    	          for (int j = 0; j < selectedColumns.length; j++) {
+		    	            selectedData = (String) table.getValueAt(selectedRow[i], selectedColumns[j]);
+		    	          }
+		    	        }	    	        
+		    	        if (!tableAllSelectedData.contains(selectedData)) {
+					        tableAllSelectedData.add(selectedData);
+					        String cp =  selectedData.substring(selectedData.lastIndexOf("[")+1,selectedData.lastIndexOf("]"));
+					        String adr = selectedData.substring(selectedData.lastIndexOf("(")+1,selectedData.lastIndexOf(")"));
+					        	System.out.println("Selected: " + cp + "-" + adr );
+						} else {
+								tableAllSelectedData.remove(selectedData);
+						        String cp =  selectedData.substring(selectedData.lastIndexOf("[")+1,selectedData.lastIndexOf("]"));
+						        String adr = selectedData.substring(selectedData.lastIndexOf("(")+1,selectedData.lastIndexOf(")"));
+						        System.out.println("Unselected: " + cp + "-" + adr );
+						}
+		        }
+		    }
+		});
+
+		table.getColumnModel().getColumn(0).setPreferredWidth(310);
+		table.setColumnSelectionAllowed(true);
+		table.setCellSelectionEnabled(true);
+		scrollPane.setViewportView(table);
+
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -425,15 +461,38 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 				String pdf = textFieldNomPDF.getText() ;
 				String date =textFieldDateFac.getText();
 				try {
-					int siren = RequeteGetSirenEntrepriseCombo(comboEntNom);					
-					RequeteInsertFacElec(siren, numeroContr, primeProtec, primeJuriProtec, chemin, pdf, date );
+					int siren = RequeteInsertion.RequeteGetSirenEntrepriseCombo(comboEntNom);					
+					RequeteInsertion.RequeteInsertFacElec(siren, numeroContr, primeProtec, primeJuriProtec, chemin, pdf, date );
 					JOptionPane.showMessageDialog(frame, "Protection juridique " + numeroContr + " insérée.");
 				} catch (SQLException e3) {
 					e3.printStackTrace();
-				}				
-				this.dispose();
-				new Accueil().setVisible(true);
-				break;
+				}	
+				if(tableAllSelectedData.isEmpty()) { 
+
+					this.dispose();
+					new Accueil().setVisible(true);
+					break;
+				} else {
+				      for (int counter = 0; counter < tableAllSelectedData.size(); counter++) { 		      
+						// Pour les liaisons avec les batis
+						String datePaiement = "01/01/2001";
+						String modePaiement = " ";
+						String numeroCheque = " ";
+						float quotitejuris = 0.0F;
+				        String adr = (tableAllSelectedData.get(counter).substring(tableAllSelectedData.get(counter).lastIndexOf("(")+1,tableAllSelectedData.get(counter).lastIndexOf(")")));
+				        String cp = (tableAllSelectedData.get(counter).substring(tableAllSelectedData.get(counter).lastIndexOf("[")+1,tableAllSelectedData.get(counter).lastIndexOf("]")));
+				        
+				        try {								
+								int siren = RequeteInsertion.RequeteGetSirenEntrepriseCombo(comboEntNom);
+								RequeteInsertion.RequeteInsertConcerneProtec(adr,cp, siren, numeroContr,  quotitejuris, datePaiement,  modePaiement, numeroCheque);
+				        } catch (SQLException e1) {
+								e1.printStackTrace();
+							}
+				      }   	
+					this.dispose();
+					new Accueil().setVisible(true);
+					break;
+				}
 			case "Choix fichier...":
 				JFileChooser pdfChooser = new JFileChooser();
 				int reponse = pdfChooser.showOpenDialog(null);
@@ -475,25 +534,30 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
-				
-			case "Entretiens des parties communes":
+			
+			case "Anciens entretiens":
 				this.dispose();
-				new EntretiensPartiesAnciens().setVisible(true);
+				new EntretiensAnciens().setVisible(true);
 				break;
 				
-			case "Nouveaux entretiens des parties communes":
+			case "Entretiens en cours":
+				this.dispose();
+				new EntretiensEnCours().setVisible(true);
+				break;
+				
+			case "Nouveaux entretiens":
 				this.dispose();
 				new NouveauEntretien().setVisible(true);
 				break;
 				
-			case "Factures d'eau payées":
+			case "Anciennes factures d'eau":
 				this.dispose();
-				new FacturesEauPayees().setVisible(true);
+				new FacturesEauAnciennes().setVisible(true);
 				break;
 				
-			case "Factures d'eau à payées":
+			case "Factures d'eau en cours":
 				this.dispose();
-				new FacturesEauAPayees().setVisible(true);
+				new FacturesEauEnCours().setVisible(true);
 				break;
 				
 			case "Nouvelles factures d'eau":
@@ -501,14 +565,14 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 				new NouvelleFactureEau().setVisible(true);
 				break;
 				
-			case "Factures d'électricité payées":
+			case "Anciennes factures d'électricité":
 				this.dispose();
-				new FacturesElectricitePayees().setVisible(true);
+				new FacturesElectriciteAnciennes().setVisible(true);
 				break;
 				
-			case "Factures d'électricité à payées":
+			case "Factures d'électricité en cours":
 				this.dispose();
-				new FacturesElectriciteAPayees().setVisible(true);
+				new FacturesElectriciteEnCours().setVisible(true);
 				break;
 				
 			case "Nouvelles factures d'électricité":
@@ -538,12 +602,12 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 				
 			case "Consultation charges supplémentaires":
 				this.dispose();
-				new ChargesSupplementaires().setVisible(true);
+				new TaxeFonciere().setVisible(true);
 				break;
 			
 			case "Nouvelle charges supplémentaires":
 				this.dispose();
-				new NouvelleChargeSupp().setVisible(true);
+				new NouvelleTaxeFonciere().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
@@ -580,30 +644,12 @@ public class NouvelleProtectionJuridique extends JFrame implements ActionListene
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
-				
-			case "Insérer":
-				this.dispose();
-				new NouveauDiagnostic().setVisible(true);
-				break;
-			
-			case "Mise à jour":
-				//this.dispose();
-				//new ().setVisible(true);
-				System.out.println("A implémenter");
-				break;
-				
-			case "Supprimer":
-				//this.dispose();
-				//new Impositions().setVisible(true);
-				System.out.println("A implémenter");
-				break;
-				
-				
+
 			case "Annuler":
 				this.dispose();
 				new ProtectionJuridique().setVisible(true);
 				break;
-       
+	
 			default:
 				System.out.println("Choix incorrect");
 				break;

@@ -4,8 +4,6 @@ import java.awt.EventQueue;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -48,7 +46,7 @@ import vue.insertion.NouvelleLocation;
 import vue.insertion.NouvelleProtectionJuridique;
 import vue.insertion.NouvelleTaxeFonciere;
 
-public class Accueil extends JFrame implements ActionListener, MouseListener{
+public class Accueil extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JTable tableAcceuilBati;
@@ -268,7 +266,6 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 		// Créer le modèle de table
 	    final DefaultTableModel model = new DefaultTableModel(columns, 0);
 		tableAcceuilBati = new JTable(model);
-		tableAcceuilBati.addMouseListener(this);
 		tableAcceuilBati.setRowSelectionAllowed(false);
 		tableAcceuilBati.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableAcceuilBati.setSurrendersFocusOnKeystroke(true);
@@ -457,16 +454,5 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 				System.out.println("Choix incorrect");
 				break;
 		}
-	}
-	
-	public void mouseClicked(MouseEvent e) {
-	}
-	public void mouseEntered(MouseEvent e) {
-	}
-	public void mouseExited(MouseEvent e) {
-	}
-	public void mousePressed(MouseEvent e) {
-	}
-	public void mouseReleased(MouseEvent e) {
 	}
 }

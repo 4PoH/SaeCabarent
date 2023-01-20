@@ -5,8 +5,6 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.CallableStatement;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -23,17 +21,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import JDBC.CictOracleDataSource;
+import Requetes.RequeteInsertion;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.FacturesEauPayees;
-import vue.consultation.ChargesSupplementaires;
-import vue.consultation.EntretiensPartiesAnciens;
-import vue.consultation.FacturesEauAPayees;
-import vue.consultation.FacturesElectricitePayees;
-import vue.consultation.FacturesElectriciteAPayees;
 import vue.consultation.Impositions;
 import vue.consultation.LocatairesAnciens;
 import vue.consultation.LocatairesEnCours;
@@ -46,13 +38,13 @@ import vue.consultation.TravauxEnCours;
 
 public class NouveauBati extends JFrame implements ActionListener {
 
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textFieldCodePostal;
 	private JTextField textFieldVille;
 	private JTextField textFieldAnnee;
 	private JTextField textFieldAdresse;
 	private JTextField textFieldPartiesCommunes;
-	private JComboBox<String> comboBoxTypeHabitation;
 	private String comboTypeHabitation;
 	private JCheckBox checkboxCopropriete;
 	private JTextField textFieldAnneObtention;
@@ -75,26 +67,8 @@ public class NouveauBati extends JFrame implements ActionListener {
 		});
 	}
 
-	// DB INSERT x8 : STRING INT STRING STRING STRING STRING BOOLEAN STRING
-	private void RequeteInsertBati(String adresse, int code, String ville, String typeHabitation, String anneeConstruction, String listePartieCommune, String copropriete, String dateObtention) throws SQLException {
-		CictOracleDataSource cict = new CictOracleDataSource();
-		String requete = "{ call insertBati(?,?,?,?,?,?,?,?) } ";		
-				try {
-					Connection connection = cict.getConnection();
-					CallableStatement cs = connection.prepareCall(requete);
-					cs.setString(1, adresse);
-					cs.setInt(2, code);
-					cs.setString(3, ville);
-					cs.setString(4, typeHabitation);
-			        cs.setString(5, anneeConstruction);
-					cs.setString(6, listePartieCommune);					
-					cs.setString(7, copropriete);
-					cs.setString(8, dateObtention);
-					cs.execute();
-				} catch(SQLException e) {
-					e.printStackTrace();
-				}
-	}
+	
+
 	
 	/**
 	 * Create the frame.
@@ -129,11 +103,9 @@ public class NouveauBati extends JFrame implements ActionListener {
 		MenuLocations.add(MenuItemNouvelleLocation);
 		
 		JMenuItem MenuItemAnciensLocataires = new JMenuItem("Anciens locataires");
-		MenuItemAnciensLocataires.addActionListener(this);
 		MenuLocations.add(MenuItemAnciensLocataires);
 		
 		JMenuItem MenuItemLocatairesEnCours = new JMenuItem("Locataires en cours");
-		MenuItemLocatairesEnCours.addActionListener(this);
 		MenuLocations.add(MenuItemLocatairesEnCours);
 		
 		JMenu MenuCharges = new JMenu("Charges");
@@ -144,13 +116,26 @@ public class NouveauBati extends JFrame implements ActionListener {
 		MenuEntretiens.addActionListener(this);
 		MenuCharges.add(MenuEntretiens);
 		
-		JMenuItem MenuItemNouveauxEntretiens = new JMenuItem("Nouveaux entretiens des parties communes");
+		JMenuItem MenuItemAnciensEntretiens = new JMenuItem("Anciens entretiens");
+		MenuItemAnciensEntretiens.addActionListener(this);
+		MenuItemAnciensEntretiens.setSelected(true);
+		MenuEntretiens.add(MenuItemAnciensEntretiens);
+		
+		JMenuItem mntmEntretiensEnCours = new JMenuItem("Entretiens en cours");
+		mntmEntretiensEnCours.addActionListener(this);
+		mntmEntretiensEnCours.setSelected(true);
+		MenuEntretiens.add(mntmEntretiensEnCours);
+		
+		JMenuItem MenuItemNouveauxEntretiens = new JMenuItem("Nouveaux entretiens");
 		MenuItemNouveauxEntretiens.addActionListener(this);
 		
-		JMenuItem MenuItemAnciensEntretiensPartiesCommunes = new JMenuItem("Entretiens des parties communes");
-		MenuItemAnciensEntretiensPartiesCommunes.addActionListener(this);
+		JMenuItem MenuItemAnciensEntretiensPartiesCommunes = new JMenuItem("Anciens entretiens parties communes");
 		MenuItemAnciensEntretiensPartiesCommunes.setSelected(true);
 		MenuEntretiens.add(MenuItemAnciensEntretiensPartiesCommunes);
+		
+		JMenuItem MenuItemEntretiensPartiesCommunes = new JMenuItem("Entretiens parties communes en cours");
+		MenuItemEntretiensPartiesCommunes.setSelected(true);
+		MenuEntretiens.add(MenuItemEntretiensPartiesCommunes);
 		MenuItemNouveauxEntretiens.setSelected(true);
 		MenuEntretiens.add(MenuItemNouveauxEntretiens);
 		
@@ -158,11 +143,11 @@ public class NouveauBati extends JFrame implements ActionListener {
 		MenuFacturesEau.addActionListener(this);
 		MenuCharges.add(MenuFacturesEau);
 		
-		JMenuItem MenuItemAnciennesFacturesEau = new JMenuItem("Factures d'eau payées");
+		JMenuItem MenuItemAnciennesFacturesEau = new JMenuItem("Anciennes factures d'eau");
 		MenuItemAnciennesFacturesEau.addActionListener(this);
 		MenuFacturesEau.add(MenuItemAnciennesFacturesEau);
 		
-		JMenuItem MenuItemFacturesEauEnCours = new JMenuItem("Factures d'eau à payées");
+		JMenuItem MenuItemFacturesEauEnCours = new JMenuItem("Factures d'eau en cours");
 		MenuItemFacturesEauEnCours.addActionListener(this);
 		MenuFacturesEau.add(MenuItemFacturesEauEnCours);
 		
@@ -174,11 +159,11 @@ public class NouveauBati extends JFrame implements ActionListener {
 		MenuElectricite.addActionListener(this);
 		MenuCharges.add(MenuElectricite);
 		
-		JMenuItem MenuItemAnciennesFacturesElectricite = new JMenuItem("Factures d'électricité payées");
+		JMenuItem MenuItemAnciennesFacturesElectricite = new JMenuItem("Anciennes factures d'électricité");
 		MenuItemAnciennesFacturesElectricite.addActionListener(this);
 		MenuElectricite.add(MenuItemAnciennesFacturesElectricite);
 		
-		JMenuItem mntmFacturesDlectricitEn = new JMenuItem("Factures d'électricité à payées");
+		JMenuItem mntmFacturesDlectricitEn = new JMenuItem("Factures d'électricité en cours");
 		mntmFacturesDlectricitEn.addActionListener(this);
 		MenuElectricite.add(mntmFacturesDlectricitEn);
 		
@@ -336,7 +321,7 @@ public class NouveauBati extends JFrame implements ActionListener {
 		contentPane.add(checkboxCopropriete);
 		checkboxCopropriete.addActionListener(this);
 		
-		JComboBox comboBoxTypeHabitation = new JComboBox();
+		JComboBox<String> comboBoxTypeHabitation = new JComboBox<String>();
 		comboBoxTypeHabitation.setBounds(181, 176, 130, 22);
 		contentPane.add(comboBoxTypeHabitation);
 		ArrayList<String> typeHab = new ArrayList<String>();
@@ -351,7 +336,7 @@ public class NouveauBati extends JFrame implements ActionListener {
 		comboBoxTypeHabitation.addActionListener(new ActionListener() {
 		      @Override
 		      public void actionPerformed(ActionEvent e) {
-		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        JComboBox<String> jcmbType = (JComboBox) e.getSource();
 		        comboTypeHabitation = (String) jcmbType.getSelectedItem();
 		      }
 		    });
@@ -382,7 +367,7 @@ public class NouveauBati extends JFrame implements ActionListener {
 				String copropriete = this.copropriete;
 		        System.out.println(adresse + code + ville + typeHabitation + anneeConstruction + listePartieCommune + dateObtention + copropriete);
 				try {					
-					RequeteInsertBati(adresse,code, ville, typeHabitation, anneeConstruction, listePartieCommune, copropriete, dateObtention);
+					RequeteInsertion.RequeteInsertBati(adresse,code, ville, typeHabitation, anneeConstruction, listePartieCommune, copropriete, dateObtention);
 					JOptionPane.showMessageDialog(frame, "Batîment " + typeHabitation + " de " + anneeConstruction + " inséré.");
 				} catch (SQLException e3) {
 					e3.printStackTrace();
@@ -390,7 +375,6 @@ public class NouveauBati extends JFrame implements ActionListener {
 				this.dispose();
 				new Accueil().setVisible(true);
 				break;
-				
 			case "Copropriété":
 				this.checkboxCopropriete = (JCheckBox) e.getSource();
 				if (checkboxCopropriete.isSelected()) {
@@ -399,7 +383,6 @@ public class NouveauBati extends JFrame implements ActionListener {
 					this.copropriete = "N";
 				}
 				break;
-				
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -429,53 +412,30 @@ public class NouveauBati extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
+		
 				
-			case "Entretiens des parties communes":
-				this.dispose();
-				new EntretiensPartiesAnciens().setVisible(true);
-				break;
-				
-			case "Nouveaux entretiens des parties communes":
+			case "Nouveaux entretiens":
 				this.dispose();
 				new NouveauEntretien().setVisible(true);
 				break;
 				
-			case "Factures d'eau payées":
-				this.dispose();
-				new FacturesEauPayees().setVisible(true);
-				break;
-				
-			case "Factures d'eau à payées":
-				this.dispose();
-				new FacturesEauAPayees().setVisible(true);
-				break;
 				
 			case "Nouvelles factures d'eau":
 				this.dispose();
 				new NouvelleFactureEau().setVisible(true);
 				break;
 				
-			case "Factures d'électricité payées":
-				this.dispose();
-				new FacturesElectricitePayees().setVisible(true);
-				break;
-				
-			case "Factures d'électricité à payées":
-				this.dispose();
-				new FacturesElectriciteAPayees().setVisible(true);
-				break;
-				
-			case "Nouvelles factures d'électricité":
+			case "Nouvelles factures d'Ã©lectricitÃ©":
 				this.dispose();
 				new NouvelleFactureElectricite().setVisible(true);
 				break;
 				
-			case "Consultation taxes foncières":
+			case "Consultation taxes fonciÃ¨res":
 				this.dispose();
 				new TaxeFonciere().setVisible(true);
 				break;
 			
-			case "Nouvelles taxes foncières":
+			case "Nouvelles taxes fonciÃ¨res":
 				this.dispose();
 				new NouvelleTaxeFonciere().setVisible(true);
 				break;
@@ -490,14 +450,14 @@ public class NouveauBati extends JFrame implements ActionListener {
 				new NouvelleProtectionJuridique().setVisible(true);
 				break;
 				
-			case "Consultation charges supplémentaires":
+			case "Consultation charges supplÃ©mentaires":
 				this.dispose();
-				new ChargesSupplementaires().setVisible(true);
+				new TaxeFonciere().setVisible(true);
 				break;
 			
-			case "Nouvelle charges supplémentaires":
+			case "Nouvelle charges supplÃ©mentaires":
 				this.dispose();
-				new NouvelleChargeSupp().setVisible(true);
+				new NouvelleTaxeFonciere().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
@@ -534,14 +494,9 @@ public class NouveauBati extends JFrame implements ActionListener {
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
-				
-			case "Annuler":
-				this.dispose();
-				break;
        
 			default:
 				System.out.println("Choix incorrect");
 				break;
-		}
-	}
+		}	}
 }

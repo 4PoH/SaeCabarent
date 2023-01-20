@@ -1,5 +1,4 @@
 package Rapport;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,6 +20,7 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 
 import JDBC.CictOracleDataSource;
+
 
 public class CreerImpot2044 {
 	
@@ -79,10 +79,10 @@ public class CreerImpot2044 {
 				listeVille.add(rs2.getString("VILLE"));
 				listeCode.add(rs2.getString("CODEPOSTAL"));
 				listeObtention.put(rs2.getString("ADRESSE") + " " + rs2.getString("CODEPOSTAL"), rs2.getString("DATEOBTENTION"));
-				PreparedStatement stmt3 = connex.prepareStatement("SELECT distinct locataire.Nom, locataire.Prenom, lieuxdelocations.idlogement"
-				+"FROM lieuxdelocations, locataire, loue, contrat, relie"
-				+"WHERE loue.idcontrat=contrat.idcontrat AND contrat.idcontrat = relie.idcontrat AND relie.idlocataire = locataire.idlocataire"
-				+"AND loue.idlogement=lieuxdelocations.idlogement AND lieuxdelocations.adresse = ? AND lieuxdelocations.codepostal = ?"
+				PreparedStatement stmt3 = connex.prepareStatement("SELECT distinct locataire.Nom, locataire.Prenom, lieuxdelocations.idlogement "
+				+"FROM lieuxdelocations, locataire, loue, contrat, relie "
+				+"WHERE loue.idcontrat=contrat.idcontrat AND contrat.idcontrat = relie.idcontrat AND relie.idlocataire = locataire.idlocataire "
+				+"AND loue.idlogement=lieuxdelocations.idlogement AND lieuxdelocations.adresse = ? AND lieuxdelocations.codepostal = ? "
 				+"AND TO_CHAR(loue.datelocation, 'yyyy') = ?");
 				stmt3.setString(1, rs2.getString("ADRESSE"));
 				stmt3.setString(2, rs2.getString("CODEPOSTAL"));
@@ -93,6 +93,7 @@ public class CreerImpot2044 {
 				}
 				i++;
 			}
+			
 			//Tableau des batiments
 			XWPFTable tableBati = document.createTable();
 			tableBati.addNewCol();
@@ -104,7 +105,7 @@ public class CreerImpot2044 {
 			
 			for (int a = 0; a < listeAdresse.size() ;a++) {
 				tableBati.createRow();
-				tableBati.getRow(a+1).getCell(0).setText("Immeuble " + a+1);
+				tableBati.getRow(a+1).getCell(0).setText("Immeuble " + (a+1));
 				String locataire = "";
 				for (String key : listeLocataire.keySet()) {
 					if (listeLocataire.get(key) == listeAdresse.get(a) + " " + listeCode.get(a)) {
@@ -113,9 +114,9 @@ public class CreerImpot2044 {
 						break;
 					}
 				}
-				tableBati.getRow(i).getCell(1).setText(locataire);
-				tableBati.getRow(i).getCell(2).setText(listeObtention.get(listeAdresse.get(a) + " " + listeCode.get(a)));
-				tableBati.getRow(i).getCell(3).setText(listeAdresse.get(a) + " " + listeCode.get(a) + " " + listeVille.get(a));
+				tableBati.getRow(a+1).getCell(1).setText(locataire);
+				tableBati.getRow(a+1).getCell(2).setText(listeObtention.get(listeAdresse.get(a) + " " + listeCode.get(a)));
+				tableBati.getRow(a+1).getCell(3).setText(listeAdresse.get(a) + " " + listeCode.get(a) + " " + listeVille.get(a));
 			}
 			//Creation tableau des recettes
 			XWPFRun text4 = paragraphe.createRun();
@@ -200,14 +201,14 @@ public class CreerImpot2044 {
 			tableTravaux.addNewCol();
 			tableTravaux.addNewCol();
 			tableTravaux.addNewCol();
-			tableTravaux.getRow(0).getCell(0).setText("N�Immeuble et nature des travaux");
+			tableTravaux.getRow(0).getCell(0).setText("N°Immeuble et nature des travaux");
 			tableTravaux.getRow(0).getCell(1).setText("Nom et adresse entrepreneurs");
 			tableTravaux.getRow(0).getCell(2).setText("Date de paiement");
 			tableTravaux.getRow(0).getCell(3).setText("Montant");
 			for (int a=0; a<listeAdresse.size(); a++) {
-				PreparedStatement stmt4 = connex.prepareStatement("SELECT bati.adresse as Badresse, bati.codepostal, travauxpartiescommune.libelle as trav, nom, entreprise.adresse as Eadresse, datepaiement, montantnondeductible"
-						+"FROM bati, entreprise, travauxpartiescommune, concernecommun"
-						+"WHERE bati.adresse = ? AND bati.codepostal = ? AND bati.adresse = concernecommun.adresse AND bati.codepostal = concernecommun.codepostal"
+				PreparedStatement stmt4 = connex.prepareStatement("SELECT bati.adresse as Badresse, bati.codepostal, travauxpartiescommune.libelle as trav, nom, entreprise.adresse as Eadresse, datepaiement, montantnondeductible "
+						+"FROM bati, entreprise, travauxpartiescommune, concernecommun "
+						+"WHERE bati.adresse = ? AND bati.codepostal = ? AND bati.adresse = concernecommun.adresse AND bati.codepostal = concernecommun.codepostal "
 						+"AND concernecommun.siren = travauxpartiescommune.siren AND concernecommun.numfact = travauxpartiescommune.numfact "
 						+"AND entreprise.siren = travauxpartiescommune.siren AND concernecommun.datepaiement IS NOT NULL AND TO_CHAR(concernecommun.datepaiement, 'yyyy') = ?");
 				stmt4.setString(1, listeAdresse.get(a));
@@ -224,9 +225,9 @@ public class CreerImpot2044 {
 					x++;
 				}
 				
-				PreparedStatement stmt5 = connex.prepareStatement("SELECT lieuxdelocations.adresse as Badresse, lieuxdelocations.codepostal, travaux.libelle as trav, nom, entreprise.adresse as Eadresse, datefact, montantnondeductible*(1-pourcentagepart) as tot"
-						+"FROM lieuxdelocations, entreprise, travaux, concerne"
-						+"WHERE lieuxdelocations.adresse = ? AND lieuxdelocations.codepostal = ? AND lieuxdelocations.idlogement = concerne.idlogement"
+				PreparedStatement stmt5 = connex.prepareStatement("SELECT lieuxdelocations.adresse as Badresse, lieuxdelocations.codepostal, travaux.libelle as trav, nom, entreprise.adresse as Eadresse, datefact, montantnondeductible*(1-pourcentagepart) as tot "
+						+"FROM lieuxdelocations, entreprise, travaux, concerne "
+						+"WHERE lieuxdelocations.adresse = ? AND lieuxdelocations.codepostal = ? AND lieuxdelocations.idlogement = concerne.idlogement "
 						+"AND concerne.siren = travaux.siren AND concerne.numfact = travaux.numfact "
 						+"AND entreprise.siren = travaux.siren AND concerne.datefact IS NOT NULL AND TO_CHAR(concerne.datefact, 'yyyy') = ?");
 				stmt5.setString(1, listeAdresse.get(a));

@@ -1,5 +1,4 @@
 package Rapport;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -30,8 +29,6 @@ public class CreerQuittance {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM bailleur");
 			boolean bool = rs.next();
 			String path = rs.getString("DESTINATION");
-			
-			
 			
 			String date = mois+"/"+annee;
 			CallableStatement cstm = connex.prepareCall("{CALL generationQuittance(?,?)}");
@@ -97,12 +94,12 @@ public class CreerQuittance {
 			text2.addCarriageReturn();
 			text2.addCarriageReturn();
 			text2.addCarriageReturn();
-			text2.setText("Je soussign� "+ rs.getString("NOM") + " " + rs.getString("PRENOM") + " propri�taire du logement "
-					+ "d�sign� ci-dessus, d�clare avoir re�u de Monsieur / Madame "
+			text2.setText("Je soussigné "+ rs.getString("NOM") + " " + rs.getString("PRENOM") + " propriétaire du logement "
+					+ "désigné ci-dessus, déclare avoir reçu de Monsieur / Madame "
 					+ rsLoc.getString("NOM") + " " + rsLoc.getString("PRENOM") +", la somme de " + montRegler + " euros"
-					+ ", au titre du paiement du loyer et des charges pour la p�riode de location "
+					+ ", au titre du paiement du loyer et des charges pour la période de location "
 					+ "du "+ dateMiseEffet.getDay() + "/" + date +" au " + dateMiseEffet.getDay() + "/" + (mois+1) + "/"+ annee + " et "
-					+ "lui en donne quittance, sous r�serve de tous mes droits.");
+					+ "lui en donne quittance, sous réserve de tous mes droits.");
 			
 			text2.addCarriageReturn();
 			text2.addCarriageReturn();

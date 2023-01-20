@@ -448,9 +448,12 @@ public class Quittances extends JFrame implements ActionListener {
 				
 			case "Générer":	
 				CreerQuittance quittance = new CreerQuittance();
-				int mois = Integer. parseInt(JTextFieldMois.getText());
-				int annee = Integer. parseInt(JTextFieldAnnee.getText());
+				int mois = Integer.parseInt(JTextFieldMois.getText());
+				int annee = Integer.parseInt(JTextFieldAnnee.getText());
 				int idcontrat = Integer. parseInt(selectedComboContrat);
+				
+				System.out.printf(String.valueOf(mois) + " " + String.valueOf(annee) + " " + String.valueOf(idcontrat));
+				
 			try {
 				quittance.generateImpot(mois,annee,idcontrat);
 			} catch (IOException e1) {

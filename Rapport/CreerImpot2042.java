@@ -1,5 +1,4 @@
 package Rapport;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -66,9 +65,9 @@ public class CreerImpot2042 {
 			text2.addCarriageReturn();
 			text2.setText("Adresse : ");
 			text2.setText(rs.getString("ADRESSE"));
-			text2.setText(rs.getString(" "));
+			text2.setText(" ");
 			text2.setText(rs.getString("CODEPOSTAL"));
-			text2.setText(rs.getString(" "));
+			text2.setText(" ");
 			text2.setText(rs.getString("VILLE"));
 			
 			text2.addCarriageReturn();

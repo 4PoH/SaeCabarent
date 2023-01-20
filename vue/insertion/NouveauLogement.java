@@ -5,8 +5,6 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.CallableStatement;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,18 +21,17 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import JDBC.CictOracleDataSource;
-import Requetes.Requete;
+import Requetes.RequeteInsertion;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.FacturesEauPayees;
-import vue.consultation.ChargesSupplementaires;
-import vue.consultation.EntretiensPartiesAnciens;
-import vue.consultation.FacturesEauAPayees;
-import vue.consultation.FacturesElectricitePayees;
-import vue.consultation.FacturesElectriciteAPayees;
+import vue.consultation.EntretiensAnciens;
+import vue.consultation.EntretiensEnCours;
+import vue.consultation.FacturesEauAnciennes;
+import vue.consultation.FacturesEauEnCours;
+import vue.consultation.FacturesElectriciteAnciennes;
+import vue.consultation.FacturesElectriciteEnCours;
 import vue.consultation.Impositions;
 import vue.consultation.LocatairesAnciens;
 import vue.consultation.LocatairesEnCours;
@@ -78,50 +75,6 @@ public class NouveauLogement extends JFrame implements ActionListener {
 		});
 	}
 
-	// SHOW COMBO CODEPOSTAL, ADRESSE FROM BATIMENT
-	private ResultSet RequeteAfficheComboBatiment() throws SQLException {
-		ResultSet retourRequete = null;
-		Requete requete = new Requetes.Requete();
-		String texteSQL = "select CODEPOSTAL, ADRESSE from BATI order by 1";
-		retourRequete = requete.requeteSelection(texteSQL);
-		return retourRequete;
-	}
-	
-	// SHOW COMBO CODEPOSTAL, ADRESSE FROM BATIMENT
-	public String RequeteGetCPWithAdr(String adresse) throws SQLException  {
-		ResultSet retourRequete = null;
-		Requete requete = new Requetes.Requete();
-		try {
-			String texteSQL = ("select CODEPOSTAL from BATI where ADRESSE = '" + adresse + "'");
-			retourRequete = requete.requeteSelection(texteSQL);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		retourRequete.next();
-		return retourRequete.getString("CODEPOSTAL");
-	}
-	
-		
-	// DB INSERT x8 : FLOAT INT STRING STRING STRING STRING STRING INT
-	private void RequeteInsertLieuLocation(float surfaceLieux,int nbPiece, String typeReseaux, String libelle, String modChauffage, String modProdEau, String adresseLieux,int codepostalLieux) throws SQLException {
-		CictOracleDataSource cict = new CictOracleDataSource();
-		String requete = "{ call insertLieuxDeLocations(?,?,?,?,?,?,?,?) } ";
-				try {
-					Connection connection = cict.getConnection();
-					CallableStatement cs = connection.prepareCall(requete);
-					cs.setFloat(1, surfaceLieux);
-					cs.setInt(2, nbPiece);
-					cs.setString(3, typeReseaux);
-			        cs.setString(4, libelle);
-					cs.setString(5, modChauffage);
-					cs.setString(6, modProdEau);
-					cs.setString(7, adresseLieux);
-					cs.setInt(8, codepostalLieux);
-					cs.execute();
-				} catch(SQLException e) {
-					e.printStackTrace();
-				}
-	}
 		
 	/**
 	 * Create the frame.
@@ -156,11 +109,9 @@ public class NouveauLogement extends JFrame implements ActionListener {
 		MenuLocations.add(MenuItemNouvelleLocation);
 		
 		JMenuItem MenuItemAnciensLocataires = new JMenuItem("Anciens locataires");
-		MenuItemAnciensLocataires.addActionListener(this);
 		MenuLocations.add(MenuItemAnciensLocataires);
 		
 		JMenuItem MenuItemLocatairesEnCours = new JMenuItem("Locataires en cours");
-		MenuItemLocatairesEnCours.addActionListener(this);
 		MenuLocations.add(MenuItemLocatairesEnCours);
 		
 		JMenu MenuCharges = new JMenu("Charges");
@@ -171,13 +122,26 @@ public class NouveauLogement extends JFrame implements ActionListener {
 		MenuEntretiens.addActionListener(this);
 		MenuCharges.add(MenuEntretiens);
 		
-		JMenuItem MenuItemNouveauxEntretiens = new JMenuItem("Nouveaux entretiens des parties communes");
+		JMenuItem MenuItemAnciensEntretiens = new JMenuItem("Anciens entretiens");
+		MenuItemAnciensEntretiens.addActionListener(this);
+		MenuItemAnciensEntretiens.setSelected(true);
+		MenuEntretiens.add(MenuItemAnciensEntretiens);
+		
+		JMenuItem mntmEntretiensEnCours = new JMenuItem("Entretiens en cours");
+		mntmEntretiensEnCours.addActionListener(this);
+		mntmEntretiensEnCours.setSelected(true);
+		MenuEntretiens.add(mntmEntretiensEnCours);
+		
+		JMenuItem MenuItemNouveauxEntretiens = new JMenuItem("Nouveaux entretiens");
 		MenuItemNouveauxEntretiens.addActionListener(this);
 		
-		JMenuItem MenuItemAnciensEntretiensPartiesCommunes = new JMenuItem("Entretiens des parties communes");
-		MenuItemAnciensEntretiensPartiesCommunes.addActionListener(this);
+		JMenuItem MenuItemAnciensEntretiensPartiesCommunes = new JMenuItem("Anciens entretiens parties communes");
 		MenuItemAnciensEntretiensPartiesCommunes.setSelected(true);
 		MenuEntretiens.add(MenuItemAnciensEntretiensPartiesCommunes);
+		
+		JMenuItem MenuItemEntretiensPartiesCommunes = new JMenuItem("Entretiens parties communes en cours");
+		MenuItemEntretiensPartiesCommunes.setSelected(true);
+		MenuEntretiens.add(MenuItemEntretiensPartiesCommunes);
 		MenuItemNouveauxEntretiens.setSelected(true);
 		MenuEntretiens.add(MenuItemNouveauxEntretiens);
 		
@@ -185,11 +149,11 @@ public class NouveauLogement extends JFrame implements ActionListener {
 		MenuFacturesEau.addActionListener(this);
 		MenuCharges.add(MenuFacturesEau);
 		
-		JMenuItem MenuItemAnciennesFacturesEau = new JMenuItem("Factures d'eau payées");
+		JMenuItem MenuItemAnciennesFacturesEau = new JMenuItem("Anciennes factures d'eau");
 		MenuItemAnciennesFacturesEau.addActionListener(this);
 		MenuFacturesEau.add(MenuItemAnciennesFacturesEau);
 		
-		JMenuItem MenuItemFacturesEauEnCours = new JMenuItem("Factures d'eau à payées");
+		JMenuItem MenuItemFacturesEauEnCours = new JMenuItem("Factures d'eau en cours");
 		MenuItemFacturesEauEnCours.addActionListener(this);
 		MenuFacturesEau.add(MenuItemFacturesEauEnCours);
 		
@@ -201,11 +165,11 @@ public class NouveauLogement extends JFrame implements ActionListener {
 		MenuElectricite.addActionListener(this);
 		MenuCharges.add(MenuElectricite);
 		
-		JMenuItem MenuItemAnciennesFacturesElectricite = new JMenuItem("Factures d'électricité payées");
+		JMenuItem MenuItemAnciennesFacturesElectricite = new JMenuItem("Anciennes factures d'électricité");
 		MenuItemAnciennesFacturesElectricite.addActionListener(this);
 		MenuElectricite.add(MenuItemAnciennesFacturesElectricite);
 		
-		JMenuItem mntmFacturesDlectricitEn = new JMenuItem("Factures d'électricité à payées");
+		JMenuItem mntmFacturesDlectricitEn = new JMenuItem("Factures d'électricité en cours");
 		mntmFacturesDlectricitEn.addActionListener(this);
 		MenuElectricite.add(mntmFacturesDlectricitEn);
 		
@@ -341,7 +305,7 @@ public class NouveauLogement extends JFrame implements ActionListener {
 		contentPane.add(comboBoxBatiment);
 		comboBoxBatiment.setFont(new Font("Tahoma", Font.ROMAN_BASELINE, 10));
 		try {
-			ResultSet rsBatiCPAdress = RequeteAfficheComboBatiment();
+			ResultSet rsBatiCPAdress = RequeteInsertion.RequeteAfficheComboBatiment();
 			int i = 0;
 			rsBatiCPAdress.next();
 			while ( i < rsBatiCPAdress.getRow()) {
@@ -453,11 +417,9 @@ public class NouveauLogement extends JFrame implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
-		
-			case "Nouveau Bâtiment":
-				new NouveauBati().setVisible(true);
-				break;
-				
+		case "Nouveau Bâtiment":
+			new NouveauBati().setVisible(true);
+			break;
 			case "Ajouter":
 				float surfaceLieux = Float.parseFloat(textFieldSurface.getText());
 				int nbPiece = Integer.parseInt(textFieldNbPiece.getText());
@@ -469,7 +431,7 @@ public class NouveauLogement extends JFrame implements ActionListener {
 				int codepostalLieux = Integer.parseInt(SelectedComboBatimentCPAdresse.substring(0,5));				
 				System.out.println(" /" + codepostalLieux + "/ " + adresseLieux + " " );
 				try {						
-					RequeteInsertLieuLocation(surfaceLieux,nbPiece, typeReseaux, libelle, modChauffage, modProdEau, adresseLieux, codepostalLieux);
+					RequeteInsertion.RequeteInsertLieuLocation(surfaceLieux,nbPiece, typeReseaux, libelle, modChauffage, modProdEau, adresseLieux, codepostalLieux);
 					JOptionPane.showMessageDialog(frame, "Logement " + libelle + " au " + adresseLieux + " inséré.");
 				} catch (SQLException e3) {
 					e3.printStackTrace();
@@ -477,7 +439,6 @@ public class NouveauLogement extends JFrame implements ActionListener {
 				this.dispose();
 				new Accueil().setVisible(true);
 				break;
-				
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -507,25 +468,30 @@ public class NouveauLogement extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
-				
-			case "Entretiens des parties communes":
+			
+			case "Anciens entretiens":
 				this.dispose();
-				new EntretiensPartiesAnciens().setVisible(true);
+				new EntretiensAnciens().setVisible(true);
 				break;
 				
-			case "Nouveaux entretiens des parties communes":
+			case "Entretiens en cours":
+				this.dispose();
+				new EntretiensEnCours().setVisible(true);
+				break;
+				
+			case "Nouveaux entretiens":
 				this.dispose();
 				new NouveauEntretien().setVisible(true);
 				break;
 				
-			case "Factures d'eau payées":
+			case "Anciennes factures d'eau":
 				this.dispose();
-				new FacturesEauPayees().setVisible(true);
+				new FacturesEauAnciennes().setVisible(true);
 				break;
 				
-			case "Factures d'eau à payées":
+			case "Factures d'eau en cours":
 				this.dispose();
-				new FacturesEauAPayees().setVisible(true);
+				new FacturesEauEnCours().setVisible(true);
 				break;
 				
 			case "Nouvelles factures d'eau":
@@ -533,14 +499,14 @@ public class NouveauLogement extends JFrame implements ActionListener {
 				new NouvelleFactureEau().setVisible(true);
 				break;
 				
-			case "Factures d'électricité payées":
+			case "Anciennes factures d'électricité":
 				this.dispose();
-				new FacturesElectricitePayees().setVisible(true);
+				new FacturesElectriciteAnciennes().setVisible(true);
 				break;
 				
-			case "Factures d'électricité à payées":
+			case "Factures d'électricité en cours":
 				this.dispose();
-				new FacturesElectriciteAPayees().setVisible(true);
+				new FacturesElectriciteEnCours().setVisible(true);
 				break;
 				
 			case "Nouvelles factures d'électricité":
@@ -570,12 +536,12 @@ public class NouveauLogement extends JFrame implements ActionListener {
 				
 			case "Consultation charges supplémentaires":
 				this.dispose();
-				new ChargesSupplementaires().setVisible(true);
+				new TaxeFonciere().setVisible(true);
 				break;
 			
 			case "Nouvelle charges supplémentaires":
 				this.dispose();
-				new NouvelleChargeSupp().setVisible(true);
+				new NouvelleTaxeFonciere().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
@@ -612,29 +578,12 @@ public class NouveauLogement extends JFrame implements ActionListener {
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
-				
-			case "Insérer":
-				this.dispose();
-				new NouveauDiagnostic().setVisible(true);
-				break;
-			
-			case "Mise à jour":
-				//this.dispose();
-				//new ().setVisible(true);
-				System.out.println("A implémenter");
-				break;
-				
-			case "Supprimer":
-				//this.dispose();
-				//new Impositions().setVisible(true);
-				System.out.println("A implémenter");
-				break;
-				
-				
+
 			case "Annuler":
 				this.dispose();
+				new LocationsEnCours().setVisible(true);
 				break;
-       
+	
 			default:
 				System.out.println("Choix incorrect");
 				break;

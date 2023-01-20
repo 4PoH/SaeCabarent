@@ -3,15 +3,17 @@ package vue.insertion;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
-import java.sql.CallableStatement;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -23,21 +25,23 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
-import JDBC.CictOracleDataSource;
-import Requetes.Requete;
+import Requetes.RequeteInsertion;
 import vue.Accueil;
 import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
-import vue.consultation.FacturesEauPayees;
-import vue.consultation.ChargesSupplementaires;
-import vue.consultation.EntretiensPartiesAnciens;
-import vue.consultation.FacturesEauAPayees;
-import vue.consultation.FacturesElectricitePayees;
-import vue.consultation.FacturesElectriciteAPayees;
+import vue.consultation.EntretiensAnciens;
+import vue.consultation.EntretiensEnCours;
+import vue.consultation.FacturesEauAnciennes;
+import vue.consultation.FacturesEauEnCours;
+import vue.consultation.FacturesElectriciteAnciennes;
+import vue.consultation.FacturesElectriciteEnCours;
 import vue.consultation.Impositions;
 import vue.consultation.LocatairesAnciens;
 import vue.consultation.LocatairesEnCours;
@@ -51,17 +55,21 @@ import vue.consultation.TravauxEnCours;
 public class NouvelleFactureEau extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	protected JTextField textFieldNumeroFacture;
-	protected JTextField textFieldPrixM3;
-	protected JTextField textFieldPartieFixe;
-	protected JTextField textFieldRepPDF;
-	protected JTextField textFieldNomPDF;
-	protected JTextField textFieldDateFac;
-	protected JTextField textFieldMontantTotal;
-	protected JTextField textFieldFrequence;
-	protected JComboBox<String> comboBoxEntreprise;
-	protected String comboEntNom;
-	protected NouvelleFactureEau frame;
+	private JTextField textFieldNumeroFacture;
+	private JTextField textFieldPrixM3;
+	private JTextField textFieldPartieFixe;
+	private JTextField textFieldRepPDF;
+	private JTextField textFieldNomPDF;
+	private JTextField textFieldDateFac;
+	private JTextField textFieldMontantTotal;
+	private JTextField textFieldFrequence;
+	private JComboBox<String> comboBoxEntreprise;
+	private String comboEntNom;
+	private NouvelleFactureEau frame;
+	private JTextField textFieldDateObtention;
+	private JTable table;
+	private int nbTableRows;
+	private ArrayList<String> tableAllSelectedData = new ArrayList<String>();
 
 	/**
 	 * Launch the application.
@@ -77,52 +85,6 @@ public class NouvelleFactureEau extends JFrame implements ActionListener {
 				}
 			}
 		});
-	}
-
-	// SHOW COMBO * ENTERPRISE.NOM
-	private ResultSet RequeteAfficheComboEntreprise() throws SQLException {
-		ResultSet retourRequete = null;
-		Requete requete = new Requetes.Requete();
-		String texteSQL = "select SIREN, NOM from ENTREPRISE";
-		retourRequete = requete.requeteSelection(texteSQL);
-		return retourRequete;
-	}
-	
-	// GET INT SIREN FROM ENTREPRISE.NOM
-	public int RequeteGetSirenEntrepriseCombo(String nomEnt) throws SQLException  {
-		ResultSet retourRequete = null;
-		Requete requete = new Requetes.Requete();
-		try {
-			String texteSQL = ("select SIREN from ENTREPRISE where NOM = '" + nomEnt + "'");
-			retourRequete = requete.requeteSelection(texteSQL);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		retourRequete.next();
-		return retourRequete.getInt("SIREN");
-	}
-	
-
-	// DB INSERT x8 : INT INT FLOAT STRING FLOAT FLOAT STRING+STRING INT
-	private void RequeteInsertFacEau(int siren, String numfact, float prixm3, String datefact, float partiefixe, float total, String chemin, String pdf, int frequencefacture ) throws SQLException {
-		CictOracleDataSource cict = new CictOracleDataSource();
-		String requete = "{ call insertFactureEau(?,?,?,?,?,?,?,?,?) } ";		
-				try {
-					Connection connection = cict.getConnection();
-					CallableStatement cs = connection.prepareCall(requete);
-					cs.setInt(1, siren);
-					cs.setString(2, numfact);
-					cs.setFloat(3, prixm3);
-			        cs.setString(4, datefact);
-			        cs.setFloat(5, partiefixe);
-			        cs.setFloat(6, total);
-					cs.setString(7, chemin);
-					cs.setString(8, pdf);
-					cs.setInt(9, frequencefacture);
-					cs.execute();
-				} catch(SQLException e) {
-					e.printStackTrace();
-				}
 	}
 	
 	/**
@@ -336,6 +298,11 @@ public class NouvelleFactureEau extends JFrame implements ActionListener {
 		ButtonAjouter.addActionListener(this);
 		contentPane.add(ButtonAjouter);
 		
+		JButton btnDateDeMaintenant = new JButton("Date");
+		btnDateDeMaintenant.setBounds(235, 98, 66, 23);
+		btnDateDeMaintenant.addActionListener(this);
+		contentPane.add(btnDateDeMaintenant);
+		
 		JButton ButtonAnnuler = new JButton("Annuler");
 		ButtonAnnuler.setBounds(49, 384, 132, 23);
 		ButtonAnnuler.addActionListener(this);
@@ -354,7 +321,7 @@ public class NouvelleFactureEau extends JFrame implements ActionListener {
 		comboBoxEntreprise.setBounds(165, 36, 132, 22);
 		contentPane.add(comboBoxEntreprise);
 		try {
-			ResultSet rsEntNom = RequeteAfficheComboEntreprise();
+			ResultSet rsEntNom = RequeteInsertion.RequeteAfficheComboEntreprise();
 			int i = 0;
 			rsEntNom.next();
 			while ( i < rsEntNom.getRow()) {
@@ -380,23 +347,23 @@ public class NouvelleFactureEau extends JFrame implements ActionListener {
 		contentPane.add(ButtonPDF);
 		
 		JLabel LabelCheminPDF = new JLabel("Chemin d'accès  :");
-		LabelCheminPDF.setBounds(50, 304, 119, 14);
+		LabelCheminPDF.setBounds(307, 239, 119, 14);
 		contentPane.add(LabelCheminPDF);
 		
 		textFieldRepPDF = new JTextField();
 		textFieldRepPDF.setEditable(false);
 		textFieldRepPDF.setColumns(10);
-		textFieldRepPDF.setBounds(166, 300, 274, 20);
+		textFieldRepPDF.setBounds(390, 238, 64, 20);
 		contentPane.add(textFieldRepPDF);
 		
 		textFieldNomPDF = new JTextField();
 		textFieldNomPDF.setEditable(false);
 		textFieldNomPDF.setColumns(10);
-		textFieldNomPDF.setBounds(166, 333, 132, 20);
+		textFieldNomPDF.setBounds(390, 269, 64, 20);
 		contentPane.add(textFieldNomPDF);
 		
 		JLabel LabelNomPDF = new JLabel("Nom fichier :");
-		LabelNomPDF.setBounds(50, 336, 119, 14);
+		LabelNomPDF.setBounds(307, 272, 119, 14);
 		contentPane.add(LabelNomPDF);
 		
 		JLabel LabelDateFacture = new JLabel("* Date de la facture  :");
@@ -434,10 +401,63 @@ public class NouvelleFactureEau extends JFrame implements ActionListener {
 		        comboEntNom = (String) jcmbType.getSelectedItem();
 		      }
 		    });
-		JButton btnDateDeMaintenant = new JButton("Date");
-		btnDateDeMaintenant.setBounds(235, 98, 66, 23);
-		btnDateDeMaintenant.addActionListener(this);
-		contentPane.add(btnDateDeMaintenant);
+
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(34, 313, 405, 70);
+		contentPane.add(scrollPane);
+		
+		DefaultTableModel tableModel = new DefaultTableModel();
+		JTable table = new JTable(tableModel);
+		tableModel.addColumn("Batiments");
+		try {
+			ResultSet rsTable = RequeteInsertion.RequeteGetBati();
+			int i = 0;
+			rsTable.next();
+			while ( i < rsTable.getRow()) {
+				String lib = rsTable.getString("lib");
+				String cp = rsTable.getString("cp");
+				String adr = rsTable.getString("adr");
+				tableModel.insertRow(0, new Object[] { lib +" ["+ cp + "] (" +  adr + ") "  });
+				rsTable.next();
+				}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		table.addMouseListener(new MouseAdapter() {
+		    public void mousePressed(MouseEvent mouseEvent) {
+		        JTable table =(JTable) mouseEvent.getSource();
+		        Point point = mouseEvent.getPoint();
+		        int row = table.rowAtPoint(point);
+		        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
+		        	 String selectedData = null;
+		    	        int[] selectedRow = table.getSelectedRows();
+		    	        int[] selectedColumns = table.getSelectedColumns();
+		    	        for (int i = 0; i < selectedRow.length; i++) {
+		    	          for (int j = 0; j < selectedColumns.length; j++) {
+		    	            selectedData = (String) table.getValueAt(selectedRow[i], selectedColumns[j]);
+		    	          }
+		    	        }	    	        
+		    	        if (!tableAllSelectedData.contains(selectedData)) {
+					        tableAllSelectedData.add(selectedData);
+					        String cp =  selectedData.substring(selectedData.lastIndexOf("[")+1,selectedData.lastIndexOf("]"));
+					        String adr = selectedData.substring(selectedData.lastIndexOf("(")+1,selectedData.lastIndexOf(")"));
+					        	System.out.println("Selected: " + cp + "-" + adr );
+						} else {
+								tableAllSelectedData.remove(selectedData);
+						        String cp =  selectedData.substring(selectedData.lastIndexOf("[")+1,selectedData.lastIndexOf("]"));
+						        String adr = selectedData.substring(selectedData.lastIndexOf("(")+1,selectedData.lastIndexOf(")"));
+						        System.out.println("Unselected: " + cp + "-" + adr );
+						}
+		        }
+		    }
+		});
+
+		table.getColumnModel().getColumn(0).setPreferredWidth(310);
+		table.setColumnSelectionAllowed(true);
+		table.setCellSelectionEnabled(true);
+		scrollPane.setViewportView(table);
+
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -455,7 +475,7 @@ public class NouvelleFactureEau extends JFrame implements ActionListener {
 				new NouvelleEntreprise().setVisible(true);
 				break;
 			case "Ajouter":
-				String numfact = textFieldNumeroFacture.getText();
+				int numfact = Integer.parseInt(textFieldNumeroFacture.getText());
 				float prixm3 = Float.parseFloat(textFieldPrixM3.getText());
 				String datefact = textFieldDateFac.getText();
 				float partiefixe = Float.parseFloat(textFieldPartieFixe.getText());
@@ -464,15 +484,38 @@ public class NouvelleFactureEau extends JFrame implements ActionListener {
 				String pdf = textFieldNomPDF.getText() ;		
 				int frequencefacture = Integer.parseInt(textFieldFrequence.getText());   
 				try {
-					int siren = RequeteGetSirenEntrepriseCombo(comboEntNom);
-					RequeteInsertFacEau(siren, numfact, prixm3, datefact, partiefixe, total, chemin, pdf, frequencefacture);
+					String siren = RequeteInsertion.RequeteGetStringSirenEntrepriseCombo(comboEntNom);
+					RequeteInsertion.RequeteInsertFacEau(siren, numfact, prixm3, datefact, partiefixe, total, chemin, pdf, frequencefacture);
+					
 					JOptionPane.showMessageDialog(frame, "Facture " + numfact + " insérée.");
 				} catch (SQLException e3) {
 					e3.printStackTrace();
-				}				
-				this.dispose();
-				new Accueil().setVisible(true);
-				break;
+				}
+				if(tableAllSelectedData.isEmpty()) { 
+
+					this.dispose();
+					new Accueil().setVisible(true);
+					break;
+				} else {
+				      for (int counter = 0; counter < tableAllSelectedData.size(); counter++) { 		      
+						// Pour les liaisons avec les batis
+						String datePaiement = "01/01/2001";
+						String modePaiement = " ";
+						String numeroCheque = " ";
+				        String adr = (tableAllSelectedData.get(counter).substring(tableAllSelectedData.get(counter).lastIndexOf("(")+1,tableAllSelectedData.get(counter).lastIndexOf(")")));
+				        String cp = (tableAllSelectedData.get(counter).substring(tableAllSelectedData.get(counter).lastIndexOf("[")+1,tableAllSelectedData.get(counter).lastIndexOf("]")));
+				        
+				        try {								
+								String siren = RequeteInsertion.RequeteGetStringSirenEntrepriseCombo(comboEntNom);
+								RequeteInsertion.RequeteInsertRattacher(adr, siren, numfact, cp, datePaiement, modePaiement, numeroCheque);
+				        } catch (SQLException e1) {
+								e1.printStackTrace();
+							}
+				      }   	
+					this.dispose();
+					new Accueil().setVisible(true);
+					break;
+				}
 			case "Accueil":
 				this.dispose();
 				new Accueil().setVisible(true);
@@ -502,25 +545,30 @@ public class NouvelleFactureEau extends JFrame implements ActionListener {
 				this.dispose();
 				new LocatairesEnCours().setVisible(true);
 				break;
-				
-			case "Entretiens des parties communes":
+			
+			case "Anciens entretiens":
 				this.dispose();
-				new EntretiensPartiesAnciens().setVisible(true);
+				new EntretiensAnciens().setVisible(true);
 				break;
 				
-			case "Nouveaux entretiens des parties communes":
+			case "Entretiens en cours":
+				this.dispose();
+				new EntretiensEnCours().setVisible(true);
+				break;
+				
+			case "Nouveaux entretiens":
 				this.dispose();
 				new NouveauEntretien().setVisible(true);
 				break;
 				
-			case "Factures d'eau payées":
+			case "Anciennes factures d'eau":
 				this.dispose();
-				new FacturesEauPayees().setVisible(true);
+				new FacturesEauAnciennes().setVisible(true);
 				break;
 				
-			case "Factures d'eau à payées":
+			case "Factures d'eau en cours":
 				this.dispose();
-				new FacturesEauAPayees().setVisible(true);
+				new FacturesEauEnCours().setVisible(true);
 				break;
 				
 			case "Nouvelles factures d'eau":
@@ -528,14 +576,14 @@ public class NouvelleFactureEau extends JFrame implements ActionListener {
 				new NouvelleFactureEau().setVisible(true);
 				break;
 				
-			case "Factures d'électricité payées":
+			case "Anciennes factures d'électricité":
 				this.dispose();
-				new FacturesElectricitePayees().setVisible(true);
+				new FacturesElectriciteAnciennes().setVisible(true);
 				break;
 				
-			case "Factures d'électricité à payées":
+			case "Factures d'électricité en cours":
 				this.dispose();
-				new FacturesElectriciteAPayees().setVisible(true);
+				new FacturesElectriciteEnCours().setVisible(true);
 				break;
 				
 			case "Nouvelles factures d'électricité":
@@ -565,12 +613,12 @@ public class NouvelleFactureEau extends JFrame implements ActionListener {
 				
 			case "Consultation charges supplémentaires":
 				this.dispose();
-				new ChargesSupplementaires().setVisible(true);
+				new TaxeFonciere().setVisible(true);
 				break;
 			
 			case "Nouvelle charges supplémentaires":
 				this.dispose();
-				new NouvelleChargeSupp().setVisible(true);
+				new NouvelleTaxeFonciere().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
@@ -607,27 +655,10 @@ public class NouvelleFactureEau extends JFrame implements ActionListener {
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
-				
-			case "Insérer":
-				this.dispose();
-				new NouveauDiagnostic().setVisible(true);
-				break;
-			
-			case "Mise à jour":
-				//this.dispose();
-				//new ().setVisible(true);
-				System.out.println("A implémenter");
-				break;
-				
-			case "Supprimer":
-				//this.dispose();
-				//new Impositions().setVisible(true);
-				System.out.println("A implémenter");
-				break;
-				
-				
+
 			case "Annuler":
 				this.dispose();
+				new LocationsEnCours().setVisible(true);
 				break;
 				
 			case "Choix fichier...":
@@ -638,8 +669,7 @@ public class NouvelleFactureEau extends JFrame implements ActionListener {
 					textFieldNomPDF.setText(file.getName());
 					textFieldRepPDF.setText(file.getAbsolutePath().substring(0, file.getAbsolutePath().length() - textFieldNomPDF.getText().length() - 1));
 				}
-				break;
-				
+				break;       
 			default:
 				System.out.println("Choix incorrect");
 				break;
