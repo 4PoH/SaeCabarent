@@ -264,7 +264,6 @@ public class LocatairesAnciens extends JFrame implements ActionListener {
 		
 		try {
 			ResultSet rsEnsLocataire = RequeteTableauAnciensLocataire();
-			int i = 0;
 			while ( rsEnsLocataire.next()) {
 				String bati = rsEnsLocataire.getString(1);
 				String nom = rsEnsLocataire.getString(2);
@@ -276,8 +275,6 @@ public class LocatairesAnciens extends JFrame implements ActionListener {
 				String datedepart = rsEnsLocataire.getString(7);
 				String lienpdf = rsEnsLocataire.getString(8);
 				model.addRow(new String[]{bati, nom, prenom, mail, tel, categoriesocio, datedepart, });
-				i++;
-				rsEnsLocataire.next();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

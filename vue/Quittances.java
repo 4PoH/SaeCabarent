@@ -7,16 +7,23 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import Rapport.CreerQuittance;
+import Requetes.Requete;
 import vue.consultation.ChargesSupplementaires;
 import vue.consultation.EntretiensPartiesAnciens;
 import vue.consultation.FacturesEauAPayees;
@@ -44,7 +51,10 @@ import vue.insertion.NouvelleTaxeFonciere;
 public class Quittances extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-
+	private JTextField JTextFieldMois;
+	private JTextField JTextFieldAnnee;
+	private JComboBox<String> comboBoxContrat;
+	private String selectedComboContrat;
 	/**
 	 * Launch the application.
 	 */
@@ -64,6 +74,15 @@ public class Quittances extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
+	
+	private ResultSet RequeteAfficheComboContrat() throws SQLException {
+		ResultSet retourRequete = null;
+		Requete requete = new Requetes.Requete();
+		String texteSQL = "select * from contrat";
+		retourRequete = requete.requeteSelection(texteSQL);
+		return retourRequete;
+	}
+	
 	public Quittances() {
 		setTitle("Quittances");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -247,6 +266,43 @@ public class Quittances extends JFrame implements ActionListener {
 		ButtonGenerer.addActionListener(this);
 		ButtonGenerer.setBounds(290, 170, 140, 25);
 		panel.add(ButtonGenerer);
+		
+		JTextFieldMois = new JTextField();
+		JTextFieldMois.setText("Mois");
+		JTextFieldMois.setBounds(80, 135, 100, 25);
+		panel.add(JTextFieldMois);
+		JTextFieldMois.setColumns(10);
+		
+		JTextFieldAnnee = new JTextField();
+		JTextFieldAnnee.setText("Année");
+		JTextFieldAnnee.setColumns(10);
+		JTextFieldAnnee.setBounds(201, 135, 100, 25);
+		panel.add(JTextFieldAnnee);
+		
+		JComboBox<String> comboBoxContrat = new JComboBox<String>();
+		comboBoxContrat.setBounds(321, 135, 132, 22);
+		comboBoxContrat.addActionListener(this);
+		panel.add(comboBoxContrat);
+		try {
+			ResultSet rsNumContrat = RequeteAfficheComboContrat();
+			int i = 0;
+			rsNumContrat.next();
+			while ( i < rsNumContrat.getRow()) {
+				comboBoxContrat.addItem(rsNumContrat.getString("IDCONTRAT"));
+				rsNumContrat.next();
+				}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		comboBoxContrat.addActionListener(new ActionListener() {
+		      @Override
+		      public void actionPerformed(ActionEvent e) {
+		        JComboBox jcmbType = (JComboBox) e.getSource();
+		        selectedComboContrat = (String) jcmbType.getSelectedItem();
+		      }
+		    });
+		
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -386,9 +442,25 @@ public class Quittances extends JFrame implements ActionListener {
 				new Impositions().setVisible(true);
 				break;
 				
-			case "Annuler":
+			case "Retour à l'accueil":
 				this.dispose();
 				break;
+				
+			case "Générer":	
+				CreerQuittance quittance = new CreerQuittance();
+				int mois = Integer. parseInt(JTextFieldMois.getText());
+				int annee = Integer. parseInt(JTextFieldAnnee.getText());
+				int idcontrat = Integer. parseInt(selectedComboContrat);
+			try {
+				quittance.generateImpot(mois,annee,idcontrat);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			break;
        
 			default:
 				System.out.println("Choix incorrect");

@@ -33,6 +33,8 @@ import vue.IRL;
 import vue.InformationsBailleur;
 import vue.Quittances;
 import vue.consultation.FacturesEauPayees;
+import vue.consultation.ChargesSupplementaires;
+import vue.consultation.EntretiensPartiesAnciens;
 import vue.consultation.FacturesEauAPayees;
 import vue.consultation.FacturesElectricitePayees;
 import vue.consultation.FacturesElectriciteAPayees;
@@ -102,14 +104,14 @@ public class NouvelleFactureEau extends JFrame implements ActionListener {
 	
 
 	// DB INSERT x8 : INT INT FLOAT STRING FLOAT FLOAT STRING+STRING INT
-	private void RequeteInsertFacEau(int siren, int numfact, float prixm3, String datefact, float partiefixe, float total, String chemin, String pdf, int frequencefacture ) throws SQLException {
+	private void RequeteInsertFacEau(int siren, String numfact, float prixm3, String datefact, float partiefixe, float total, String chemin, String pdf, int frequencefacture ) throws SQLException {
 		CictOracleDataSource cict = new CictOracleDataSource();
 		String requete = "{ call insertFactureEau(?,?,?,?,?,?,?,?,?) } ";		
 				try {
 					Connection connection = cict.getConnection();
 					CallableStatement cs = connection.prepareCall(requete);
 					cs.setInt(1, siren);
-					cs.setInt(2, numfact);
+					cs.setString(2, numfact);
 					cs.setFloat(3, prixm3);
 			        cs.setString(4, datefact);
 			        cs.setFloat(5, partiefixe);
@@ -453,7 +455,7 @@ public class NouvelleFactureEau extends JFrame implements ActionListener {
 				new NouvelleEntreprise().setVisible(true);
 				break;
 			case "Ajouter":
-				int numfact = Integer.parseInt(textFieldNumeroFacture.getText());
+				String numfact = textFieldNumeroFacture.getText();
 				float prixm3 = Float.parseFloat(textFieldPrixM3.getText());
 				String datefact = textFieldDateFac.getText();
 				float partiefixe = Float.parseFloat(textFieldPartieFixe.getText());
@@ -501,17 +503,22 @@ public class NouvelleFactureEau extends JFrame implements ActionListener {
 				new LocatairesEnCours().setVisible(true);
 				break;
 				
-			case "Nouveaux entretiens":
+			case "Entretiens des parties communes":
+				this.dispose();
+				new EntretiensPartiesAnciens().setVisible(true);
+				break;
+				
+			case "Nouveaux entretiens des parties communes":
 				this.dispose();
 				new NouveauEntretien().setVisible(true);
 				break;
 				
-			case "Anciennes factures d'eau":
+			case "Factures d'eau payées":
 				this.dispose();
 				new FacturesEauPayees().setVisible(true);
 				break;
 				
-			case "Factures d'eau en cours":
+			case "Factures d'eau à payées":
 				this.dispose();
 				new FacturesEauAPayees().setVisible(true);
 				break;
@@ -521,12 +528,12 @@ public class NouvelleFactureEau extends JFrame implements ActionListener {
 				new NouvelleFactureEau().setVisible(true);
 				break;
 				
-			case "Anciennes factures d'électricité":
+			case "Factures d'électricité payées":
 				this.dispose();
 				new FacturesElectricitePayees().setVisible(true);
 				break;
 				
-			case "Factures d'électricité en cours":
+			case "Factures d'électricité à payées":
 				this.dispose();
 				new FacturesElectriciteAPayees().setVisible(true);
 				break;
@@ -558,12 +565,12 @@ public class NouvelleFactureEau extends JFrame implements ActionListener {
 				
 			case "Consultation charges supplémentaires":
 				this.dispose();
-				new TaxeFonciere().setVisible(true);
+				new ChargesSupplementaires().setVisible(true);
 				break;
 			
 			case "Nouvelle charges supplémentaires":
 				this.dispose();
-				new NouvelleTaxeFonciere().setVisible(true);
+				new NouvelleChargeSupp().setVisible(true);
 				break;
 			
 			case "Anciens travaux":
@@ -600,10 +607,27 @@ public class NouvelleFactureEau extends JFrame implements ActionListener {
 				this.dispose();
 				new Impositions().setVisible(true);
 				break;
-
+				
+			case "Insérer":
+				this.dispose();
+				new NouveauDiagnostic().setVisible(true);
+				break;
+			
+			case "Mise à jour":
+				//this.dispose();
+				//new ().setVisible(true);
+				System.out.println("A implémenter");
+				break;
+				
+			case "Supprimer":
+				//this.dispose();
+				//new Impositions().setVisible(true);
+				System.out.println("A implémenter");
+				break;
+				
+				
 			case "Annuler":
 				this.dispose();
-				new LocationsEnCours().setVisible(true);
 				break;
 				
 			case "Choix fichier...":
@@ -614,7 +638,8 @@ public class NouvelleFactureEau extends JFrame implements ActionListener {
 					textFieldNomPDF.setText(file.getName());
 					textFieldRepPDF.setText(file.getAbsolutePath().substring(0, file.getAbsolutePath().length() - textFieldNomPDF.getText().length() - 1));
 				}
-				break;       
+				break;
+				
 			default:
 				System.out.println("Choix incorrect");
 				break;

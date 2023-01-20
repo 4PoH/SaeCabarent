@@ -31,6 +31,8 @@ public class CreerQuittance {
 			boolean bool = rs.next();
 			String path = rs.getString("DESTINATION");
 			
+			
+			
 			String date = mois+"/"+annee;
 			CallableStatement cstm = connex.prepareCall("{CALL generationQuittance(?,?)}");
 			cstm.setInt(1, idcontrat);

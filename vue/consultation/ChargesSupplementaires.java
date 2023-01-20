@@ -418,13 +418,13 @@ public class ChargesSupplementaires extends JFrame implements ActionListener {
 				
 			case "Insérer":
 				this.dispose();
-				new NouvelleChargeSupp().setVisible(true);
+				new ChargesSupplementaires().setVisible(true);
 				break;
-       
+				
 			case "Annuler":
 				this.dispose();
 				break;
-				
+       
 			default:
 				System.out.println("Choix incorrect");
 				break;

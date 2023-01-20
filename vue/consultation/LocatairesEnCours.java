@@ -262,8 +262,7 @@ public class LocatairesEnCours extends JFrame implements ActionListener {
 		
 		try {
 			ResultSet rsEnsLocataire = RequeteTableauLocataireEnCours();
-			int i = 0;
-			while ( rsEnsLocataire.next()) {
+				while ( rsEnsLocataire.next()) {
 				String bati = rsEnsLocataire.getString(1);
 				String nom = rsEnsLocataire.getString(2);
 				String prenom = rsEnsLocataire.getString(3);
@@ -273,8 +272,6 @@ public class LocatairesEnCours extends JFrame implements ActionListener {
 				//a modifier pour faire en sorte que ce soit un bouton qui renvoie vers le pdf du fichier
 				String findecontrat = rsEnsLocataire.getString(7);
 				model.addRow(new String[]{bati, nom, prenom, mail, tel, categoriesocio, findecontrat});
-				i++;
-				rsEnsLocataire.next();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

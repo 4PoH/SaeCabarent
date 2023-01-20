@@ -273,13 +273,13 @@ public class Accueil extends JFrame implements ActionListener, MouseListener{
 		tableAcceuilBati.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableAcceuilBati.setSurrendersFocusOnKeystroke(true);
 		
-		int totalLoyer = 0;
+		float totalLoyer = 0;
 		
 		try {
 			ResultSet rsEnsBati = RequeteTableauBati();
 			while (rsEnsBati.next()) {
-				totalLoyer += rsEnsBati.getInt("MONTANTLOYER");
-				String loyer = String.valueOf(rsEnsBati.getInt("MONTANTLOYER"));
+				totalLoyer += rsEnsBati.getFloat("MONTANTLOYER");
+				String loyer = String.valueOf(rsEnsBati.getFloat("MONTANTLOYER"));
 				String adresse = rsEnsBati.getString("ADRESSE");
 				adresse += ", ";
 				adresse += rsEnsBati.getString("CODEPOSTAL");

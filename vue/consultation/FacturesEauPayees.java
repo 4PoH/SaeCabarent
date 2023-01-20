@@ -280,7 +280,7 @@ public class FacturesEauPayees extends JFrame implements ActionListener {
 		ButtonInserer.setBounds(75, 370, 100, 25);
 		contentPane.add(ButtonInserer);
 		
-		JButton ButtonMiseJour = new JButton("Mise à  jour");
+		JButton ButtonMiseJour = new JButton("Mise à jour");
 		ButtonMiseJour.addActionListener(this);
 		ButtonMiseJour.setBounds(305, 370, 100, 25);
 		contentPane.add(ButtonMiseJour);
